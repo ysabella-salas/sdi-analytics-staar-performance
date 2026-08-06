@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Memo</title>
+  <link rel="stylesheet" href="../print.css">
+</head>
+<body>
+
+  <div class="print-running-header">
+    HISD Internal Memorandum
+    <span class="right">Confidential</span>
+  </div>
+  <div class="print-running-footer">
+    Houston Independent School District
+    <span class="right page-counter"></span>
+  </div>
+
+  <div class="screen-page">
+
+    <div class="hisd-ribbon" aria-hidden="true"></div>
+
+    <header class="hisd-masthead">
+      <img class="hisd-logo hisd-logo--sm" src="../assets/logos/full-dark-grey.svg"
+           alt="Houston Independent School District">
+      <div style="text-align:right;">
+        <p class="t-eyebrow" style="margin:0;">Internal</p>
+        <p class="t-display" style="font-size:20pt;margin:0;color:var(--hisd-dark-grey);">MEMORANDUM</p>
+      </div>
+    </header>
+
+    <hr class="hisd-footrule">
+
+    <!-- TO / FROM / DATE / RE block -->
+    <div class="memo-grid">
+      <div class="label">To</div><div>All Campus Principals</div>
+      <div class="label">From</div><div>Office of Academics</div>
+      <div class="label">Date</div><div>June 20, 2026</div>
+      <div class="label">Re</div><div>Applying the 2025 HISD Brand to Printed Materials</div>
+    </div>
+
+    <hr class="hisd-footrule">
+
+    <h2 class="t-h2">Summary</h2>
+    <p class="t-body">
+      This memo establishes the standard for HISD-branded print materials. All letterhead,
+      reports, and memos should use the brand ribbon, the approved district logo, and the
+      type roles defined in the print kit. When sending materials to a commercial printer,
+      always specify Pantone and CMYK values from the color reference rather than RGB.
+    </p>
+
+    <h2 class="t-h2">Action items</h2>
+    <table class="hisd-table keep-together">
+      <thead>
+        <tr><th>Item</th><th>Owner</th><th>Due</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Adopt the print kit for all campus newsletters</td><td>Campus comms leads</td><td>Aug 1, 2026</td></tr>
+        <tr><td>Order letterhead using PMS 7467 C (Teal)</td><td>Procurement</td><td>Aug 15, 2026</td></tr>
+        <tr><td>Replace legacy logos in templates</td><td>Office of Communications</td><td>Sep 1, 2026</td></tr>
+      </tbody>
+    </table>
+
+    <div class="hisd-callout t-body">
+      <strong>Print rule:</strong> hand your printer the Pantone build first, CMYK second.
+      Teal = PMS&nbsp;7467&nbsp;C / CMYK&nbsp;78&nbsp;15&nbsp;31&nbsp;0. The on-screen hex
+      (#00A3AF) is for digital use only and will shift on press.
+    </div>
+
+    <h2 class="t-h2">Background</h2>
+    <p class="t-body">
+      The brand refresh consolidates the district's color palette into four primary and
+      six secondary colors. Widow and orphan control keeps body copy clean across page
+      breaks, and the running header and footer repeat the district name and page number
+      on every page. This paragraph is intentionally long so that, in a multi-page memo,
+      the pagination hygiene rules in print.css are exercised: paragraphs will not strand
+      a single line at the top or bottom of a page, and headings stay attached to the
+      content that follows them rather than floating alone at the foot of a page.
+    </p>
+
+    <div class="hisd-signature">
+      <span class="name">Hannah Childs</span><br>
+      Visual Media Manager, Office of Communications
+    </div>
+
+  </div>
+
+  <p class="screen-note">
+    Screen preview only. Cmd-P (Ctrl-P) &rarr; "Save as PDF", US Letter, margins
+    "Default", and enable <strong>"Background graphics"</strong> so the teal ribbon and
+    table header print.
+  </p>
+
+</body>
+</html>

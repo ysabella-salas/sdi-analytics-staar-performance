@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Skeleton — Component Demo</title>
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="skeleton.css">
+  <style>
+    /* Demo-page chrome only — not part of the component. */
+    body { margin: 0; font-family: var(--font-sans); color: var(--color-text);
+           background-color: var(--color-bg); line-height: var(--leading-normal); }
+    .demo-page { max-inline-size: 64rem; margin-inline: auto;
+                 padding-inline: var(--space-6); padding-block: var(--space-8); }
+    .demo-page > h1 { font-family: var(--font-display); font-size: var(--text-4xl);
+                      margin-block: 0 var(--space-2); }
+    .demo-intro { color: var(--color-text-muted); max-inline-size: 52rem;
+                  margin-block: 0 var(--space-6); }
+    .demo-toggle { font: inherit; font-weight: 600; cursor: pointer;
+                   border: 1px solid var(--color-border); border-radius: var(--radius-pill);
+                   padding-inline: var(--space-4); padding-block: var(--space-2);
+                   background-color: var(--color-surface); color: var(--color-text);
+                   margin-block-end: var(--space-6); }
+    .demo-toggle:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+                 gap: var(--space-6); }
+    .demo-panel { background-color: var(--color-surface); border: 1px solid var(--color-border);
+                  border-radius: var(--radius-lg); padding-inline: var(--space-6);
+                  padding-block: var(--space-5); color: var(--color-text); }
+    .demo-panel > h2 { font-family: var(--font-display); font-size: var(--text-xl);
+                       margin-block: 0 var(--space-5); }
+    .demo-block__caption { display: block; font-size: var(--text-sm);
+                           color: var(--color-text-muted); margin-block-start: var(--space-3); }
+    .card-skel { display: flex; gap: var(--space-4); align-items: flex-start; }
+    .card-skel__body { flex: 1; }
+    .real-card { display: flex; gap: var(--space-4); align-items: flex-start; }
+    .real-card img { inline-size: var(--space-12); block-size: var(--space-12);
+                     border-radius: var(--radius-pill); object-fit: cover; }
+    .real-card h3 { font-family: var(--font-display); margin: 0 0 var(--space-1); }
+    .real-card p { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+    .reload { font: inherit; font-weight: 600; cursor: pointer; margin-block-start: var(--space-4);
+              border: none; border-radius: var(--radius-md); padding-inline: var(--space-4);
+              padding-block: var(--space-2); background-color: var(--color-action);
+              color: var(--color-on-action); }
+    .reload:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; padding: 0;
+                       margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    .snippet { margin-block-start: var(--space-8); }
+    .snippet > h2 { font-family: var(--font-display); font-size: var(--text-2xl); margin-block: 0 var(--space-3); }
+    .snippet pre { background-color: var(--color-surface-sunken); border: 1px solid var(--color-border);
+                   border-radius: var(--radius-md); padding: var(--space-4); overflow-x: auto;
+                   font-family: var(--font-mono); font-size: var(--text-sm);
+                   line-height: var(--leading-relaxed); color: var(--color-text); }
+    code { font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <h1>Skeleton</h1>
+    <p class="demo-intro">
+      The canonical loading floor. Bones are a tokenized <code>--color-surface-sunken</code> fill with a
+      sheen sweep; the sweep is <strong>movement</strong>, so it pauses under reduced motion and forced
+      colors. When data resolves, the real content fades in over <code>--duration-crossfade</code> — an
+      <strong>opacity-only</strong> reveal that survives reduced motion (shortened to 120&nbsp;ms) instead of
+      cutting. The bones are <code>aria-hidden</code>; loading state is announced in a separate bilingual
+      live region.
+    </p>
+    <button class="demo-toggle" type="button"
+      onclick="var h=document.documentElement;h.dataset.theme=(h.dataset.theme==='dark'?'light':'dark')">
+      Toggle theme</button>
+
+    <div class="demo-grid">
+      <section class="demo-panel">
+        <h2>Skeleton bones</h2>
+        <div class="hisd-skeleton-group" aria-busy="true" aria-hidden="true">
+          <div class="card-skel">
+            <div class="hisd-skeleton hisd-skeleton--circle"></div>
+            <div class="card-skel__body">
+              <div class="hisd-skeleton hisd-skeleton--title" style="inline-size:70%"></div>
+              <div class="hisd-skeleton hisd-skeleton--text"></div>
+              <div class="hisd-skeleton hisd-skeleton--text"></div>
+              <div class="hisd-skeleton hisd-skeleton--text hisd-skeleton--short"></div>
+            </div>
+          </div>
+        </div>
+        <span class="demo-block__caption">Bones are decorative (<code>aria-hidden</code>) on an
+          <code>aria-busy</code> region.</span>
+      </section>
+
+      <section class="demo-panel">
+        <h2>Skeleton-to-content crossfade</h2>
+        <div id="swap-region" aria-busy="true">
+          <!-- skeleton, shown while loading -->
+          <div class="hisd-skeleton-group" data-skel aria-hidden="true">
+            <div class="card-skel">
+              <div class="hisd-skeleton hisd-skeleton--circle"></div>
+              <div class="card-skel__body">
+                <div class="hisd-skeleton hisd-skeleton--title" style="inline-size:60%"></div>
+                <div class="hisd-skeleton hisd-skeleton--text"></div>
+                <div class="hisd-skeleton hisd-skeleton--text hisd-skeleton--short"></div>
+              </div>
+            </div>
+          </div>
+          <!-- real content, faded in via .hisd-skeleton-reveal -->
+          <div class="hisd-skeleton-reveal real-card" data-real hidden>
+            <img src="../assets/logos/icon/icon-teal.svg" alt="">
+            <div>
+              <h3>Wharton Dual Language Academy</h3>
+              <p>K–8 · Magnet · 1.2 mi · Spanish/English two-way immersion</p>
+            </div>
+          </div>
+        </div>
+        <p class="visually-hidden" role="status" aria-live="polite" id="swap-status">Loading school… Cargando escuela…</p>
+        <button class="reload" type="button" id="reload">Reload</button>
+        <span class="demo-block__caption">The real card uses <code>.hisd-skeleton-reveal</code>; toggle
+          reduced motion in your OS and the fade stays (shorter), it does not cut.</span>
+      </section>
+
+      <section class="demo-panel">
+        <h2>CLS-proof media frame</h2>
+        <div class="hisd-media-frame" style="--hisd-media-ratio: 4 / 3; --hisd-media-placeholder: var(--hisd-teal-100)">
+          <img id="framed-img" alt="HISD campus" width="800" height="600" loading="lazy"
+               src="../assets/logos/full-logo/full-dark-grey-teal.svg">
+        </div>
+        <span class="demo-block__caption">The frame reserves space with <code>aspect-ratio</code> + a
+          dominant-color fill (zero layout shift); the image fades in on load. The LCP hero image instead
+          sets <code>loading="eager" fetchpriority="high"</code>.</span>
+      </section>
+    </div>
+
+    <section class="snippet">
+      <h2>Markup</h2>
+      <pre><code>&lt;!-- Loading region: bones are aria-hidden; state lives in a live region --&gt;
+&lt;div class="hisd-skeleton-group" aria-busy="true" aria-hidden="true"&gt;
+  &lt;div class="hisd-skeleton hisd-skeleton--circle"&gt;&lt;/div&gt;
+  &lt;div class="hisd-skeleton hisd-skeleton--title" style="inline-size:70%"&gt;&lt;/div&gt;
+  &lt;div class="hisd-skeleton hisd-skeleton--text"&gt;&lt;/div&gt;
+  &lt;div class="hisd-skeleton hisd-skeleton--text hisd-skeleton--short"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p class="visually-hidden" role="status" aria-live="polite"&gt;Loading… Cargando…&lt;/p&gt;
+
+&lt;!-- Real content: fades in on --duration-crossfade when data arrives --&gt;
+&lt;div class="hisd-skeleton-reveal" data-loaded="false"&gt;…&lt;/div&gt;
+
+&lt;!-- CLS-proof image: reserve the box, lazy-load, fade in on load --&gt;
+&lt;!-- --hisd-media-placeholder: the image's dominant color (a build-time raw value), or a brand token --&gt;
+&lt;div class="hisd-media-frame" style="--hisd-media-ratio: 4 / 3; --hisd-media-placeholder: var(--hisd-teal-100)"&gt;
+  &lt;img src="campus.avif" alt="HISD campus" width="800" height="600"
+       loading="lazy" onload="this.dataset.loaded='true'"&gt;
+&lt;/div&gt;
+&lt;!-- LCP hero only: loading="eager" fetchpriority="high" --&gt;</code></pre>
+    </section>
+  </main>
+
+  <script>
+    // Demo only: simulate a fetch, then crossfade skeleton -> content.
+    (function () {
+      var region = document.getElementById('swap-region');
+      var skel = region.querySelector('[data-skel]');
+      var real = region.querySelector('[data-real]');
+      var status = document.getElementById('swap-status');
+      function load() {
+        skel.hidden = false; real.hidden = true;
+        real.dataset.loaded = 'false';
+        region.setAttribute('aria-busy', 'true');
+        status.textContent = 'Loading school… Cargando escuela…';
+        setTimeout(function () {
+          skel.hidden = true; real.hidden = false;
+          // next frame so the transition runs from opacity 0
+          requestAnimationFrame(function () { real.dataset.loaded = 'true'; });
+          region.setAttribute('aria-busy', 'false');
+          status.textContent = 'School loaded. Escuela cargada.';
+        }, 1400);
+      }
+      document.getElementById('reload').addEventListener('click', load);
+      load();
+      // Framed image fades in on load.
+      var img = document.getElementById('framed-img');
+      if (img.complete) img.dataset.loaded = 'true';
+      else img.addEventListener('load', function () { img.dataset.loaded = 'true'; });
+    })();
+  </script>
+</body>
+</html>

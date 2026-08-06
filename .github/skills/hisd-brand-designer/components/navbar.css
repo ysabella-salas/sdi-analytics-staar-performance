@@ -1,0 +1,618 @@
+/* ==========================================================================
+   HISD Navbar — reusable top-navigation component styles
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css             (token names + light/dark values)
+     - Docs/Design-System/Components.md  (Navigation + Accessibility Contract)
+     - reference/Conventions.md          (token usage rules)
+
+   Component contract (from Components.md → Navigation):
+     - Root: <nav aria-label="Main">, preceded in DOM order by a skip-link
+       (href="#main-content") that is visually hidden until focused.
+     - Active link: AA-safe --color-action text (the brand accent is carried by
+       a 2px solid --color-brand border-block-end marker), marked
+       aria-current="page". Components.md mandates the brand as the active
+       signal; we honor that with the brand UNDERLINE while binding the TEXT to
+       --color-action so the active link clears WCAG 2.2 AA (4.5:1) on
+       --color-surface in BOTH themes — --color-brand text would be 3.06:1 in
+       light and fails. See the contrast note on the active-link tokens below.
+     - Hover: background --color-surface-hover (press: --color-surface-active),
+       the state-ladder tokens for non-filled interactive surfaces.
+     - Mobile: a hamburger trigger opens a role="dialog" drawer.
+
+   Rules honored here:
+     - Every COLOR is a semantic var(--color-…) or ramp var(--hisd-…) token.
+       Zero raw hex / rgb / hsl / named colors. The hamburger and close glyphs
+       are SVG data-URIs whose stroke is currentColor, so they inherit text.
+     - Spacing / radius / type / shadow / motion come from tokens only
+       (allowed literals: 0, 1px borders, 100%/percentages, outline widths).
+     - CSS logical properties only (padding-inline, border-block-end, …) — no
+       physical left/right.
+     - Visible focus ring on every interactive element; never bare outline:none.
+     - No component-specific dark-mode color values. Dark inherits from an
+       ancestor [data-theme="dark"]; the few structural tweaks are scoped under
+       that selector and change layout/shadow only, never raw color.
+     - All interactive targets clear the WCAG 2.2 24×24px minimum via padding /
+       min-block-size.
+     - Motion references --duration-* / --ease-* and is disabled under
+       prefers-reduced-motion: reduce.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root — the navigation bar. A horizontal cluster: brand on the inline-start,
+   primary links + actions on the inline-end. Sits on --color-surface with a
+   bottom hairline; claims --shadow-1 as a sticky header per the elevation rule.
+   -------------------------------------------------------------------------- */
+.hisd-navbar {
+  --hisd-navbar-link-fg: var(--color-text);
+  /* Active-link TEXT uses --color-action (AA-safe on --color-surface in both
+     themes: 5.23:1 light, 6.94:1 dark). The brand accent is carried by the
+     separate 2px underline marker (--hisd-navbar-link-marker), so the active
+     state never relies on the sub-4.5:1 --color-brand foreground. */
+  --hisd-navbar-link-fg-active: var(--color-action);
+  --hisd-navbar-link-marker: var(--color-brand);
+  /* Nav links are NON-filled interactive surfaces, so their hover/press tints
+     come from the state-ladder tokens rather than an elevation surface. */
+  --hisd-navbar-link-bg-hover: var(--color-surface-hover);
+  --hisd-navbar-link-bg-active: var(--color-surface-active);
+
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  inline-size: 100%;
+  min-block-size: var(--space-16); /* 4rem = 64px bar height */
+  padding-inline: var(--space-5);
+  padding-block: var(--space-2);
+
+  background-color: var(--color-surface);
+  border-block-end: var(--space-px) solid var(--color-border);
+  box-shadow: var(--shadow-1);
+
+  font-family: var(--font-sans);
+  color: var(--color-text);
+}
+
+.hisd-navbar *,
+.hisd-navbar *::before,
+.hisd-navbar *::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Skip-link — FIRST in DOM order, visually hidden until focused. On focus it
+   pins to the inline-start of the bar as a high-contrast action chip so a
+   keyboard user can jump straight to #main-content.
+   -------------------------------------------------------------------------- */
+.hisd-navbar__skip-link {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 2;
+
+  /* Clip out of view without removing from the a11y tree. */
+  inline-size: var(--space-px);
+  block-size: var(--space-px);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.hisd-navbar__skip-link:focus,
+.hisd-navbar__skip-link:focus-visible {
+  inline-size: auto;
+  block-size: auto;
+  min-block-size: var(--space-6); /* ≥24px target */
+  padding-inline: var(--space-4);
+  padding-block: var(--space-2);
+  overflow: visible;
+  clip-path: none;
+
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Brand — the district wordmark / logo lockup on the inline-start.
+   -------------------------------------------------------------------------- */
+.hisd-navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  min-block-size: var(--space-6); /* ≥24px target when it is a link */
+  margin-inline-end: auto; /* push links + actions to the inline-end */
+  padding-inline: var(--space-1);
+  padding-block: var(--space-1);
+
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-brand);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.hisd-navbar__brand:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.hisd-navbar__brand-mark {
+  display: inline-flex;
+  inline-size: var(--space-8);
+  block-size: var(--space-8);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+
+  /* The 'H' glyph is text-on-color, so it uses the AA-safe --color-action /
+     --color-on-action pair (5.23:1 light, 7.70:1 dark) rather than --color-brand
+     (white-on-teal = 3.06:1 in light). It is aria-hidden + decorative, but
+     keeping it ≥4.5:1 means every text-on-color pair in the component is truthful
+     to the 'AA for both themes' contract. */
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-extrabold);
+}
+
+/* --------------------------------------------------------------------------
+   Link list — the primary horizontal navigation. A plain <ul>; we strip list
+   chrome and lay it out as a cluster.
+   -------------------------------------------------------------------------- */
+.hisd-navbar__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hisd-navbar__item {
+  display: flex;
+}
+
+/* --------------------------------------------------------------------------
+   Link — the navigable item. Default rests on the bar; hover raises the
+   surface; active uses AA-safe --color-action text with a 2px --color-brand
+   underline (aria-current). A transparent 2px bottom border at rest reserves
+   space so the active underline never shifts layout.
+   -------------------------------------------------------------------------- */
+.hisd-navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  min-block-size: var(--space-6); /* ≥24px target */
+  padding-inline: var(--space-3);
+  padding-block: var(--space-2);
+
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  color: var(--hisd-navbar-link-fg);
+  text-decoration: none;
+  white-space: nowrap;
+
+  background-color: transparent;
+  border: 0;
+  border-block-end: 2px solid transparent; /* reserves the active underline */
+  border-radius: var(--radius-sm);
+
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-navbar__link:hover {
+  background-color: var(--hisd-navbar-link-bg-hover);
+  color: var(--color-text);
+}
+
+.hisd-navbar__link:active {
+  background-color: var(--hisd-navbar-link-bg-active);
+  color: var(--color-text);
+}
+
+.hisd-navbar__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Active link — AA-safe --color-action text + a 2px --color-brand underline.
+   Driven by aria-current="page" so the styling and the a11y signal can never
+   drift. The brand stays the visual accent via the underline marker while the
+   text token clears 4.5:1 on --color-surface in both themes. */
+.hisd-navbar__link[aria-current="page"] {
+  color: var(--hisd-navbar-link-fg-active);
+  border-block-end-color: var(--hisd-navbar-link-marker);
+  font-weight: var(--weight-semibold);
+}
+
+.hisd-navbar__link[aria-current="page"]:hover {
+  color: var(--hisd-navbar-link-fg-active);
+  border-block-end-color: var(--hisd-navbar-link-marker);
+}
+
+/* --------------------------------------------------------------------------
+   Trailing actions cluster (e.g. a sign-in button slot) + the hamburger.
+   -------------------------------------------------------------------------- */
+.hisd-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Hamburger — icon-only trigger, hidden on wide viewports, shown ≤48rem.
+   Carries aria-label + aria-expanded + aria-controls in markup. The glyph is a
+   currentColor SVG data-URI mask so its color tracks the text token with no
+   raw hex anywhere.
+   -------------------------------------------------------------------------- */
+.hisd-navbar__toggle {
+  display: none; /* shown by the mobile media query */
+  align-items: center;
+  justify-content: center;
+
+  inline-size: var(--space-10); /* 2.5rem = 40px target (>24px min) */
+  block-size: var(--space-10);
+  padding: var(--space-2);
+
+  background-color: transparent;
+  color: var(--color-text);
+  border: var(--space-px) solid transparent;
+  border-radius: var(--radius-md);
+
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-navbar__toggle:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+
+.hisd-navbar__toggle:active {
+  background-color: var(--color-surface-active);
+  border-color: var(--color-border);
+}
+
+.hisd-navbar__toggle:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Icon — drawn with currentColor so it inherits the trigger text color.
+   mask-image keeps the single allowed exception (a monochrome SVG data-URI)
+   while the painted fill is the token-driven currentColor. */
+.hisd-navbar__toggle-icon {
+  display: block;
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-navbar-icon-menu) center / contain no-repeat;
+  mask: var(--hisd-navbar-icon-menu) center / contain no-repeat;
+}
+
+.hisd-navbar {
+  --hisd-navbar-icon-menu: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 6h18M3 12h18M3 18h18'/%3E%3C/svg%3E");
+  --hisd-navbar-icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   Drawer — the mobile overlay. role="dialog" in markup. Hidden by default and
+   on wide viewports; on narrow viewports it is revealed when the host carries
+   data-open="true". Composed of a scrim + a panel that slides in from the
+   inline-end (see the panel's rest/open transforms below, which flip for RTL
+   via :dir() so the slide always originates from the inline-end edge).
+   -------------------------------------------------------------------------- */
+.hisd-navbar__drawer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+/* Open only matters at mobile widths; the media query below switches it on. */
+
+.hisd-navbar__scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-surface-inverse);
+  opacity: 0.6;
+}
+
+.hisd-navbar__panel {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  inline-size: min(20rem, 86%);
+  max-inline-size: 100%;
+  padding: var(--space-5);
+
+  background-color: var(--color-surface);
+  border-inline-start: var(--space-px) solid var(--color-border);
+  box-shadow: var(--shadow-3);
+
+  overflow-y: auto;
+
+  /* Rest state: parked off-screen past the inline-end edge. Because the panel
+     is pinned to inset-inline-end: 0, +100% (LTR) hides it to the right and the
+     :dir(rtl) override below flips to -100% so it hides to the left — i.e. it
+     always rests beyond the inline-end edge and slides toward inline-start when
+     opened. (X-axis translate is direction-agnostic here precisely because the
+     sign is flipped per writing direction, honoring the logical-properties rule.) */
+  transform: translateX(100%);
+}
+
+[dir="rtl"] .hisd-navbar__panel,
+.hisd-navbar__panel:dir(rtl) {
+  transform: translateX(-100%);
+}
+
+.hisd-navbar__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block-end: var(--space-3);
+  border-block-end: var(--space-px) solid var(--color-border);
+}
+
+.hisd-navbar__panel-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Close button — icon-only, carries aria-label in markup. */
+.hisd-navbar__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  inline-size: var(--space-10); /* 2.5rem = 40px target */
+  block-size: var(--space-10);
+  padding: var(--space-2);
+
+  background-color: transparent;
+  color: var(--color-text);
+  border: var(--space-px) solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-navbar__close:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+
+.hisd-navbar__close:active {
+  background-color: var(--color-surface-active);
+  border-color: var(--color-border);
+}
+
+.hisd-navbar__close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.hisd-navbar__close-icon {
+  display: block;
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-navbar-icon-close) center / contain no-repeat;
+  mask: var(--hisd-navbar-icon-close) center / contain no-repeat;
+}
+
+/* Drawer link list — vertical stack inside the panel. */
+.hisd-navbar__panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hisd-navbar__panel-link {
+  display: flex;
+  align-items: center;
+
+  min-block-size: var(--space-10); /* generous 40px stacked target */
+  padding-inline: var(--space-3);
+  padding-block: var(--space-2);
+
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  text-decoration: none;
+
+  background-color: transparent;
+  border: 0;
+  /* Active marker as an inline-start bar so vertical items echo the contract
+     without shifting layout. */
+  border-inline-start: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-navbar__panel-link:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.hisd-navbar__panel-link:active {
+  background-color: var(--color-surface-active);
+}
+
+.hisd-navbar__panel-link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Active drawer link — same contract as the horizontal active link: AA-safe
+   --color-action text with the brand carried by the inline-start marker bar. */
+.hisd-navbar__panel-link[aria-current="page"] {
+  color: var(--hisd-navbar-link-fg-active);
+  border-inline-start-color: var(--hisd-navbar-link-marker);
+  font-weight: var(--weight-semibold);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile collapse — ≤48rem (768px): hide the horizontal list, reveal the
+   hamburger, and let the drawer open when data-open="true".
+   -------------------------------------------------------------------------- */
+@media (max-width: 48rem) {
+  .hisd-navbar__list {
+    display: none;
+  }
+  .hisd-navbar__toggle {
+    display: inline-flex;
+  }
+  .hisd-navbar[data-open="true"] .hisd-navbar__drawer {
+    display: block;
+  }
+}
+
+/* The drawer slides in when motion is allowed. The panel rests off-screen past
+   the inline-end edge (transform above); opening resets it to translateX(0) so
+   it slides toward inline-start into view. The reduced-motion block below
+   neutralizes the transition (the open/closed transform still applies, the
+   change is just instantaneous). */
+.hisd-navbar__panel {
+  transition: transform var(--duration-base) var(--ease-emphasized);
+}
+
+@media (max-width: 48rem) {
+  .hisd-navbar[data-open="true"] .hisd-navbar__panel,
+  [dir="rtl"] .hisd-navbar[data-open="true"] .hisd-navbar__panel,
+  .hisd-navbar[data-open="true"] .hisd-navbar__panel:dir(rtl) {
+    transform: translateX(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Dark theme — structural-only scoping. NO raw colors: every value above
+   already resolves through semantic tokens that flip under [data-theme="dark"].
+   Dark surfaces lose the resting shadow in favor of the border per the
+   dark-mode elevation rule.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] .hisd-navbar {
+  box-shadow: var(--shadow-0);
+}
+
+[data-theme="dark"] .hisd-navbar__panel {
+  box-shadow: var(--shadow-2);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable link/toggle/drawer transitions. (The theme file
+   already zeroes the --duration-* tokens; this belt-and-braces the rule.)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-navbar__link,
+  .hisd-navbar__toggle,
+  .hisd-navbar__close,
+  .hisd-navbar__panel-link,
+  .hisd-navbar__panel {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast) — keep the component usable when the
+   OS flattens backgrounds. forced-color-adjust stays AT THE DEFAULT (auto) so
+   system colors take over; we only (1) keep every focus ring visible with a
+   system color, (2) ensure the current-page state is carried by a BORDER (not
+   background alone) so it survives the flatten, and (3) read disabled chrome as
+   disabled via GrayText. All values are CSS system-color keywords — no hex.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* The bar's hairline + the panel border map to the system frame color. */
+  .hisd-navbar {
+    border-block-end-color: CanvasText;
+  }
+  .hisd-navbar__panel {
+    border-inline-start-color: CanvasText;
+  }
+  .hisd-navbar__panel-header {
+    border-block-end-color: CanvasText;
+  }
+
+  /* Focus rings: never lose the ring; pin it to the system Highlight color. */
+  .hisd-navbar__skip-link:focus,
+  .hisd-navbar__skip-link:focus-visible,
+  .hisd-navbar__brand:focus-visible,
+  .hisd-navbar__link:focus-visible,
+  .hisd-navbar__toggle:focus-visible,
+  .hisd-navbar__close:focus-visible,
+  .hisd-navbar__panel-link:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Current page — the brand underline/marker bar collapses to a system color
+     when backgrounds are flattened, so pin the marker to Highlight so the
+     active item stays distinguishable by its border, not by any tint. */
+  .hisd-navbar__link[aria-current="page"],
+  .hisd-navbar__link[aria-current="page"]:hover {
+    border-block-end-color: Highlight;
+  }
+  .hisd-navbar__panel-link[aria-current="page"] {
+    border-inline-start-color: Highlight;
+  }
+
+  /* Icon buttons get a visible system border so their hit area reads in HC,
+     where the transparent rest border would otherwise disappear. */
+  .hisd-navbar__toggle,
+  .hisd-navbar__close {
+    border-color: ButtonText;
+  }
+  .hisd-navbar__toggle:hover,
+  .hisd-navbar__close:hover,
+  .hisd-navbar__toggle:active,
+  .hisd-navbar__close:active {
+    border-color: Highlight;
+  }
+
+  /* Disabled interactive items read as disabled via GrayText. */
+  .hisd-navbar__link:disabled,
+  .hisd-navbar__toggle:disabled,
+  .hisd-navbar__close:disabled,
+  .hisd-navbar__panel-link[aria-disabled="true"] {
+    color: GrayText;
+    border-color: GrayText;
+  }
+}

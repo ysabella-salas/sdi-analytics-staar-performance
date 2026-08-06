@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Modal / Overlay — component demo</title>
+
+  <!-- Theme tokens FIRST, then the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="modal.css">
+
+  <style>
+    /* Demo-page scaffolding only — not part of the component. Uses tokens. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .demo-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: stretch;
+      padding: var(--space-6);
+    }
+    .demo-panel {
+      flex: 1 1 24rem;
+      min-inline-size: 0;
+      box-sizing: border-box;
+      padding: var(--space-6);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .demo-panel > h2 {
+      margin-block: 0 var(--space-4);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-row {
+      margin-block-end: var(--space-5);
+    }
+    .demo-row > h3 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle);
+    }
+    .demo-row > p {
+      margin-block: 0 var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    /* Demo trigger buttons reuse the component's self-contained button tokens. */
+    .demo-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-inline-size: 5rem;
+      min-block-size: var(--space-6);
+      padding-inline: var(--space-4);
+      padding-block: var(--space-2);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-tight);
+      background-color: var(--color-action);
+      color: var(--color-on-action);
+      border: var(--space-px) solid var(--color-action);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: background-color var(--duration-fast) var(--ease-standard);
+    }
+    .demo-trigger:hover { background-color: var(--color-action-hover); border-color: var(--color-action-hover); }
+    .demo-trigger--danger { background-color: var(--color-danger); border-color: var(--color-danger); color: var(--color-text-on-accent); }
+    .demo-trigger:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    .page-head {
+      padding: var(--space-6) var(--space-6) 0;
+    }
+    .page-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-text);
+    }
+    .page-head p {
+      margin-block: var(--space-2) 0;
+      max-inline-size: 72ch;
+      color: var(--color-text-muted);
+    }
+    .snippet {
+      margin: var(--space-6);
+      padding: var(--space-5);
+      background-color: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .snippet h2 {
+      margin-block: 0 var(--space-3);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+    .snippet pre {
+      margin: 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+    .demo-visually-hidden {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>HISD Modal / Overlay</h1>
+    <p>
+      Modals are blocking dialogs. Root is
+      <code>role="dialog" aria-modal="true" aria-labelledby</code>; the overlay
+      is <code>--color-surface-inverse</code> at 60% opacity; the panel is
+      <code>--color-surface</code>, <code>--radius-xl</code>,
+      <code>--shadow-4</code>, max 512px. Focus is trapped on open and returned
+      to the trigger on close. <strong>Non-destructive</strong> modals dismiss on
+      Escape or backdrop click; the <strong>destructive-confirm</strong> variant
+      ignores both and requires an explicit Confirm. The right panel is forced to
+      <code>data-theme="dark"</code> — the component inherits dark purely through
+      semantic tokens. Entrance animates scale .95→1 + opacity over
+      <code>--duration-base</code>, skipped under
+      <code>prefers-reduced-motion</code>.
+    </p>
+  </header>
+
+  <!-- Single polite live region: announces open/close + confirm outcomes. -->
+  <div id="modal-live" class="demo-visually-hidden" role="status" aria-live="polite"></div>
+
+  <div class="demo-wrap">
+
+    <!-- ============================ LIGHT ============================ -->
+    <section class="demo-panel" data-theme="light" aria-label="Modal states in light theme">
+      <h2>Light theme</h2>
+
+      <div class="demo-row">
+        <h3>Non-destructive (Escape &amp; backdrop dismiss)</h3>
+        <p>A standard information / confirmation dialog. Tab cycles within the
+          trap, Shift+Tab reverses, Escape closes, focus returns to this button.</p>
+        <button type="button" class="demo-trigger" data-modal-open="l-modal-info">
+          Edit student profile
+        </button>
+      </div>
+
+      <div class="demo-row">
+        <h3>Destructive confirm (ignores Escape &amp; backdrop)</h3>
+        <p>Reserved for irreversible actions. Escape and backdrop clicks are
+          ignored; only the explicit Cancel or Delete buttons close it.</p>
+        <button type="button" class="demo-trigger demo-trigger--danger" data-modal-open="l-modal-delete">
+          Remove enrollment…
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================ DARK ============================ -->
+    <section class="demo-panel" data-theme="dark" aria-label="Modal states in dark theme">
+      <h2>Dark theme</h2>
+
+      <div class="demo-row">
+        <h3>Non-destructive (Escape &amp; backdrop dismiss)</h3>
+        <p>Same component, dark tokens. No component-specific dark CSS — the
+          surface, overlay, shadow, and text all flip via semantic tokens.</p>
+        <button type="button" class="demo-trigger" data-modal-open="d-modal-info">
+          Edit student profile
+        </button>
+      </div>
+
+      <div class="demo-row">
+        <h3>Destructive confirm (ignores Escape &amp; backdrop)</h3>
+        <p>A leading warning glyph, the danger accent, and the heading copy
+          carry the meaning — not color alone. Confirm is required to proceed.</p>
+        <button type="button" class="demo-trigger demo-trigger--danger" data-modal-open="d-modal-delete">
+          Remove enrollment…
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ====================================================================
+       MODAL INSTANCES (rendered once, near the end of <body>).
+       Each carries [hidden] until opened. role/aria-modal/aria-labelledby
+       are on the root .hisd-modal[role="dialog"]. The panel is the focus
+       landing target (tabindex="-1"). Destructive variants are marked with
+       data-modal-destructive so the script blocks Escape + backdrop.
+       Each lives inside a [data-theme] wrapper so the overlay matches its
+       trigger's theme even though it is portalled to the page end.
+       ==================================================================== -->
+
+  <!-- ---- LIGHT: non-destructive ---- -->
+  <div data-theme="light">
+    <div class="hisd-modal" id="l-modal-info" role="dialog" aria-modal="true"
+         aria-labelledby="l-modal-info-title" aria-describedby="l-modal-info-desc" hidden>
+      <div class="hisd-modal__panel" tabindex="-1">
+        <header class="hisd-modal__header">
+          <h2 class="hisd-modal__title" id="l-modal-info-title">Edit student profile</h2>
+          <button type="button" class="hisd-modal__close" data-modal-close aria-label="Close dialog">
+            <span class="hisd-modal__close-icon" aria-hidden="true"></span>
+          </button>
+        </header>
+        <div class="hisd-modal__body" id="l-modal-info-desc">
+          <p>Update the contact details on file for this student. Changes are
+            saved to the district record and shared with the campus office.</p>
+          <p>Preferred language and emergency-contact fields support text
+            expansion for Spanish-language entries.</p>
+        </div>
+        <footer class="hisd-modal__footer">
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--secondary" data-modal-close>Cancel</button>
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--action" data-modal-confirm>Save changes</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- LIGHT: destructive confirm ---- -->
+  <div data-theme="light">
+    <div class="hisd-modal hisd-modal--destructive" id="l-modal-delete" role="alertdialog" aria-modal="true"
+         aria-labelledby="l-modal-delete-title" aria-describedby="l-modal-delete-desc"
+         data-modal-destructive hidden>
+      <div class="hisd-modal__panel" tabindex="-1">
+        <header class="hisd-modal__header">
+          <h2 class="hisd-modal__title" id="l-modal-delete-title">
+            <span class="hisd-modal__title-icon" aria-hidden="true"></span>
+            <span class="hisd-modal__title-text">Remove enrollment?</span>
+          </h2>
+        </header>
+        <div class="hisd-modal__body" id="l-modal-delete-desc">
+          <p>This permanently removes the student from the 2026–2027 roster.
+            This action cannot be undone and Escape will not dismiss it — choose
+            an option below.</p>
+        </div>
+        <footer class="hisd-modal__footer">
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--secondary" data-modal-close>Cancel</button>
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--danger" data-modal-confirm>Remove enrollment</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- DARK: non-destructive ---- -->
+  <div data-theme="dark">
+    <div class="hisd-modal" id="d-modal-info" role="dialog" aria-modal="true"
+         aria-labelledby="d-modal-info-title" aria-describedby="d-modal-info-desc" hidden>
+      <div class="hisd-modal__panel" tabindex="-1">
+        <header class="hisd-modal__header">
+          <h2 class="hisd-modal__title" id="d-modal-info-title">Edit student profile</h2>
+          <button type="button" class="hisd-modal__close" data-modal-close aria-label="Close dialog">
+            <span class="hisd-modal__close-icon" aria-hidden="true"></span>
+          </button>
+        </header>
+        <div class="hisd-modal__body" id="d-modal-info-desc">
+          <p>Update the contact details on file for this student. Changes are
+            saved to the district record and shared with the campus office.</p>
+          <p>Preferred language and emergency-contact fields support text
+            expansion for Spanish-language entries.</p>
+        </div>
+        <footer class="hisd-modal__footer">
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--secondary" data-modal-close>Cancel</button>
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--action" data-modal-confirm>Save changes</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- DARK: destructive confirm ---- -->
+  <div data-theme="dark">
+    <div class="hisd-modal hisd-modal--destructive" id="d-modal-delete" role="alertdialog" aria-modal="true"
+         aria-labelledby="d-modal-delete-title" aria-describedby="d-modal-delete-desc"
+         data-modal-destructive hidden>
+      <div class="hisd-modal__panel" tabindex="-1">
+        <header class="hisd-modal__header">
+          <h2 class="hisd-modal__title" id="d-modal-delete-title">
+            <span class="hisd-modal__title-icon" aria-hidden="true"></span>
+            <span class="hisd-modal__title-text">Remove enrollment?</span>
+          </h2>
+        </header>
+        <div class="hisd-modal__body" id="d-modal-delete-desc">
+          <p>This permanently removes the student from the 2026–2027 roster.
+            This action cannot be undone and Escape will not dismiss it — choose
+            an option below.</p>
+        </div>
+        <footer class="hisd-modal__footer">
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--secondary" data-modal-close>Cancel</button>
+          <button type="button" class="hisd-modal__btn hisd-modal__btn--danger" data-modal-confirm>Remove enrollment</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ SNIPPET ============================ -->
+  <section class="snippet" aria-label="Copy-paste markup">
+    <h2>Copy-paste snippet</h2>
+    <pre><code>&lt;!-- Trigger: any focusable control. data-modal-open points at the dialog id. --&gt;
+&lt;button type="button" class="hisd-modal__btn hisd-modal__btn--action"
+        data-modal-open="modal-info"&gt;Edit student profile&lt;/button&gt;
+
+&lt;!-- Dialog: rendered once near the end of &lt;body&gt;, [hidden] until opened. --&gt;
+&lt;div class="hisd-modal" id="modal-info" role="dialog" aria-modal="true"
+     aria-labelledby="modal-info-title" aria-describedby="modal-info-desc" hidden&gt;
+  &lt;div class="hisd-modal__panel" tabindex="-1"&gt;
+    &lt;header class="hisd-modal__header"&gt;
+      &lt;h2 class="hisd-modal__title" id="modal-info-title"&gt;Edit student profile&lt;/h2&gt;
+      &lt;button type="button" class="hisd-modal__close" data-modal-close
+              aria-label="Close dialog"&gt;
+        &lt;span class="hisd-modal__close-icon" aria-hidden="true"&gt;&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/header&gt;
+    &lt;div class="hisd-modal__body" id="modal-info-desc"&gt;
+      Dialog content…
+    &lt;/div&gt;
+    &lt;footer class="hisd-modal__footer"&gt;
+      &lt;button type="button" class="hisd-modal__btn hisd-modal__btn--secondary"
+              data-modal-close&gt;Cancel&lt;/button&gt;
+      &lt;button type="button" class="hisd-modal__btn hisd-modal__btn--action"
+              data-modal-confirm&gt;Save changes&lt;/button&gt;
+    &lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Destructive variant: role="alertdialog", add hisd-modal--destructive AND
+     data-modal-destructive. The script then ignores Escape + backdrop clicks;
+     only an explicit button closes it. --&gt;
+&lt;div class="hisd-modal hisd-modal--destructive" id="modal-delete"
+     role="alertdialog" aria-modal="true" aria-labelledby="modal-delete-title"
+     data-modal-destructive hidden&gt;
+  …
+  &lt;button type="button" class="hisd-modal__btn hisd-modal__btn--danger"
+          data-modal-confirm&gt;Remove enrollment&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Keyboard (WAI-ARIA APG "Dialog"): focus moves into the panel on open;
+     Tab / Shift+Tab cycle within the trap; Escape closes NON-destructive
+     dialogs; focus returns to the trigger on close. --&gt;</code></pre>
+  </section>
+
+  <script>
+    // ======================================================================
+    // HISD Modal — WAI-ARIA APG "Dialog (Modal)".
+    //  - Open: reveal the dialog, move focus into the panel, trap Tab focus.
+    //  - Close: hide the dialog, return focus to the triggering element.
+    //  - Tab / Shift+Tab cycle through focusable descendants only (trap).
+    //  - Escape closes NON-destructive dialogs; destructive ones ignore it
+    //    (and backdrop clicks) and require an explicit button.
+    //  - Animation is driven by .is-open / .is-closing; the actual hide waits
+    //    for the transition to end (or fires immediately under reduced motion).
+    // ======================================================================
+    (function () {
+      var liveRegion = document.getElementById('modal-live');
+      var FOCUSABLE = [
+        'a[href]', 'button:not([disabled])', 'input:not([disabled])',
+        'select:not([disabled])', 'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(',');
+
+      var activeDialog = null;   // currently-open .hisd-modal
+      var returnTarget = null;   // element to restore focus to on close
+
+      function announce(msg) {
+        if (liveRegion) { liveRegion.textContent = msg; }
+      }
+
+      function focusableIn(dialog) {
+        return Array.prototype.filter.call(
+          dialog.querySelectorAll(FOCUSABLE),
+          function (el) {
+            // Skip elements that are not actually rendered/visible.
+            return el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement;
+          }
+        );
+      }
+
+      function reducedMotion() {
+        return window.matchMedia &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      }
+
+      function openDialog(dialog, trigger) {
+        if (activeDialog) { return; }
+        activeDialog = dialog;
+        returnTarget = trigger || document.activeElement;
+
+        dialog.hidden = false;
+        // Force a reflow so the .is-open transition runs from the start state.
+        // eslint-disable-next-line no-unused-expressions
+        dialog.offsetHeight;
+        dialog.classList.add('is-open');
+
+        // Land focus on the panel (or first focusable control as a fallback).
+        var panel = dialog.querySelector('.hisd-modal__panel');
+        var first = focusableIn(dialog)[0];
+        if (panel) { panel.focus(); }
+        else if (first) { first.focus(); }
+
+        announce(
+          (dialog.querySelector('.hisd-modal__title') || {}).textContent
+            ? dialog.querySelector('.hisd-modal__title').textContent.trim() + ' dialog opened'
+            : 'Dialog opened'
+        );
+      }
+
+      function finishClose(dialog) {
+        dialog.hidden = true;
+        dialog.classList.remove('is-closing');
+        if (returnTarget && typeof returnTarget.focus === 'function') {
+          returnTarget.focus();
+        }
+        activeDialog = null;
+        returnTarget = null;
+      }
+
+      function closeDialog(dialog, outcome) {
+        if (!dialog || dialog !== activeDialog) { return; }
+        dialog.classList.remove('is-open');
+        dialog.classList.add('is-closing');
+        announce(outcome || 'Dialog closed');
+
+        if (reducedMotion()) {
+          finishClose(dialog);
+          return;
+        }
+        // Wait for the panel's transform/opacity transition to finish.
+        var panel = dialog.querySelector('.hisd-modal__panel');
+        var done = false;
+        function onEnd() {
+          if (done) { return; }
+          done = true;
+          panel.removeEventListener('transitionend', onEnd);
+          finishClose(dialog);
+        }
+        if (panel) {
+          panel.addEventListener('transitionend', onEnd);
+          // Safety net if transitionend never fires (e.g. zero-duration).
+          window.setTimeout(onEnd, 400);
+        } else {
+          finishClose(dialog);
+        }
+      }
+
+      function isDestructive(dialog) {
+        return dialog.hasAttribute('data-modal-destructive');
+      }
+
+      // ---- Wiring: open triggers -----------------------------------------
+      document.querySelectorAll('[data-modal-open]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var id = trigger.getAttribute('data-modal-open');
+          var dialog = document.getElementById(id);
+          if (dialog) { openDialog(dialog, trigger); }
+        });
+      });
+
+      // ---- Wiring: close + confirm controls ------------------------------
+      document.querySelectorAll('.hisd-modal').forEach(function (dialog) {
+        dialog.querySelectorAll('[data-modal-close]').forEach(function (btn) {
+          btn.addEventListener('click', function () { closeDialog(dialog, 'Dialog dismissed'); });
+        });
+        dialog.querySelectorAll('[data-modal-confirm]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            // In a real app, run the action here. The demo just announces it.
+            closeDialog(dialog, btn.textContent.trim() + ' confirmed');
+          });
+        });
+
+        // Backdrop click: only closes NON-destructive dialogs, and only when
+        // the click lands on the overlay itself (not the panel).
+        dialog.addEventListener('mousedown', function (event) {
+          if (event.target === dialog && !isDestructive(dialog)) {
+            closeDialog(dialog, 'Dialog dismissed');
+          }
+        });
+      });
+
+      // ---- Global keydown: focus trap + Escape ---------------------------
+      document.addEventListener('keydown', function (event) {
+        if (!activeDialog) { return; }
+
+        if (event.key === 'Escape') {
+          // Escape dismisses NON-destructive dialogs only (contract).
+          if (!isDestructive(activeDialog)) {
+            event.preventDefault();
+            closeDialog(activeDialog, 'Dialog dismissed');
+          }
+          return;
+        }
+
+        if (event.key !== 'Tab') { return; }
+
+        // Trap Tab focus within the dialog's focusable descendants.
+        var items = focusableIn(activeDialog);
+        if (items.length === 0) {
+          // Nothing tabbable: keep focus on the panel.
+          event.preventDefault();
+          var panel = activeDialog.querySelector('.hisd-modal__panel');
+          if (panel) { panel.focus(); }
+          return;
+        }
+
+        var first = items[0];
+        var last = items[items.length - 1];
+        var current = document.activeElement;
+        var onPanel = current === activeDialog.querySelector('.hisd-modal__panel');
+
+        if (event.shiftKey) {
+          if (current === first || onPanel) {
+            event.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (current === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

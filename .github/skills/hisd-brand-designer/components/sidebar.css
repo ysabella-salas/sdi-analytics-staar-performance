@@ -1,0 +1,223 @@
+/* HISD Sidebar Navigation — reusable component styles.
+   Depends on hisd-theme.css for all tokens. Dark theme is inherited
+   automatically from an ancestor [data-theme="dark"]; this file ships
+   no component-specific dark-mode colors.
+
+   Contract (Components.md › Navigation + Accessibility Contract):
+   - Root renders as <nav aria-label="…">.
+   - Active link: text --color-action (AA-passing brand-on-light token; teal-700
+     in light / teal-400 in dark), border-inline-start 3px solid --color-action,
+     aria-current="page". (--color-brand fails AA for the small-text label and the
+     non-text rail on the light sunken rail, so the action token carries both.)
+   - Hover: background --color-surface-raised.
+   - Grouped sections with headings supported.
+   - Logical inline-start throughout so it mirrors correctly in RTL.
+   All colors are semantic var(--color-…) / ramp var(--hisd-…) tokens. */
+
+.hisd-sidebar {
+  /* Sunken surface so a raised-surface hover/active reads against the rail.
+     (--color-surface-raised == --color-surface in light, so the rail must
+     sit one elevation lower for hover to be visible.) */
+  background: var(--color-surface-sunken);
+  color: var(--color-text);
+  border-inline-end: 1px solid var(--color-border);
+  inline-size: 16rem;
+  max-inline-size: 100%;
+  padding-block: var(--space-4);
+  padding-inline: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  box-sizing: border-box;
+}
+
+/* ---- Grouped sections ---------------------------------------------------- */
+
+.hisd-sidebar__group {
+  margin-block-end: var(--space-5);
+}
+
+.hisd-sidebar__group:last-child {
+  margin-block-end: var(--space-0);
+}
+
+.hisd-sidebar__heading {
+  margin-block: var(--space-0) var(--space-2);
+  padding-inline: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  /* --color-text-muted (6.07:1 on the --color-surface-sunken rail in light,
+     9.88:1 in dark) clears the 4.5:1 normal-text floor; --color-text-subtle
+     would only reach 3.75:1 on the rail in light. */
+  color: var(--color-text-muted);
+}
+
+/* ---- List + items -------------------------------------------------------- */
+
+.hisd-sidebar__list {
+  list-style: none;
+  margin-block: var(--space-0);
+  padding-inline: var(--space-0);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-px);
+}
+
+.hisd-sidebar__item {
+  margin-block: var(--space-0);
+}
+
+/* ---- Link ---------------------------------------------------------------- */
+
+.hisd-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  /* ≥24px target: line-height + block padding clears the WCAG 2.2 minimum. */
+  min-block-size: var(--space-6); /* 1.5rem = 24px */
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  /* Transparent inline-start accent reserves space so active items do not
+     shift the label; mirrors automatically in RTL via the logical border. */
+  border-inline-start: 3px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-standard),
+              color var(--duration-fast) var(--ease-standard);
+}
+
+/* Hover — background --color-surface-raised per the contract. */
+.hisd-sidebar__link:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+/* Focus — visible ring, never suppressed without a replacement. */
+.hisd-sidebar__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Active link — aria-current="page" is the source of truth so the visual
+   state and the accessibility state can never drift apart. */
+.hisd-sidebar__link[aria-current="page"] {
+  /* --color-action is the AA-passing brand-on-light token: label reaches
+     5.23:1 on the raised surface in light (--color-brand was only 3.06:1),
+     and the 3px accent rail reaches 4.53:1 on the sunken rail in light,
+     clearing the 3:1 non-text minimum (--color-brand was 2.65:1). */
+  color: var(--color-action);
+  border-inline-start-color: var(--color-action);
+  background: var(--color-surface-raised);
+  font-weight: var(--weight-semibold);
+}
+
+.hisd-sidebar__link[aria-current="page"]:hover {
+  color: var(--color-action);
+}
+
+/* Disabled link (rendered as <a aria-disabled> or <span>). */
+.hisd-sidebar__link[aria-disabled="true"] {
+  color: var(--color-text-subtle);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ---- Leading icon (optional) -------------------------------------------- */
+
+.hisd-sidebar__icon {
+  flex: none;
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+  /* Icons are monochrome and inherit the link's text color. */
+  color: currentColor;
+}
+
+.hisd-sidebar__label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ---- Trailing badge (optional count / status) --------------------------- */
+
+.hisd-sidebar__badge {
+  flex: none;
+  min-inline-size: var(--space-5);
+  padding-inline: var(--space-2);
+  padding-block: var(--space-0\.5);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  text-align: center;
+}
+
+.hisd-sidebar__link[aria-current="page"] .hisd-sidebar__badge {
+  /* --color-action fill keeps --color-text-on-accent at 5.23:1 in light and
+     7.70:1 in dark; --color-brand fill was only 3.06:1 in light. */
+  background: var(--color-action);
+  color: var(--color-text-on-accent);
+}
+
+/* ---- Reduced motion ------------------------------------------------------ */
+/* hisd-theme.css already zeroes the --duration-* tokens under reduced motion,
+   so the transition above collapses to 0ms. This block removes the
+   transition entirely as a belt-and-suspenders guarantee. */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-sidebar__link {
+    transition: none;
+  }
+}
+
+/* ---- Forced colors (Windows High Contrast) ------------------------------ */
+/* In forced-colors mode the OS flattens our backgrounds, so state that relied
+   on a background tint (hover, active) must also carry a border/outline. We let
+   system colors take over by default (forced-color-adjust stays auto) and only
+   restate what would otherwise be lost. */
+@media (forced-colors: active) {
+  /* Keep the rail and its separator legible as system surfaces. */
+  .hisd-sidebar {
+    border-inline-end-color: CanvasText;
+  }
+
+  /* Hover/focus need a visible outline since the raised-surface tint is gone. */
+  .hisd-sidebar__link:hover {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+
+  /* Preserve the focus ring with a system color. */
+  .hisd-sidebar__link:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Active/current item: the background tint is flattened, so carry the state
+     on the inline-start rail AND an outline so it stays distinguishable. */
+  .hisd-sidebar__link[aria-current="page"] {
+    border-inline-start-color: Highlight;
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+
+  /* Disabled reads as disabled via GrayText. */
+  .hisd-sidebar__link[aria-disabled="true"] {
+    color: GrayText;
+    opacity: 1;
+  }
+
+  /* Badge: give it a border so the pill is visible without its background fill,
+     and let the current-item badge invert with system selection colors. */
+  .hisd-sidebar__badge {
+    border: 1px solid CanvasText;
+  }
+
+  .hisd-sidebar__link[aria-current="page"] .hisd-sidebar__badge {
+    border-color: Highlight;
+  }
+}

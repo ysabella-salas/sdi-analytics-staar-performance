@@ -1,0 +1,310 @@
+/* ==========================================================================
+   HISD Pagination — reusable component styles
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css             (token names + light/dark values)
+     - Docs/Design-System/Components.md  (Components + Accessibility Contract)
+     - reference/Conventions.md          (token usage rules)
+
+   Contract:
+     Root        <nav> wrapping page links/buttons; aria-label ends in the
+                 word "pagination" (e.g. "Search results pagination") so the
+                 landmark name carries the APG pattern while distinguishing
+                 multiple pagination navs on one page.
+     Active      bg --color-action, text --color-on-action, aria-current="page".
+     Prev/Next   <button> with aria-label; disabled at the first/last bound.
+     Ellipsis    aria-hidden gap marker for elided page ranges.
+     Targets     every interactive control is >=24px (WCAG 2.2 SC 2.5.8).
+
+   Rules honored here:
+     - Every color is a semantic var(--color-…) or ramp var(--hisd-…) token.
+       Zero raw hex / rgb / hsl / named colors. The only non-token color is the
+       monochrome chevron icon, drawn as an SVG mask filled with currentColor.
+     - Spacing / radius / type / shadow / motion come from tokens only
+       (allowed literals: 0, 1px borders, percentages, outline widths).
+     - CSS logical properties only (padding-inline, margin-block,
+       border-inline-start, inset-inline-…) — no physical left/right.
+     - Visible focus ring on every interactive element; never bare outline:none.
+     - Dark theme inherits from an ancestor [data-theme="dark"] via semantic
+       tokens — no component-specific dark-mode color values.
+     - Motion references --duration-* / --ease-* and is disabled under
+       prefers-reduced-motion: reduce.
+
+   States covered: page (rest), active, hover, focus-visible,
+   disabled-bound (prev/next at edges), ellipsis.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Component-scoped tokens — resolve to semantic tokens only (Conventions
+   tier 3). A consumer can retheme one pagination instance by overriding these
+   without touching the rule bodies.
+   -------------------------------------------------------------------------- */
+.hisd-pagination {
+  --hisd-pagination-fg: var(--color-text);
+  --hisd-pagination-fg-muted: var(--color-text-muted);
+  --hisd-pagination-bg: transparent;
+  /* State-ladder tokens for this NON-filled interactive surface (page links,
+     prev/next buttons): hover tint + pressed tint. */
+  --hisd-pagination-bg-hover: var(--color-surface-hover);
+  --hisd-pagination-bg-active: var(--color-surface-active);
+  --hisd-pagination-border: var(--color-border);
+  --hisd-pagination-active-bg: var(--color-action);
+  --hisd-pagination-active-fg: var(--color-on-action);
+  --hisd-pagination-active-bg-hover: var(--color-action-hover);
+  --hisd-pagination-ellipsis-fg: var(--color-text-subtle);
+  /* Min interactive target (WCAG 2.2 SC 2.5.8). 24px = --space-6. */
+  --hisd-pagination-min-size: var(--space-6);
+
+  display: block;
+  font-family: var(--font-sans);
+}
+
+/* --------------------------------------------------------------------------
+   The list — a single horizontal, wrapping row of page controls. Wrapping
+   (rather than scroll) keeps every page reachable on narrow viewports and
+   tolerates >=40% text expansion. List semantics are kept; the markup uses
+   role="list" on a reset <ul> so VoiceOver still announces item counts.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hisd-pagination__item {
+  display: flex;
+}
+
+/* --------------------------------------------------------------------------
+   Base control — shared shell for page links, prev/next buttons, and the
+   ellipsis. Native <a>/<button> keep Enter/Space + focus for free. The
+   transparent 1px border reserves space so the active/hover border adds no
+   layout shift between states.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__link,
+.hisd-pagination__nav,
+.hisd-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+
+  /* >=24px target on both axes via min-size + padding. */
+  min-inline-size: var(--hisd-pagination-min-size);
+  min-block-size: var(--hisd-pagination-min-size);
+  padding-inline: var(--space-2);
+  padding-block: var(--space-1);
+  margin: 0;
+
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  color: var(--hisd-pagination-fg);
+  background-color: var(--hisd-pagination-bg);
+  border: var(--space-px) solid transparent;
+  border-radius: var(--radius-md);
+}
+
+/* Interactive controls only (links + prev/next). */
+.hisd-pagination__link,
+.hisd-pagination__nav {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+/* --------------------------------------------------------------------------
+   Hover — only on enabled, non-active controls. A sunken surface fill signals
+   affordance without borrowing the active accent.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__link:hover:not([aria-current="page"]),
+.hisd-pagination__nav:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--hisd-pagination-bg-hover);
+  border-color: var(--hisd-pagination-border);
+}
+
+/* --------------------------------------------------------------------------
+   Pressed — enabled, non-active controls only. A deeper surface tint
+   (--color-surface-active) reads as a press without borrowing the brand accent.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__link:active:not([aria-current="page"]),
+.hisd-pagination__nav:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--hisd-pagination-bg-active);
+  border-color: var(--hisd-pagination-border);
+}
+
+/* --------------------------------------------------------------------------
+   Focus — visible ring on every interactive control. Never suppressed without
+   a replacement (Accessibility Contract: focus management).
+   -------------------------------------------------------------------------- */
+.hisd-pagination__link:focus-visible,
+.hisd-pagination__nav:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Active page — the contract's exact treatment:
+     bg --color-action, text --color-on-action, plus aria-current="page".
+   Driven by the ARIA attribute so the visual state and the a11y state can
+   never drift apart.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__link[aria-current="page"] {
+  color: var(--hisd-pagination-active-fg);
+  background-color: var(--hisd-pagination-active-bg);
+  border-color: var(--hisd-pagination-active-bg);
+  font-weight: var(--weight-semibold);
+  cursor: default;
+}
+
+.hisd-pagination__link[aria-current="page"]:hover {
+  background-color: var(--hisd-pagination-active-bg-hover);
+  border-color: var(--hisd-pagination-active-bg-hover);
+}
+
+/* --------------------------------------------------------------------------
+   Prev / Next — icon + optional label. The icon is a monochrome chevron drawn
+   as an SVG mask filled with currentColor (the sole permitted non-token color
+   usage), so it tracks the control's text token in every theme and state.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__icon {
+  flex: 0 0 auto;
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-pagination-icon, none) center / contain no-repeat;
+  mask: var(--hisd-pagination-icon, none) center / contain no-repeat;
+}
+
+/* Leading chevron (Previous) and trailing chevron (Next). The glyph itself
+   points inline-start; the Next button mirrors it on the inline axis so a
+   single icon asset serves both directions and flips correctly under RTL. */
+.hisd-pagination__nav--prev {
+  --hisd-pagination-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M10.5 3 5.5 8l5 5" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+}
+.hisd-pagination__nav--next {
+  --hisd-pagination-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M10.5 3 5.5 8l5 5" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+}
+.hisd-pagination__nav--next .hisd-pagination__icon {
+  transform: scaleX(-1);
+}
+
+/* RTL: the inline axis reverses, so the chevrons must swap visual direction. */
+[dir="rtl"] .hisd-pagination__nav--prev .hisd-pagination__icon {
+  transform: scaleX(-1);
+}
+[dir="rtl"] .hisd-pagination__nav--next .hisd-pagination__icon {
+  transform: scaleX(1);
+}
+
+/* Optional text label beside the chevron (e.g. "Previous"). */
+.hisd-pagination__label {
+  font-weight: var(--weight-medium);
+}
+
+/* --------------------------------------------------------------------------
+   Disabled bound — prev at the first page / next at the last page. Covers a
+   native <button>:disabled and an [aria-disabled="true"] element. Matches the
+   contract's disabled delta: opacity 0.38 + non-interactive.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__nav:disabled,
+.hisd-pagination__nav[aria-disabled="true"] {
+  opacity: 0.38;
+  pointer-events: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Ellipsis — a presentational gap marker for elided page ranges. aria-hidden
+   in markup; non-interactive here. Muted so it recedes behind real controls.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__ellipsis {
+  color: var(--hisd-pagination-ellipsis-fg);
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Optional results summary ("Page 3 of 12") — paired with the nav as an
+   aria-live target so screen readers hear the page change. Token-styled text;
+   carries no interactive state.
+   -------------------------------------------------------------------------- */
+.hisd-pagination__status {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--hisd-pagination-fg-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode) — the OS flattens
+   author backgrounds to system colors, so state can't ride on background fill
+   alone. We let forced-color-adjust stay at its default (auto) and lean on
+   borders/outlines + system color keywords so every state stays distinct.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Keep the focus ring visible and mapped to a system color. */
+  .hisd-pagination__link:focus-visible,
+  .hisd-pagination__nav:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Current page: the brand fill is flattened, so carry the "you are here"
+     state on a border/outline instead of background alone. */
+  .hisd-pagination__link[aria-current="page"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  /* Hover/active surface tints vanish under forced colors; restore an affordance
+     with a system-colored border on non-active, enabled controls. */
+  .hisd-pagination__link:hover:not([aria-current="page"]),
+  .hisd-pagination__nav:hover:not(:disabled):not([aria-disabled="true"]),
+  .hisd-pagination__link:active:not([aria-current="page"]),
+  .hisd-pagination__nav:active:not(:disabled):not([aria-disabled="true"]) {
+    border-color: Highlight;
+  }
+
+  /* Disabled bounds: opacity is ignored in forced colors, so read "disabled"
+     via GrayText on text + border (the chevron tracks currentColor). */
+  .hisd-pagination__nav:disabled,
+  .hisd-pagination__nav[aria-disabled="true"] {
+    color: GrayText;
+    border-color: GrayText;
+  }
+
+  /* Ellipsis gap marker stays muted-but-legible against the system canvas. */
+  .hisd-pagination__ellipsis {
+    color: GrayText;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — drop the color/background transitions. Duration tokens are
+   already zeroed at :root by the theme; this is the belt-and-suspenders.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-pagination__link,
+  .hisd-pagination__nav {
+    transition: none;
+  }
+}

@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD — Input Text component</title>
+
+  <!-- Tokens MUST load first, then the component styles -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="input-text.css">
+
+  <style>
+    /* Demo page chrome only — not part of the component. Still token-driven. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .page {
+      max-inline-size: 76rem;
+      margin-inline: auto;
+      padding-inline: var(--space-6);
+      padding-block: var(--space-8);
+    }
+    .page > h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      margin-block: 0 var(--space-2);
+    }
+    .page > p.lede {
+      color: var(--color-text-muted);
+      margin-block: 0 var(--space-8);
+      max-inline-size: 60ch;
+    }
+    .themes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: var(--space-6);
+    }
+    .demo {
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding-inline: var(--space-6);
+      padding-block: var(--space-6);
+    }
+    .demo > h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      margin-block: 0 var(--space-1);
+      color: var(--color-text);
+    }
+    .demo > p.theme-note {
+      color: var(--color-text-subtle);
+      font-size: var(--text-xs);
+      margin-block: 0 var(--space-6);
+    }
+    .demo > .hisd-input-text + .hisd-input-text {
+      margin-block-start: var(--space-5);
+    }
+    .state-tag {
+      display: inline-block;
+      font-size: var(--text-2xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-subtle);
+      margin-block-end: var(--space-1);
+    }
+    h2.snippet-heading {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      margin-block: var(--space-12) var(--space-3);
+    }
+    pre {
+      background-color: var(--color-surface-sunken);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+    }
+    .toolbar {
+      display: flex;
+      gap: var(--space-2);
+      margin-block-end: var(--space-8);
+    }
+    .toolbar button {
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-on-action);
+      background-color: var(--color-action);
+      border: 0;
+      border-radius: var(--radius-md);
+      padding-inline: var(--space-4);
+      padding-block: var(--space-2);
+      min-block-size: var(--space-10);
+      cursor: pointer;
+    }
+    .toolbar button:hover { background-color: var(--color-action-hover); }
+    .toolbar button:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>Input Text</h1>
+    <p class="lede">
+      The production HISD single-line text field. Label above the control,
+      token-driven shell, and the full state set: default, focus, error,
+      disabled, and with-helper — shown side by side in light and dark.
+    </p>
+
+    <div class="toolbar">
+      <button type="button" id="toggle-theme">Toggle page theme</button>
+    </div>
+
+    <div class="themes">
+
+      <!-- ================= LIGHT ================= -->
+      <section class="demo" data-theme="light" aria-label="Input Text in light theme">
+        <h2>Light theme</h2>
+        <p class="theme-note">data-theme="light"</p>
+
+        <!-- Default + helper -->
+        <div class="hisd-input-text">
+          <span class="state-tag">Default · with-helper</span>
+          <label class="hisd-input-text__label" for="l-name">Full name</label>
+          <div class="hisd-input-text__control">
+            <input
+              class="hisd-input-text__field"
+              type="text"
+              id="l-name"
+              name="name"
+              placeholder="e.g. Ada Lovelace"
+              autocomplete="name"
+              aria-describedby="l-name-help">
+          </div>
+          <p class="hisd-input-text__helper" id="l-name-help">
+            As it appears on your district ID.
+          </p>
+        </div>
+
+        <!-- Required + leading icon + clear action -->
+        <div class="hisd-input-text">
+          <span class="state-tag">Default · leading icon · clearable</span>
+          <label class="hisd-input-text__label" for="l-search">
+            Search students
+            <span class="hisd-input-text__required" aria-hidden="true">*</span>
+          </label>
+          <div class="hisd-input-text__control">
+            <span class="hisd-input-text__icon hisd-input-text__icon--leading" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 4a6 6 0 014.47 10.03l4.25 4.24-1.42 1.42-4.24-4.25A6 6 0 1110 4zm0 2a4 4 0 100 8 4 4 0 000-8z"/>
+              </svg>
+            </span>
+            <input
+              class="hisd-input-text__field js-clearable"
+              type="text"
+              id="l-search"
+              name="search"
+              required
+              placeholder="Name or ID"
+              aria-describedby="l-search-help">
+            <button
+              type="button"
+              class="hisd-input-text__action js-clear"
+              hidden
+              aria-label="Clear search students">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6.4 5L5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6 6.4 5z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="hisd-input-text__helper" id="l-search-help">
+            Type to filter; press Escape or the clear button to reset.
+          </p>
+        </div>
+
+        <!-- Error -->
+        <div class="hisd-input-text is-error">
+          <span class="state-tag">Error</span>
+          <label class="hisd-input-text__label" for="l-email">Email address</label>
+          <div class="hisd-input-text__control">
+            <input
+              class="hisd-input-text__field"
+              type="email"
+              id="l-email"
+              name="email"
+              value="ada@@example"
+              aria-invalid="true"
+              aria-describedby="l-email-error">
+          </div>
+          <p class="hisd-input-text__error" id="l-email-error" role="alert">
+            Enter a valid email address, like name@hisd.org.
+          </p>
+        </div>
+
+        <!-- Disabled -->
+        <div class="hisd-input-text">
+          <span class="state-tag">Disabled</span>
+          <label class="hisd-input-text__label" for="l-id">Employee ID</label>
+          <div class="hisd-input-text__control">
+            <input
+              class="hisd-input-text__field"
+              type="text"
+              id="l-id"
+              name="employee-id"
+              value="HISD-004821"
+              disabled>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= DARK ================= -->
+      <section class="demo" data-theme="dark" aria-label="Input Text in dark theme">
+        <h2>Dark theme</h2>
+        <p class="theme-note">data-theme="dark"</p>
+
+        <!-- Default + helper -->
+        <div class="hisd-input-text">
+          <span class="state-tag">Default · with-helper</span>
+          <label class="hisd-input-text__label" for="d-name">Full name</label>
+          <div class="hisd-input-text__control">
+            <input
+              class="hisd-input-text__field"
+              type="text"
+              id="d-name"
+              name="name"
+              placeholder="e.g. Ada Lovelace"
+              autocomplete="name"
+              aria-describedby="d-name-help">
+          </div>
+          <p class="hisd-input-text__helper" id="d-name-help">
+            As it appears on your district ID.
+          </p>
+        </div>
+
+        <!-- Required + leading icon + clear action -->
+        <div class="hisd-input-text">
+          <span class="state-tag">Default · leading icon · clearable</span>
+          <label class="hisd-input-text__label" for="d-search">
+            Search students
+            <span class="hisd-input-text__required" aria-hidden="true">*</span>
+          </label>
+          <div class="hisd-input-text__control">
+            <span class="hisd-input-text__icon hisd-input-text__icon--leading" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 4a6 6 0 014.47 10.03l4.25 4.24-1.42 1.42-4.24-4.25A6 6 0 1110 4zm0 2a4 4 0 100 8 4 4 0 000-8z"/>
+              </svg>
+            </span>
+            <input
+              class="hisd-input-text__field js-clearable"
+              type="text"
+              id="d-search"
+              name="search"
+              required
+              placeholder="Name or ID"
+              aria-describedby="d-search-help">
+            <button
+              type="button"
+              class="hisd-input-text__action js-clear"
+              hidden
+              aria-label="Clear search students">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6.4 5L5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6 6.4 5z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="hisd-input-text__helper" id="d-search-help">
+            Type to filter; press Escape or the clear button to reset.
+          </p>
+        </div>
+
+        <!-- Error -->
+        <div class="hisd-input-text is-error">
+          <span class="state-tag">Error</span>
+          <label class="hisd-input-text__label" for="d-email">Email address</label>
+          <div class="hisd-input-text__control">
+            <input
+              class="hisd-input-text__field"
+              type="email"
+              id="d-email"
+              name="email"
+              value="ada@@example"
+              aria-invalid="true"
+              aria-describedby="d-email-error">
+          </div>
+          <p class="hisd-input-text__error" id="d-email-error" role="alert">
+            Enter a valid email address, like name@hisd.org.
+          </p>
+        </div>
+
+        <!-- Disabled -->
+        <div class="hisd-input-text">
+          <span class="state-tag">Disabled</span>
+          <label class="hisd-input-text__label" for="d-id">Employee ID</label>
+          <div class="hisd-input-text__control">
+            <input
+              class="hisd-input-text__field"
+              type="text"
+              id="d-id"
+              name="employee-id"
+              value="HISD-004821"
+              disabled>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <h2 class="snippet-heading">Copy-paste snippet</h2>
+    <pre><code>&lt;!-- Default field with helper text --&gt;
+&lt;div class="hisd-input-text"&gt;
+  &lt;label class="hisd-input-text__label" for="full-name"&gt;Full name&lt;/label&gt;
+  &lt;div class="hisd-input-text__control"&gt;
+    &lt;input
+      class="hisd-input-text__field"
+      type="text"
+      id="full-name"
+      name="full-name"
+      placeholder="e.g. Ada Lovelace"
+      aria-describedby="full-name-help"&gt;
+  &lt;/div&gt;
+  &lt;p class="hisd-input-text__helper" id="full-name-help"&gt;
+    As it appears on your district ID.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Error state: add .is-error, aria-invalid="true", and link the message --&gt;
+&lt;div class="hisd-input-text is-error"&gt;
+  &lt;label class="hisd-input-text__label" for="email"&gt;Email address&lt;/label&gt;
+  &lt;div class="hisd-input-text__control"&gt;
+    &lt;input
+      class="hisd-input-text__field"
+      type="email"
+      id="email"
+      name="email"
+      aria-invalid="true"
+      aria-describedby="email-error"&gt;
+  &lt;/div&gt;
+  &lt;p class="hisd-input-text__error" id="email-error" role="alert"&gt;
+    Enter a valid email address, like name@hisd.org.
+  &lt;/p&gt;
+&lt;/div&gt;</code></pre>
+  </main>
+
+  <script>
+    // ---- Page theme toggle (demo chrome only) ---------------------------
+    // Flips the document between forced light and dark. The two side-by-side
+    // sections keep their own data-theme regardless, so the component is
+    // always visible in both; this just exercises the inherited default.
+    (function () {
+      var btn = document.getElementById('toggle-theme');
+      var root = document.documentElement;
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        root.dataset.themeSource = 'manual';
+      });
+    })();
+
+    // ---- Clearable text input (WAI-ARIA: standard text entry) -----------
+    // Standard text entry needs no custom key handling for typing. We add an
+    // icon-only Clear button (aria-label) plus Escape-to-clear, per common
+    // search-field convention. The button shows only when there is text.
+    (function () {
+      var fields = document.querySelectorAll('.js-clearable');
+      Array.prototype.forEach.call(fields, function (field) {
+        var control = field.closest('.hisd-input-text__control');
+        var clearBtn = control.querySelector('.js-clear');
+        if (!clearBtn) return;
+
+        function sync() {
+          var hasValue = field.value.length > 0;
+          clearBtn.hidden = !hasValue;
+        }
+
+        function clear() {
+          field.value = '';
+          sync();
+          field.focus(); // return focus to the field after clearing
+        }
+
+        field.addEventListener('input', sync);
+
+        field.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && field.value.length > 0) {
+            e.preventDefault(); // don't bubble to ancestor dialogs
+            clear();
+          }
+        });
+
+        clearBtn.addEventListener('click', clear);
+
+        sync(); // initialize from any pre-filled value
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "_comment": "Strict TS so the kit catches typos before pbiviz packaging.",
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "lib": ["ES2019", "DOM"],
+    "outDir": ".tmp/build"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

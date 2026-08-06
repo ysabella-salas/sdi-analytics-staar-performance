@@ -1,0 +1,358 @@
+/* =====================================================================
+   HISD print stylesheet  —  platforms/print/print.css
+   ---------------------------------------------------------------------
+   Print + Office kit. Colors here are RAW HEX on purpose: print output
+   needs concrete sRGB values that the PDF engine can hand to the press
+   workflow, and this file is EXEMPT from the var()-only rule.
+
+   The hex values below are the screen equivalents of the brand palette.
+   The authoritative CMYK / Pantone builds for the press live in
+   color-reference.md — set those on the printer / RIP, not in CSS.
+
+   Brand hex used here (from assets/hisd.tokens.json, matches the PDF):
+     Teal        #00A3AF   PMS 7467 C
+     Dark Grey   #24383C   PMS 7546 C   (brand "black")
+     Dark Green  #006F5B   PMS 568 C
+     Light Green #6DB83D   PMS 361 C
+     Yellow      #F9D04E   PMS 128 C
+     Off-White   #FFFFED
+   ===================================================================== */
+
+/* ---- Fonts: Office-safe fallbacks per the Quick Reference Guide ------
+   Microsoft Applications -> Arial (display/body) + Times New Roman.
+   Brand fonts (Parkinsans / Radio Canada / Lora) are used when present,
+   otherwise the document degrades to the MS-app fonts the guide names. */
+:root {
+  --print-display: "Parkinsans", "Parkin Sans", Arial, sans-serif;
+  --print-body:    "Radio Canada", Arial, sans-serif;
+  --print-serif:   "Lora", "Times New Roman", serif;
+
+  --hisd-teal:        #00A3AF;
+  --hisd-dark-grey:   #24383C;
+  --hisd-dark-green:  #006F5B;
+  --hisd-light-green: #6DB83D;
+  --hisd-yellow:      #F9D04E;
+  --hisd-off-white:   #FFFFED;
+  --hisd-light-grey:  #D4D4D5;
+}
+
+/* =====================================================================
+   PAGE GEOMETRY
+   US Letter, 0.75in margins. The running header/footer live in the
+   @page margin boxes so they repeat on every printed page.
+   ===================================================================== */
+@page {
+  size: letter portrait;
+  margin: 0.9in 0.75in 0.85in 0.75in;
+}
+
+/* First page of a document usually carries the masthead, so it gets a
+   little extra headroom and no running header. */
+@page :first {
+  margin-top: 0.6in;
+}
+
+/* =====================================================================
+   BASE
+   ===================================================================== */
+html {
+  font-family: var(--print-body);
+  color: var(--hisd-dark-grey);
+  font-size: 11pt;
+  line-height: 1.45;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+/* =====================================================================
+   TYPE ROLES
+   ===================================================================== */
+.t-display {
+  font-family: var(--print-display);
+  font-weight: 800;
+  color: var(--hisd-dark-grey);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.t-h1 {
+  font-family: var(--print-display);
+  font-weight: 800;
+  font-size: 22pt;
+  color: var(--hisd-teal);
+  margin: 0 0 0.15in 0;
+  line-height: 1.12;
+}
+
+.t-h2 {
+  font-family: var(--print-display);
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--hisd-dark-grey);
+  margin: 0.22in 0 0.06in 0;
+}
+
+.t-eyebrow {
+  font-family: var(--print-body);
+  font-weight: 700;
+  font-size: 9pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hisd-dark-green);
+  margin: 0 0 0.04in 0;
+}
+
+.t-body {
+  font-family: var(--print-body);
+  font-size: 11pt;
+  color: var(--hisd-dark-grey);
+}
+
+.t-serif {
+  font-family: var(--print-serif);
+  font-size: 11pt;
+}
+
+.t-meta {
+  font-family: var(--print-body);
+  font-size: 9pt;
+  color: #4B5C5F;
+}
+
+/* =====================================================================
+   THE RIBBON  (brand bar) — top accent band on letterhead / cover
+   print-color-adjust:exact forces the fill to print instead of being
+   dropped as a "background" by the browser's ink-saving default.
+   ===================================================================== */
+.hisd-ribbon {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  background: var(--hisd-teal);
+  color: var(--hisd-off-white);
+  height: 0.32in;
+  width: 100%;
+  display: block;
+}
+
+/* The canonical brand device is the teal FIELD + white STROKES (see the
+   ribbon line kit + assets/ribbon/print/cover-light.svg, used full-bleed on
+   the cover). At the 0.32in letterhead/memo band height the soft white
+   strokes are sub-perceptual and only waste toner, so the band intentionally
+   degrades to SOLID TEAL — that is the correct reduced form of the device at
+   this scale. (The off-brand 4-color fan variant has been removed.) */
+
+/* Footer rule that prints */
+.hisd-footrule {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  border: 0;
+  border-top: 2pt solid var(--hisd-teal);
+  margin: 0.1in 0 0.06in 0;
+}
+
+/* =====================================================================
+   MASTHEAD + LOGO PLACEMENT
+   ===================================================================== */
+.hisd-masthead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.4in;
+  padding-top: 0.18in;
+}
+
+.hisd-logo {
+  width: 1.9in;
+  height: auto;
+  display: block;
+}
+.hisd-logo--sm { width: 1.4in; }
+.hisd-logo--lg { width: 2.6in; }
+
+.hisd-seal {
+  width: 1.1in;
+  height: auto;
+  display: block;
+}
+
+/* =====================================================================
+   RUNNING HEADER / FOOTER (HTML-driven, repeated via position:fixed)
+   When printing from a browser, position:fixed elements repeat on every
+   page. We hide them on screen and only show them in print.
+   Page numbers use the CSS counter exposed in the @page bottom box.
+   ===================================================================== */
+.print-running-header,
+.print-running-footer {
+  display: none;
+}
+
+@media print {
+  .print-running-header {
+    display: block;
+    position: fixed;
+    top: -0.55in;            /* sits up in the top page margin */
+    left: 0;
+    right: 0;
+    font-family: var(--print-body);
+    font-size: 8pt;
+    color: #4B5C5F;
+    border-bottom: 0.5pt solid var(--hisd-light-grey);
+    padding-bottom: 2pt;
+  }
+  .print-running-header .right { float: right; }
+
+  .print-running-footer {
+    display: block;
+    position: fixed;
+    bottom: -0.5in;          /* sits down in the bottom page margin */
+    left: 0;
+    right: 0;
+    font-family: var(--print-body);
+    font-size: 8pt;
+    color: #4B5C5F;
+    border-top: 0.5pt solid var(--hisd-light-grey);
+    padding-top: 2pt;
+  }
+  .print-running-footer .right { float: right; }
+
+  /* Page number. counter(page) / counter(pages) resolve inside the
+     paginated context; the browser fills them when printing. */
+  .page-counter::after {
+    content: counter(page) " / " counter(pages);
+  }
+}
+
+/* @page margin boxes — engines that support them (Prince, WeasyPrint,
+   Paged.js) render footer text + page numbers natively. Chrome ignores
+   these, which is why the fixed footer above is the browser fallback. */
+@page {
+  @bottom-right {
+    content: "Page " counter(page) " of " counter(pages);
+    font-family: Arial, sans-serif;
+    font-size: 8pt;
+    color: #4B5C5F;
+  }
+  @bottom-left {
+    content: "Houston Independent School District";
+    font-family: Arial, sans-serif;
+    font-size: 8pt;
+    color: #4B5C5F;
+  }
+}
+
+/* =====================================================================
+   WIDOW / ORPHAN CONTROL + PAGINATION HYGIENE
+   ===================================================================== */
+p, li, blockquote {
+  orphans: 3;
+  widows: 3;
+}
+
+h1, h2, h3, .t-h1, .t-h2, .t-eyebrow {
+  break-after: avoid;
+  page-break-after: avoid;     /* legacy alias */
+}
+
+figure, table, .keep-together, .hisd-callout {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.page-break {
+  break-before: page;
+  page-break-before: always;
+}
+
+/* =====================================================================
+   CONTENT BLOCKS
+   ===================================================================== */
+.hisd-callout {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  background: var(--hisd-off-white);
+  border-left: 3pt solid var(--hisd-yellow);
+  padding: 0.12in 0.16in;
+  margin: 0.16in 0;
+}
+
+.hisd-addressblock {
+  margin: 0.3in 0 0.2in 0;
+  font-size: 10.5pt;
+}
+
+.hisd-signature {
+  margin-top: 0.5in;
+  font-size: 10.5pt;
+}
+.hisd-signature .name {
+  font-weight: 700;
+  color: var(--hisd-dark-grey);
+}
+
+table.hisd-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+}
+table.hisd-table th {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  background: var(--hisd-teal);
+  color: var(--hisd-off-white);
+  text-align: left;
+  padding: 4pt 6pt;
+  font-family: var(--print-body);
+}
+table.hisd-table td {
+  border-bottom: 0.5pt solid var(--hisd-light-grey);
+  padding: 4pt 6pt;
+}
+
+/* Memo header grid */
+.memo-grid {
+  display: grid;
+  grid-template-columns: 0.9in 1fr;
+  row-gap: 3pt;
+  margin: 0.2in 0;
+  font-size: 10.5pt;
+}
+.memo-grid .label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--hisd-dark-green);
+}
+
+/* =====================================================================
+   SCREEN-ONLY HELPERS  (so the templates are readable before printing)
+   A faux "page" frame on screen; removed in print so nothing double-borders.
+   ===================================================================== */
+.screen-page {
+  max-width: 8.5in;
+  margin: 16px auto;
+  padding: 0.75in;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,.12);
+  box-sizing: border-box;
+}
+.screen-note {
+  max-width: 8.5in;
+  margin: 16px auto 0;
+  font: 12px/1.4 Arial, sans-serif;
+  color: #4B5C5F;
+}
+
+@media print {
+  .screen-note { display: none; }
+  .screen-page {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  body { background: #fff; }
+}

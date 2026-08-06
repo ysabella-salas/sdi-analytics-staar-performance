@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Textarea — Component Demo</title>
+
+  <!-- Token layer FIRST, then the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="textarea.css">
+
+  <style>
+    /* Demo-page chrome only — not part of the component contract.
+       Still token-driven so the page itself stays on-brand. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .demo-page {
+      max-inline-size: 76rem;
+      margin-inline: auto;
+      padding-block: var(--space-8);
+      padding-inline: var(--space-6);
+    }
+    .demo-page > h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      margin-block: 0 var(--space-2);
+    }
+    .demo-lede {
+      color: var(--color-text-muted);
+      max-inline-size: 52rem;
+      margin-block: 0 var(--space-8);
+      line-height: var(--leading-relaxed);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: var(--space-6);
+    }
+    .demo-theme {
+      background-color: var(--color-surface);
+      border: var(--space-px) solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-1);
+    }
+    .demo-theme > h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      margin-block: 0 var(--space-1);
+    }
+    .demo-theme-note {
+      color: var(--color-text-subtle);
+      font-size: var(--text-sm);
+      margin-block: 0 var(--space-6);
+    }
+    .demo-state {
+      margin-block-end: var(--space-6);
+    }
+    .demo-state:last-child { margin-block-end: 0; }
+    .demo-state > h3 {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-subtle);
+      margin-block: 0 var(--space-2);
+    }
+    .demo-snippet {
+      margin-block-start: var(--space-10);
+    }
+    .demo-snippet > h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-semibold);
+      margin-block: 0 var(--space-3);
+    }
+    .demo-snippet pre {
+      margin: 0;
+      padding: var(--space-4);
+      overflow-x: auto;
+      background-color: var(--color-surface-sunken);
+      border: var(--space-px) solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <h1>HISD Textarea</h1>
+    <p class="demo-lede">
+      Multi-line form control. It shares the input shell — <code>1px</code> border at rest,
+      <code>2px</code> action ring on focus, danger border on error — and adds vertical
+      resize plus a three-row minimum height. The label sits above the control; helper and
+      error text are wired through <code>aria-describedby</code>. Both themes below render
+      every state from the same stylesheet; dark inherits entirely from
+      <code>data-theme="dark"</code>.
+    </p>
+
+    <div class="demo-grid">
+
+      <!-- ── LIGHT THEME ──────────────────────────────────────────────────── -->
+      <section class="demo-theme" data-theme="light" aria-label="Textarea states in the light theme">
+        <h2>Light theme</h2>
+        <p class="demo-theme-note">Default district surface.</p>
+
+        <!-- Default -->
+        <div class="demo-state">
+          <h3>Default</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-light-default">Comments</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-light-default"
+              name="comments"
+              rows="3"
+              placeholder="Share your feedback about the school year…"
+              aria-describedby="ta-light-default-help"></textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-light-default-help">
+              Tell us what went well and what we can improve.
+            </p>
+          </div>
+        </div>
+
+        <!-- Focus (programmatically illustrated; tab to it to see the ring) -->
+        <div class="demo-state">
+          <h3>Focus &mdash; tab into the field to see the ring</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-light-focus">Message</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-light-focus"
+              name="message"
+              rows="3"
+              aria-describedby="ta-light-focus-help">The focus ring is a 2px --color-focus outline at a 2px offset.</textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-light-focus-help">
+              Focus is keyboard-visible and never suppressed.
+            </p>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="demo-state">
+          <h3>Error</h3>
+          <div class="hisd-textarea-field" data-invalid="true">
+            <label class="hisd-textarea-label" for="ta-light-error">
+              Reason for absence
+              <span class="hisd-textarea-required" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-light-error"
+              name="reason"
+              rows="3"
+              required
+              aria-invalid="true"
+              aria-describedby="ta-light-error-msg"></textarea>
+            <p class="hisd-textarea-message hisd-textarea-error" id="ta-light-error-msg" role="alert">
+              A reason is required before you can submit.
+            </p>
+          </div>
+        </div>
+
+        <!-- Disabled -->
+        <div class="demo-state">
+          <h3>Disabled</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-light-disabled">Internal notes</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-light-disabled"
+              name="notes"
+              rows="3"
+              disabled
+              aria-describedby="ta-light-disabled-help">Locked until enrollment is confirmed.</textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-light-disabled-help">
+              Read-only for your role.
+            </p>
+          </div>
+        </div>
+
+        <!-- Live character counter -->
+        <div class="demo-state">
+          <h3>With live character counter</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-light-count">Short bio</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-light-count"
+              name="bio"
+              rows="3"
+              maxlength="120"
+              data-count-max="120"
+              placeholder="Up to 120 characters…"
+              aria-describedby="ta-light-count-help ta-light-count-live"></textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-light-count-help">
+              Appears on your staff directory card.
+            </p>
+            <span
+              class="hisd-textarea-count"
+              id="ta-light-count-live"
+              aria-live="polite"
+              aria-atomic="true">0 / 120</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DARK THEME ───────────────────────────────────────────────────── -->
+      <section class="demo-theme" data-theme="dark" aria-label="Textarea states in the dark theme">
+        <h2>Dark theme</h2>
+        <p class="demo-theme-note">Inherited from <code>data-theme="dark"</code> — no component overrides.</p>
+
+        <!-- Default -->
+        <div class="demo-state">
+          <h3>Default</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-dark-default">Comments</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-dark-default"
+              name="comments-dark"
+              rows="3"
+              placeholder="Share your feedback about the school year…"
+              aria-describedby="ta-dark-default-help"></textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-dark-default-help">
+              Tell us what went well and what we can improve.
+            </p>
+          </div>
+        </div>
+
+        <!-- Focus -->
+        <div class="demo-state">
+          <h3>Focus &mdash; tab into the field to see the ring</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-dark-focus">Message</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-dark-focus"
+              name="message-dark"
+              rows="3"
+              aria-describedby="ta-dark-focus-help">The teal brightens automatically in dark; the focus ring follows.</textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-dark-focus-help">
+              Focus is keyboard-visible and never suppressed.
+            </p>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="demo-state">
+          <h3>Error</h3>
+          <div class="hisd-textarea-field" data-invalid="true">
+            <label class="hisd-textarea-label" for="ta-dark-error">
+              Reason for absence
+              <span class="hisd-textarea-required" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-dark-error"
+              name="reason-dark"
+              rows="3"
+              required
+              aria-invalid="true"
+              aria-describedby="ta-dark-error-msg"></textarea>
+            <p class="hisd-textarea-message hisd-textarea-error" id="ta-dark-error-msg" role="alert">
+              A reason is required before you can submit.
+            </p>
+          </div>
+        </div>
+
+        <!-- Disabled -->
+        <div class="demo-state">
+          <h3>Disabled</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-dark-disabled">Internal notes</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-dark-disabled"
+              name="notes-dark"
+              rows="3"
+              disabled
+              aria-describedby="ta-dark-disabled-help">Locked until enrollment is confirmed.</textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-dark-disabled-help">
+              Read-only for your role.
+            </p>
+          </div>
+        </div>
+
+        <!-- Live character counter -->
+        <div class="demo-state">
+          <h3>With live character counter</h3>
+          <div class="hisd-textarea-field">
+            <label class="hisd-textarea-label" for="ta-dark-count">Short bio</label>
+            <textarea
+              class="hisd-textarea-control"
+              id="ta-dark-count"
+              name="bio-dark"
+              rows="3"
+              maxlength="120"
+              data-count-max="120"
+              placeholder="Up to 120 characters…"
+              aria-describedby="ta-dark-count-help ta-dark-count-live"></textarea>
+            <p class="hisd-textarea-message hisd-textarea-helper" id="ta-dark-count-help">
+              Appears on your staff directory card.
+            </p>
+            <span
+              class="hisd-textarea-count"
+              id="ta-dark-count-live"
+              aria-live="polite"
+              aria-atomic="true">0 / 120</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Copy-paste canonical markup ───────────────────────────────────── -->
+    <section class="demo-snippet" aria-label="Copy-paste snippet">
+      <h2>Copy-paste snippet</h2>
+      <pre><code>&lt;!-- Default --&gt;
+&lt;div class="hisd-textarea-field"&gt;
+  &lt;label class="hisd-textarea-label" for="comments"&gt;Comments&lt;/label&gt;
+  &lt;textarea
+    class="hisd-textarea-control"
+    id="comments"
+    name="comments"
+    rows="3"
+    placeholder="Share your feedback…"
+    aria-describedby="comments-help"&gt;&lt;/textarea&gt;
+  &lt;p class="hisd-textarea-message hisd-textarea-helper" id="comments-help"&gt;
+    Tell us what went well and what we can improve.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Error: mark the field, flip aria-invalid, point describedby at the message --&gt;
+&lt;div class="hisd-textarea-field" data-invalid="true"&gt;
+  &lt;label class="hisd-textarea-label" for="reason"&gt;
+    Reason for absence
+    &lt;span class="hisd-textarea-required" aria-hidden="true"&gt;*&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;textarea
+    class="hisd-textarea-control"
+    id="reason"
+    name="reason"
+    rows="3"
+    required
+    aria-invalid="true"
+    aria-describedby="reason-msg"&gt;&lt;/textarea&gt;
+  &lt;p class="hisd-textarea-message hisd-textarea-error" id="reason-msg" role="alert"&gt;
+    A reason is required before you can submit.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Disabled --&gt;
+&lt;textarea class="hisd-textarea-control" id="notes" rows="3" disabled&gt;&lt;/textarea&gt;</code></pre>
+    </section>
+  </main>
+
+  <script>
+    // Progressive enhancement only. A <textarea> already has full native keyboard
+    // support per the WAI-ARIA APG (text-entry: arrows, Home/End, selection,
+    // Enter inserts a newline, Tab moves focus). The only behavior we add is the
+    // optional live character counter, announced politely via aria-live.
+    (function () {
+      var fields = document.querySelectorAll('[data-count-max]');
+      Array.prototype.forEach.call(fields, function (el) {
+        var max = parseInt(el.getAttribute('data-count-max'), 10);
+        var liveId = (el.getAttribute('aria-describedby') || '')
+          .split(/\s+/)
+          .filter(function (id) { return /count-live$/.test(id); })[0];
+        var live = liveId ? document.getElementById(liveId) : null;
+        if (!live || isNaN(max)) return;
+
+        function update() {
+          var n = el.value.length;
+          live.textContent = n + ' / ' + max;
+          live.setAttribute('data-over', String(n >= max));
+        }
+        el.addEventListener('input', update);
+        update();
+      });
+    })();
+  </script>
+</body>
+</html>

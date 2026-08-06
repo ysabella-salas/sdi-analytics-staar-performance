@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Toast — component demo</title>
+
+  <!-- Theme tokens FIRST, then the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="toast.css">
+
+  <style>
+    /* Demo-page scaffolding only — not part of the component. Uses tokens. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .demo-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: stretch;
+      padding: var(--space-6);
+    }
+    .demo-panel {
+      position: relative; /* contain each panel's own toast region */
+      flex: 1 1 24rem;
+      box-sizing: border-box;
+      min-block-size: 24rem;
+      padding: var(--space-6);
+      overflow: hidden;
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .demo-panel h2 {
+      margin-block: 0 var(--space-2);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-panel > p {
+      margin-block: 0 var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    .demo-row {
+      margin-block-end: var(--space-5);
+    }
+    .demo-row > h3 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle);
+    }
+    /* Demo trigger buttons — token-driven, not part of the component. */
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .demo-btn {
+      box-sizing: border-box;
+      min-block-size: var(--space-8);
+      padding-block: var(--space-2);
+      padding-inline: var(--space-3);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-on-action);
+      background-color: var(--color-action);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .demo-btn:hover { background-color: var(--color-action-hover); }
+    .demo-btn:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+    /* The live region inside each panel is absolutely pinned to that panel's
+       bottom-end so both themes are visible at once. In production the region
+       is position:fixed (the component default). */
+    .demo-panel .hisd-toast-region {
+      position: absolute;
+    }
+    .page-head {
+      padding: var(--space-6) var(--space-6) 0;
+    }
+    .page-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-text);
+    }
+    .page-head p {
+      margin-block: var(--space-2) 0;
+      max-inline-size: 70ch;
+      color: var(--color-text-muted);
+    }
+    .snippet {
+      margin: var(--space-6);
+      padding: var(--space-5);
+      background-color: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .snippet h2 {
+      margin-block: 0 var(--space-3);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+    .snippet pre {
+      margin: 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>HISD Toast</h1>
+    <p>
+      Brief, non-blocking feedback pinned to the bottom-end of the viewport.
+      Four semantic variants map to the status tokens; meaning is carried by
+      the glyph shape, the text, and the status-colored rail together — never
+      color alone. Success and info auto-dismiss after 5&nbsp;s; warning and
+      danger persist until dismissed. At most three stack; the oldest fades
+      out when a fourth arrives. The right panel is forced to
+      <code>data-theme="dark"</code> and inherits dark purely through semantic
+      tokens — no component-specific dark CSS.
+    </p>
+  </header>
+
+  <div class="demo-wrap">
+
+    <!-- ============================ LIGHT ============================ -->
+    <section class="demo-panel" data-theme="light" aria-label="Toast states in light theme">
+      <h2>Light theme</h2>
+      <p>Use the buttons to emit each variant. Try emitting four quickly to see the oldest fade.</p>
+
+      <div class="demo-row">
+        <h3>Auto-dismiss (5&nbsp;s)</h3>
+        <div class="demo-controls">
+          <button type="button" class="demo-btn" data-emit="success">Success</button>
+          <button type="button" class="demo-btn" data-emit="info">Info</button>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Persistent (dismiss to close)</h3>
+        <div class="demo-controls">
+          <button type="button" class="demo-btn" data-emit="warning">Warning</button>
+          <button type="button" class="demo-btn" data-emit="danger">Danger</button>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Stacking (max 3)</h3>
+        <div class="demo-controls">
+          <button type="button" class="demo-btn" data-emit-burst>Emit 4 in a row</button>
+        </div>
+      </div>
+
+      <!--
+        Two live regions: polite for non-urgent variants, assertive for danger.
+        A toast is appended to the region matching its urgency so screen readers
+        announce it correctly.
+      -->
+      <ol class="hisd-toast-region" data-region="polite" role="status" aria-live="polite" aria-relevant="additions"></ol>
+      <ol class="hisd-toast-region" data-region="assertive" role="alert" aria-live="assertive" aria-relevant="additions"></ol>
+    </section>
+
+    <!-- ============================ DARK ============================ -->
+    <section class="demo-panel" data-theme="dark" aria-label="Toast states in dark theme">
+      <h2>Dark theme</h2>
+      <p>Identical markup. Status colors brighten automatically via the dark token set.</p>
+
+      <div class="demo-row">
+        <h3>Auto-dismiss (5&nbsp;s)</h3>
+        <div class="demo-controls">
+          <button type="button" class="demo-btn" data-emit="success">Success</button>
+          <button type="button" class="demo-btn" data-emit="info">Info</button>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Persistent (dismiss to close)</h3>
+        <div class="demo-controls">
+          <button type="button" class="demo-btn" data-emit="warning">Warning</button>
+          <button type="button" class="demo-btn" data-emit="danger">Danger</button>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Stacking (max 3)</h3>
+        <div class="demo-controls">
+          <button type="button" class="demo-btn" data-emit-burst>Emit 4 in a row</button>
+        </div>
+      </div>
+
+      <ol class="hisd-toast-region" data-region="polite" role="status" aria-live="polite" aria-relevant="additions"></ol>
+      <ol class="hisd-toast-region" data-region="assertive" role="alert" aria-live="assertive" aria-relevant="additions"></ol>
+    </section>
+
+  </div>
+
+  <!-- ============================ SNIPPET ============================ -->
+  <section class="snippet" aria-label="Copy-paste markup">
+    <h2>Copy-paste snippet</h2>
+    <pre><code>&lt;!-- Two live regions, pinned bottom-end. polite for success/info/warning,
+     assertive for danger. Put one pair near the end of &lt;body&gt;. --&gt;
+&lt;ol class="hisd-toast-region" role="status"  aria-live="polite"    aria-relevant="additions"&gt;&lt;/ol&gt;
+&lt;ol class="hisd-toast-region" role="alert"   aria-live="assertive" aria-relevant="additions"&gt;&lt;/ol&gt;
+
+&lt;!-- A single toast (append to the region matching its urgency). The icon is
+     decorative — its meaning is duplicated by the text — so it is aria-hidden.
+     The dismiss button is icon-only and carries an aria-label. --&gt;
+&lt;li class="hisd-toast hisd-toast--success" role="group" aria-label="Success"&gt;
+  &lt;span class="hisd-toast__icon" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;div class="hisd-toast__body"&gt;
+    &lt;p class="hisd-toast__title"&gt;Saved&lt;/p&gt;
+    &lt;p class="hisd-toast__message"&gt;Your changes were saved.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button type="button" class="hisd-toast__dismiss" aria-label="Dismiss notification"&gt;
+    &lt;span class="hisd-toast__dismiss-icon" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/li&gt;
+
+&lt;!-- Variants: hisd-toast--success | --info | --warning | --danger.
+     Auto-dismiss success/info after 5s; warning/danger persist. --&gt;</code></pre>
+  </section>
+
+  <script>
+    // ======================================================================
+    // Minimal toast manager — vanilla JS, per WAI-ARIA APG notification guidance.
+    //
+    // - Each demo panel owns two live regions (polite + assertive). A toast is
+    //   appended to the region matching its urgency (danger -> assertive).
+    // - success/info auto-dismiss after 5s; warning/danger persist.
+    // - At most 3 visible per panel; emitting a 4th animates the oldest out.
+    // - The dismiss <button> is a native button, so Enter/Space activate it for
+    //   free; we only wire the click that both keys dispatch, then animate out
+    //   and remove. Focus is never trapped (toasts are non-modal).
+    // ======================================================================
+    var AUTO_DISMISS_MS = 5000;
+    var MAX_VISIBLE = 3;
+
+    var VARIANTS = {
+      success: { title: 'Saved',            message: 'Your enrollment changes were saved.', urgency: 'polite',    auto: true  },
+      info:    { title: 'Heads up',         message: 'Report cards publish Friday at 4 PM.', urgency: 'polite',    auto: true  },
+      warning: { title: 'Check your input', message: 'Two fields need attention before you continue.', urgency: 'polite', auto: false },
+      danger:  { title: 'Submission failed',message: 'We could not reach the server. Try again.', urgency: 'assertive', auto: false }
+    };
+
+    // X-glyph markup reused for the dismiss button across toasts.
+    function buildToast(variant, conf) {
+      var li = document.createElement('li');
+      li.className = 'hisd-toast hisd-toast--' + variant;
+      li.setAttribute('role', 'group');
+      // Label the group with the variant so SR users hear context with the text.
+      li.setAttribute('aria-label', conf.title);
+
+      var icon = document.createElement('span');
+      icon.className = 'hisd-toast__icon';
+      icon.setAttribute('aria-hidden', 'true');
+
+      var body = document.createElement('div');
+      body.className = 'hisd-toast__body';
+
+      var title = document.createElement('p');
+      title.className = 'hisd-toast__title';
+      title.textContent = conf.title;
+
+      var msg = document.createElement('p');
+      msg.className = 'hisd-toast__message';
+      msg.textContent = conf.message;
+
+      body.appendChild(title);
+      body.appendChild(msg);
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hisd-toast__dismiss';
+      btn.setAttribute('aria-label', 'Dismiss notification');
+      var btnIcon = document.createElement('span');
+      btnIcon.className = 'hisd-toast__dismiss-icon';
+      btnIcon.setAttribute('aria-hidden', 'true');
+      btn.appendChild(btnIcon);
+
+      li.appendChild(icon);
+      li.appendChild(body);
+      li.appendChild(btn);
+
+      return { el: li, dismiss: btn };
+    }
+
+    // Animate a toast out, then remove it. Clears any pending auto-dismiss timer.
+    function removeToast(li) {
+      if (!li || li.dataset.state === 'leaving') return;
+      if (li._timer) { clearTimeout(li._timer); li._timer = null; }
+      li.dataset.state = 'leaving';
+
+      var done = function () { if (li.parentNode) li.parentNode.removeChild(li); };
+      // If reduced motion zeroed the animation, animationend may not fire on
+      // some engines; fall back to a short timeout.
+      var fired = false;
+      li.addEventListener('animationend', function handler() {
+        fired = true;
+        li.removeEventListener('animationend', handler);
+        done();
+      });
+      setTimeout(function () { if (!fired) done(); }, 400);
+    }
+
+    function emit(panel, variant) {
+      var conf = VARIANTS[variant];
+      if (!conf) return;
+
+      var region = panel.querySelector('.hisd-toast-region[data-region="' + conf.urgency + '"]');
+      if (!region) return;
+
+      // Enforce the stack cap across BOTH regions in this panel: count visible
+      // (non-leaving) toasts and fade the oldest if we are at the limit.
+      var allToasts = panel.querySelectorAll('.hisd-toast:not([data-state="leaving"])');
+      if (allToasts.length >= MAX_VISIBLE) {
+        removeToast(allToasts[0]); // oldest in DOM order
+      }
+
+      var made = buildToast(variant, conf);
+      region.appendChild(made.el);
+
+      // Dismiss: native button -> Enter/Space dispatch click for free.
+      made.dismiss.addEventListener('click', function () {
+        removeToast(made.el);
+      });
+
+      if (conf.auto) {
+        made.el._timer = setTimeout(function () { removeToast(made.el); }, AUTO_DISMISS_MS);
+      }
+    }
+
+    // Wire the demo controls within each panel.
+    document.querySelectorAll('.demo-panel').forEach(function (panel) {
+      panel.querySelectorAll('[data-emit]').forEach(function (btn) {
+        btn.addEventListener('click', function () { emit(panel, btn.getAttribute('data-emit')); });
+      });
+      panel.querySelectorAll('[data-emit-burst]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var seq = ['info', 'success', 'warning', 'danger'];
+          seq.forEach(function (v, i) { setTimeout(function () { emit(panel, v); }, i * 250); });
+        });
+      });
+    });
+  </script>
+</body>
+</html>

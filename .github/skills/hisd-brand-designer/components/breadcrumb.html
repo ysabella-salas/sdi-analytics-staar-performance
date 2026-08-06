@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" data-theme-source="system">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Breadcrumb</title>
+  <!-- Theme tokens MUST load before the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="breadcrumb.css">
+  <style>
+    /* Demo-page chrome only — not part of the component. */
+    body {
+      margin: 0;
+      padding: var(--space-6);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+    }
+    .demo-grid {
+      display: grid;
+      gap: var(--space-6);
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    }
+    .demo-panel {
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+    }
+    .demo-panel h2 {
+      margin-block: 0 var(--space-4);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      color: var(--color-text);
+    }
+    .demo-label {
+      margin-block: var(--space-4) var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+    }
+    .demo-label:first-of-type { margin-block-start: 0; }
+    h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      color: var(--color-text);
+      margin-block: 0 var(--space-6);
+    }
+    .snippet {
+      margin-block-start: var(--space-8);
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background-color: var(--color-surface-sunken);
+    }
+    .snippet h2 {
+      margin-block: 0 var(--space-3);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      color: var(--color-text);
+    }
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+    .demo-narrow { max-inline-size: 22rem; }
+  </style>
+</head>
+<body>
+  <h1>HISD Breadcrumb</h1>
+
+  <div class="demo-grid">
+    <!-- ===================== LIGHT ===================== -->
+    <section class="demo-panel" data-theme="light" aria-label="Breadcrumb examples, light theme">
+      <h2>Light theme</h2>
+
+      <p class="demo-label">Default trail (links + current page)</p>
+      <nav class="hisd-breadcrumb" aria-label="Breadcrumb">
+        <ol class="hisd-breadcrumb__list">
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Home</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Schools</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Elementary</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <span class="hisd-breadcrumb__current" aria-current="page">Roberts Elementary</span>
+          </li>
+        </ol>
+      </nav>
+
+      <p class="demo-label">Truncated middle crumb (long label)</p>
+      <nav class="hisd-breadcrumb" aria-label="Breadcrumb, truncated label">
+        <ol class="hisd-breadcrumb__list">
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Home</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link hisd-breadcrumb__link--truncate" href="#"
+               title="Office of Academics and School Leadership">Office of Academics and School Leadership</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <span class="hisd-breadcrumb__current" aria-current="page">Enrollment</span>
+          </li>
+        </ol>
+      </nav>
+
+      <p class="demo-label">Collapsed middle (overflow disclosure)</p>
+      <nav class="hisd-breadcrumb demo-narrow" aria-label="Breadcrumb, collapsed" data-breadcrumb-collapsible>
+        <ol class="hisd-breadcrumb__list">
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Home</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <button type="button" class="hisd-breadcrumb__overflow"
+                    aria-expanded="false" aria-label="Show 2 hidden breadcrumb levels">&hellip;</button>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item hisd-breadcrumb__item--collapsible" hidden>
+            <a class="hisd-breadcrumb__link" href="#">Schools</a>
+          </li>
+          <li class="hisd-breadcrumb__separator hisd-breadcrumb__item--collapsible" aria-hidden="true" hidden></li>
+          <li class="hisd-breadcrumb__item hisd-breadcrumb__item--collapsible" hidden>
+            <a class="hisd-breadcrumb__link" href="#">Elementary</a>
+          </li>
+          <li class="hisd-breadcrumb__separator hisd-breadcrumb__item--collapsible" aria-hidden="true" hidden></li>
+          <li class="hisd-breadcrumb__item">
+            <span class="hisd-breadcrumb__current" aria-current="page">Roberts Elementary</span>
+          </li>
+        </ol>
+      </nav>
+    </section>
+
+    <!-- ===================== DARK ===================== -->
+    <section class="demo-panel" data-theme="dark" aria-label="Breadcrumb examples, dark theme">
+      <h2>Dark theme</h2>
+
+      <p class="demo-label">Default trail (links + current page)</p>
+      <nav class="hisd-breadcrumb" aria-label="Breadcrumb">
+        <ol class="hisd-breadcrumb__list">
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Home</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Schools</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Elementary</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <span class="hisd-breadcrumb__current" aria-current="page">Roberts Elementary</span>
+          </li>
+        </ol>
+      </nav>
+
+      <p class="demo-label">Truncated middle crumb (long label)</p>
+      <nav class="hisd-breadcrumb" aria-label="Breadcrumb, truncated label">
+        <ol class="hisd-breadcrumb__list">
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Home</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link hisd-breadcrumb__link--truncate" href="#"
+               title="Office of Academics and School Leadership">Office of Academics and School Leadership</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <span class="hisd-breadcrumb__current" aria-current="page">Enrollment</span>
+          </li>
+        </ol>
+      </nav>
+
+      <p class="demo-label">Collapsed middle (overflow disclosure)</p>
+      <nav class="hisd-breadcrumb demo-narrow" aria-label="Breadcrumb, collapsed" data-breadcrumb-collapsible>
+        <ol class="hisd-breadcrumb__list">
+          <li class="hisd-breadcrumb__item">
+            <a class="hisd-breadcrumb__link" href="#">Home</a>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item">
+            <button type="button" class="hisd-breadcrumb__overflow"
+                    aria-expanded="false" aria-label="Show 2 hidden breadcrumb levels">&hellip;</button>
+          </li>
+          <li class="hisd-breadcrumb__separator" aria-hidden="true"></li>
+          <li class="hisd-breadcrumb__item hisd-breadcrumb__item--collapsible" hidden>
+            <a class="hisd-breadcrumb__link" href="#">Schools</a>
+          </li>
+          <li class="hisd-breadcrumb__separator hisd-breadcrumb__item--collapsible" aria-hidden="true" hidden></li>
+          <li class="hisd-breadcrumb__item hisd-breadcrumb__item--collapsible" hidden>
+            <a class="hisd-breadcrumb__link" href="#">Elementary</a>
+          </li>
+          <li class="hisd-breadcrumb__separator hisd-breadcrumb__item--collapsible" aria-hidden="true" hidden></li>
+          <li class="hisd-breadcrumb__item">
+            <span class="hisd-breadcrumb__current" aria-current="page">Roberts Elementary</span>
+          </li>
+        </ol>
+      </nav>
+    </section>
+  </div>
+
+  <section class="snippet">
+    <h2>Copy-paste snippet</h2>
+    <pre><code>&lt;nav class="hisd-breadcrumb" aria-label="Breadcrumb"&gt;
+  &lt;ol class="hisd-breadcrumb__list"&gt;
+    &lt;li class="hisd-breadcrumb__item"&gt;
+      &lt;a class="hisd-breadcrumb__link" href="/"&gt;Home&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="hisd-breadcrumb__separator" aria-hidden="true"&gt;&lt;/li&gt;
+    &lt;li class="hisd-breadcrumb__item"&gt;
+      &lt;a class="hisd-breadcrumb__link" href="/schools"&gt;Schools&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="hisd-breadcrumb__separator" aria-hidden="true"&gt;&lt;/li&gt;
+    &lt;li class="hisd-breadcrumb__item"&gt;
+      &lt;span class="hisd-breadcrumb__current" aria-current="page"&gt;Roberts Elementary&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+  </section>
+
+  <script>
+    // Overflow disclosure: the "…" button reveals the collapsed middle
+    // crumbs. APG disclosure pattern — a single button that toggles
+    // aria-expanded and shows/hides the [hidden] crumbs. Activated with
+    // Enter/Space natively because it is a real <button>.
+    document.querySelectorAll('[data-breadcrumb-collapsible]').forEach(function (nav) {
+      var toggle = nav.querySelector('.hisd-breadcrumb__overflow');
+      if (!toggle) return;
+      var hiddenItems = nav.querySelectorAll('.hisd-breadcrumb__item--collapsible');
+
+      toggle.addEventListener('click', function () {
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        var next = !expanded;
+        toggle.setAttribute('aria-expanded', String(next));
+        hiddenItems.forEach(function (el) {
+          if (next) { el.removeAttribute('hidden'); }
+          else { el.setAttribute('hidden', ''); }
+        });
+        if (next) {
+          // Move focus to the first revealed link for keyboard continuity.
+          var firstLink = nav.querySelector('.hisd-breadcrumb__item--collapsible .hisd-breadcrumb__link');
+          if (firstLink) { firstLink.focus(); }
+          toggle.setAttribute('aria-label', 'Hide 2 breadcrumb levels');
+        } else {
+          toggle.setAttribute('aria-label', 'Show 2 hidden breadcrumb levels');
+          toggle.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

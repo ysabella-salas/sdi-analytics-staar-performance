@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 16" width="640" height="16"
+     role="img" aria-hidden="true" preserveAspectRatio="none">
+  <title>HISD Ribbon — fan divider band</title>
+  <desc>The SECONDARY ribbon recipe — a thin multi-color "fan" divider band. FIXED
+        canonical 4 stops, identical everywhere a fan appears (teal first, per brand):
+        teal #00A3AF @ 0%, light-green #6DB83D @ 38%, yellow #F9D04E @ 64%,
+        purple #474F99 @ 100%. Never themed, never re-ordered. Decorative only:
+        role="img" + aria-hidden; host with alt="" / role="presentation". Hex are the
+        flattened canonical fan stops so the file renders standalone (print/email/no-CSS).</desc>
+  <defs>
+    <!-- var(ribbon-fan) = linear-gradient(90deg, #00A3AF 0%, #6DB83D 38%, #F9D04E 64%, #474F99 100%) -->
+    <linearGradient id="hisdRibbonFan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"    stop-color="#00A3AF"/>
+      <stop offset="0.38" stop-color="#6DB83D"/>
+      <stop offset="0.64" stop-color="#F9D04E"/>
+      <stop offset="1"    stop-color="#474F99"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="640" height="16" fill="url(#hisdRibbonFan)"/>
+</svg>

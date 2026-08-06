@@ -1,0 +1,33 @@
+{
+  "_comment": "Power BI capabilities — KPI default. Replace dataRoles / dataViewMappings for trend (Category + Values) or comparison-highlight (Category + Value + focal). The accessibility object below opts the visual into Power BI's keyboard data-view automatically.",
+  "dataRoles": [
+    { "displayName": "Category",   "name": "category", "kind": "Grouping" },
+    { "displayName": "Value",      "name": "value",    "kind": "Measure"  },
+    { "displayName": "Comparison", "name": "compare",  "kind": "Measure"  }
+  ],
+  "dataViewMappings": [{
+    "categorical": {
+      "categories": { "for": { "in": "category" } },
+      "values":     { "select": [ { "for": { "in": "value" } }, { "for": { "in": "compare" } } ] }
+    }
+  }],
+  "supportsHighlight": true,
+  "supportsKeyboardFocus": true,
+  "supportsLandingPage": false,
+  "supportsMultiVisualSelectionOptimization": true,
+  "accessibilityRole": "image",
+  "objects": {
+    "general": { "displayName": "General", "properties": {
+      "recipe": {
+        "displayName": "Recipe",
+        "type": { "enumeration": [
+          { "displayName": "KPI",                    "value": "kpi" },
+          { "displayName": "Trend",                  "value": "trend" },
+          { "displayName": "Comparison highlight",   "value": "comparisonHighlight" },
+          { "displayName": "Map marker (metadata)",  "value": "mapMarker" }
+        ] }
+      },
+      "focalIndex": { "displayName": "Focal index (comparison)", "type": { "numeric": true } }
+    } }
+  }
+}

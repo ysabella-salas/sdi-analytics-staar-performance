@@ -1,0 +1,14 @@
+{
+  "name": "hisd-style-dictionary",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Style Dictionary v4 build for HISD design tokens — consumes DTCG tokens and emits CSS, SCSS, JS, iOS, Android, and a Tokens Studio (Figma) JSON export.",
+  "type": "module",
+  "scripts": {
+    "build": "style-dictionary build --config config.mjs",
+    "clean": "rm -rf build"
+  },
+  "devDependencies": {
+    "style-dictionary": "^4.3.0"
+  }
+}

@@ -1,0 +1,434 @@
+/* ==========================================================================
+   HISD Modal / Overlay — reusable component styles
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css             (token names + light/dark values)
+     - Docs/Design-System/Components.md  (Modal / Overlay + Accessibility Contract)
+     - reference/Conventions.md          (token usage rules)
+
+   Contract (Components.md → "Modal / Overlay"):
+     - Root: role="dialog" aria-modal="true" aria-labelledby="[title-id]".
+     - Overlay: --color-surface-inverse at 60% opacity.
+     - Panel: --color-surface, radius --radius-xl, --shadow-4, max 512px inline.
+     - Focus trapped on open, returned to the trigger on close (vanilla JS).
+     - Escape dismisses NON-destructive modals; the destructive-confirm variant
+       ignores Escape / backdrop and requires an explicit Confirm.
+     - Animation: scale(.95) → scale(1) + opacity 0 → 1 over --duration-base,
+       skipped under prefers-reduced-motion: reduce.
+
+   Rules honored here:
+     - Every color is a semantic var(--color-…) or ramp var(--hisd-…) token.
+       Zero raw hex / rgb / hsl / named colors. The single close-icon glyph is
+       an SVG data-URI mask whose paint is currentColor only.
+     - Spacing / radius / type / shadow / motion come from tokens only.
+     - Logical properties only (padding-inline, inset-inline-…, margin-block, …).
+     - Visible focus ring on every interactive element; never bare outline:none.
+     - Dark theme inherits from [data-theme="dark"] on an ancestor — no
+       component-specific dark-mode color values.
+     - Interactive targets ≥24px via padding / min-size.
+     - Motion references --duration-* / --ease-* and is disabled under
+       prefers-reduced-motion: reduce.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Overlay — the blocking scrim. Covers the viewport, centers the panel.
+   Background is --color-surface-inverse at 60% opacity (contract).
+   Hidden by default; the [hidden] attribute removes it from the a11y tree
+   and layout. The .is-open / .is-closing classes drive the animation.
+   -------------------------------------------------------------------------- */
+.hisd-modal {
+  /* Component-level vars resolve to semantic tokens (Conventions tier 3). */
+  --hisd-modal-overlay: var(--color-surface-inverse);
+  --hisd-modal-overlay-opacity: 0.6;
+  --hisd-modal-max-inline: 32rem; /* 512px default (contract) */
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: var(--space-4);
+
+  /* The scrim itself: semantic inverse surface dialled to 60% opacity. */
+  background-color: color-mix(
+    in srgb,
+    var(--hisd-modal-overlay) calc(var(--hisd-modal-overlay-opacity) * 100%),
+    transparent
+  );
+
+  /* Entrance: the overlay fades its scrim in. */
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+/* The [hidden] attribute is the source of truth for "not rendered". */
+.hisd-modal[hidden] {
+  display: none;
+}
+
+/* Open + closing states drive overlay opacity. */
+.hisd-modal.is-open {
+  opacity: 1;
+}
+.hisd-modal.is-closing {
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Panel — the dialog surface. --color-surface, radius --radius-xl, shadow-4,
+   max-inline-size 512px. Scales 0.95 → 1 and fades on entry.
+   -------------------------------------------------------------------------- */
+.hisd-modal__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  inline-size: 100%;
+  max-inline-size: var(--hisd-modal-max-inline);
+  max-block-size: calc(100% - var(--space-8)); /* breathe at the viewport edges */
+
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: var(--space-px) solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-4);
+
+  /* Entrance transform: starts slightly small + transparent. */
+  transform: scale(0.95);
+  opacity: 0;
+  transition:
+    transform var(--duration-base) var(--ease-emphasized),
+    opacity var(--duration-base) var(--ease-emphasized);
+}
+
+.hisd-modal.is-open .hisd-modal__panel {
+  transform: scale(1);
+  opacity: 1;
+}
+.hisd-modal.is-closing .hisd-modal__panel {
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+/* The panel itself is the scroll container when content overflows. */
+.hisd-modal__panel {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Header — title + optional dismiss button.
+   Title uses --font-display per the system's display-title convention.
+   -------------------------------------------------------------------------- */
+.hisd-modal__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-block: var(--space-5) var(--space-3);
+  padding-inline: var(--space-6);
+}
+
+.hisd-modal__title {
+  margin: 0;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+}
+
+/* --------------------------------------------------------------------------
+   Close button — icon-only; MUST carry aria-label in markup. ≥24px target.
+   Icon is a monochrome SVG mask painted with currentColor (the only allowed
+   icon exception). No raw colors.
+   -------------------------------------------------------------------------- */
+.hisd-modal__close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  /* ≥24px target via min-size; padding gives a comfortable hit area. */
+  min-inline-size: var(--space-8); /* 2rem = 32px */
+  min-block-size: var(--space-8);
+  padding: var(--space-1);
+
+  color: var(--color-text-muted);
+  background-color: transparent;
+  border: var(--space-px) solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-modal__close:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+.hisd-modal__close:active {
+  background-color: var(--color-surface-active);
+}
+
+/* The glyph: a 16×16 "X" drawn as a currentColor mask. */
+.hisd-modal__close-icon {
+  inline-size: var(--space-5); /* 1.25rem = 20px */
+  block-size: var(--space-5);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-modal-close-glyph) center / contain no-repeat;
+  mask: var(--hisd-modal-close-glyph) center / contain no-repeat;
+}
+
+.hisd-modal {
+  --hisd-modal-close-glyph: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M8 6.94 12.47 2.47a.75.75 0 1 1 1.06 1.06L9.06 8l4.47 4.47a.75.75 0 1 1-1.06 1.06L8 9.06l-4.47 4.47a.75.75 0 0 1-1.06-1.06L6.94 8 2.47 3.53a.75.75 0 0 1 1.06-1.06L8 6.94Z"/></svg>');
+}
+
+/* --------------------------------------------------------------------------
+   Body — scrollable content region. Muted body text by default; authors may
+   place any tokenized content inside.
+   -------------------------------------------------------------------------- */
+.hisd-modal__body {
+  padding-inline: var(--space-6);
+  padding-block: var(--space-1) var(--space-2);
+  overflow-y: auto;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+.hisd-modal__body > :first-child { margin-block-start: 0; }
+.hisd-modal__body > :last-child { margin-block-end: 0; }
+
+/* --------------------------------------------------------------------------
+   Footer — action cluster. Buttons align to the inline-end (logical right).
+   The confirm/cancel pair uses the shared button tokens (see button.css);
+   self-contained fallbacks below keep this file usable on its own.
+   -------------------------------------------------------------------------- */
+.hisd-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-block: var(--space-4) var(--space-5);
+  padding-inline: var(--space-6);
+}
+
+/* --------------------------------------------------------------------------
+   Self-contained buttons — so the demo is correct even without button.css.
+   Mirrors the Button component's token contract.
+   -------------------------------------------------------------------------- */
+.hisd-modal__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+
+  min-inline-size: 5rem;
+  min-block-size: var(--space-6); /* 1.5rem = 24px target floor */
+  padding-inline: var(--space-4);
+  padding-block: var(--space-2);
+
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  text-align: center;
+  white-space: nowrap;
+
+  background-color: transparent;
+  color: var(--color-text);
+  border: var(--space-px) solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+/* Action (filled) — the dominant/confirm action. */
+.hisd-modal__btn--action {
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+  border-color: var(--color-action);
+}
+.hisd-modal__btn--action:hover {
+  background-color: var(--color-action-hover);
+  border-color: var(--color-action-hover);
+}
+.hisd-modal__btn--action:active {
+  background-color: var(--color-action-active);
+  border-color: var(--color-action-active);
+  box-shadow: var(--shadow-1);
+}
+
+/* Secondary (outlined) — cancel / dismiss. */
+.hisd-modal__btn--secondary {
+  background-color: transparent;
+  color: var(--color-action);
+  border-color: var(--color-action);
+}
+.hisd-modal__btn--secondary:hover {
+  background-color: var(--color-surface-hover);
+}
+.hisd-modal__btn--secondary:active {
+  background-color: var(--color-surface-active);
+}
+
+/* Danger (filled) — destructive, irreversible confirm ONLY. */
+.hisd-modal__btn--danger {
+  background-color: var(--color-danger);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-danger);
+}
+.hisd-modal__btn--danger:hover {
+  background-color: color-mix(in srgb, var(--color-danger) 88%, var(--color-text-inverse));
+  border-color: color-mix(in srgb, var(--color-danger) 88%, var(--color-text-inverse));
+}
+.hisd-modal__btn--danger:active {
+  background-color: color-mix(in srgb, var(--color-danger) 80%, var(--color-text-inverse));
+  border-color: color-mix(in srgb, var(--color-danger) 80%, var(--color-text-inverse));
+  box-shadow: var(--shadow-1);
+}
+
+/* --------------------------------------------------------------------------
+   Variant: destructive confirm. Three non-color signals stack so the meaning
+   survives without color: (1) a leading danger glyph (warning triangle) beside
+   the title, (2) an --color-danger top accent, and (3) the heading + body copy
+   ("Remove …?", "cannot be undone"). The glyph is a currentColor SVG mask —
+   the same paint mechanism as .hisd-modal__close-icon — so it inherits the
+   title's color in either theme and adds no raw color of its own.
+   This variant ignores Escape / backdrop in JS — CSS only signals it.
+   -------------------------------------------------------------------------- */
+.hisd-modal--destructive .hisd-modal__panel {
+  border-block-start: var(--space-1) solid var(--color-danger);
+}
+.hisd-modal--destructive .hisd-modal__title {
+  color: var(--color-danger);
+}
+
+/* Leading danger glyph: a warning triangle drawn as a currentColor mask, so it
+   takes the title's --color-danger paint. Sized to align with the title cap
+   height; aria-hidden in markup (the copy carries the meaning to AT). */
+.hisd-modal__title-icon {
+  flex: 0 0 auto;
+  inline-size: var(--space-6); /* 1.5rem = 24px */
+  block-size: var(--space-6);
+  margin-block-start: var(--space-px);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-modal-danger-glyph) center / contain no-repeat;
+  mask: var(--hisd-modal-danger-glyph) center / contain no-repeat;
+}
+
+.hisd-modal {
+  --hisd-modal-danger-glyph: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.25a1.5 1.5 0 0 1 1.31.77l9.2 16.36A1.5 1.5 0 0 1 21.2 21.6H2.8a1.5 1.5 0 0 1-1.31-2.22l9.2-16.36A1.5 1.5 0 0 1 12 2.25Zm0 5.25a1 1 0 0 0-1 1v5a1 1 0 1 0 2 0v-5a1 1 0 0 0-1-1Zm0 9a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/></svg>');
+}
+
+/* In the destructive header, the title becomes a flex row so the glyph sits
+   inline-start of the heading text. */
+.hisd-modal--destructive .hisd-modal__title {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Focus — visible ring on EVERY interactive element. Never suppressed
+   without a replacement (Accessibility Contract: focus management).
+   -------------------------------------------------------------------------- */
+.hisd-modal__close:focus-visible,
+.hisd-modal__btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* The panel receives focus on open (tabindex="-1" in markup). Give it a
+   visible ring too, so keyboard users see where focus landed. */
+.hisd-modal__panel:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode). The OS flattens
+   our token backgrounds to system colors, so anything that signalled state
+   with background OR brand color alone must regain a border/outline here.
+   We keep forced-color-adjust at its default (auto) so system colors take over;
+   the destructive accent + title glyph are the only elements pinned to a brand
+   color, and each is paired with a system-color border so it still reads.
+   System-color keywords (Canvas, CanvasText, Highlight, GrayText, …) are
+   keywords — not raw hex — so they satisfy the no-raw-color rule.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Panel: give the surface a system border so it separates from the scrim. */
+  .hisd-modal__panel {
+    border: var(--space-px) solid CanvasText;
+  }
+
+  /* Keep focus visible with a system color (never remove the ring). */
+  .hisd-modal__close:focus-visible,
+  .hisd-modal__btn:focus-visible,
+  .hisd-modal__panel:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  /* Non-filled interactive surfaces: hover/press lose their token tint when
+     backgrounds flatten, so mark them with a Highlight border instead. */
+  .hisd-modal__close:hover,
+  .hisd-modal__close:active,
+  .hisd-modal__btn--secondary:hover,
+  .hisd-modal__btn--secondary:active {
+    border-color: Highlight;
+  }
+
+  /* Disabled controls read as disabled via GrayText (text + border). */
+  .hisd-modal__close:disabled,
+  .hisd-modal__btn:disabled {
+    color: GrayText;
+    border-color: GrayText;
+  }
+
+  /* Destructive variant: the danger top-accent and the danger title color are
+     color-only signals that disappear when the OS flattens paint. Re-assert a
+     visible top border so the destructive panel stays distinguishable, and pin
+     the warning glyph to a brand color paired with that signal so it survives. */
+  .hisd-modal--destructive .hisd-modal__panel {
+    border-block-start: var(--space-1) solid Mark;
+  }
+  .hisd-modal--destructive .hisd-modal__title-icon {
+    forced-color-adjust: none;
+    background-color: Mark;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable the entrance/exit animation entirely. The theme
+   file already zeroes --duration-*, but we belt-and-brace here so the panel
+   appears at its final state with no transform/opacity tween.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-modal,
+  .hisd-modal__panel,
+  .hisd-modal__close,
+  .hisd-modal__btn {
+    transition: none;
+  }
+  .hisd-modal__panel {
+    transform: none;
+  }
+}

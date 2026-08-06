@@ -1,0 +1,256 @@
+/* HISD — Switch component
+ * Toggle switch: role="switch" with aria-checked.
+ * Track --color-border fill when off (with a --color-text-subtle boundary ring),
+ * --color-action when on; sliding thumb --color-surface with a --color-text-subtle edge.
+ * focus-visible ring on --color-focus. Thumb animates with --duration-fast,
+ * disabled under prefers-reduced-motion. Interactive target >= 24px.
+ *
+ * Every color resolves to a semantic --color-* or reference --hisd-* token.
+ * Dark theme is inherited automatically from an ancestor [data-theme="dark"];
+ * no component-specific dark-mode colors are declared here.
+ *
+ * Canonical markup:
+ *   <button type="button" class="hisd-switch" role="switch"
+ *           aria-checked="false" aria-label="Email notifications"></button>
+ */
+
+/* Component-scoped vars resolve to semantic tokens (per Conventions tier 3). */
+.hisd-switch {
+  /* Track geometry */
+  --hisd-switch-track-inline: var(--space-10);   /* 2.5rem track width  */
+  --hisd-switch-track-block: var(--space-6);     /* 1.5rem track height -> >=24px target */
+  --hisd-switch-thumb-size: var(--space-5);      /* 1.25rem thumb       */
+  --hisd-switch-gap: var(--space-0\.5);          /* inset of thumb from track edge */
+
+  /* Token-backed colors */
+  --hisd-switch-track-off: var(--color-border);
+  /* OFF-state boundary ring + thumb border resolve to --color-text-subtle so the
+   * track edge and thumb edge clear WCAG 2.2 SC 1.4.11 (>=3:1) against the host
+   * surface in BOTH themes — and the thumb edge stays >=3:1 against the pale
+   * --color-border track fill. (--color-border alone is only ~1.3-1.5:1 on
+   * surface and was the cause of the prior OFF-state contrast failure.) */
+  --hisd-switch-track-off-ring: var(--color-text-subtle);
+  --hisd-switch-track-on: var(--color-action);
+  --hisd-switch-track-on-hover: var(--color-action-hover);
+  /* Pressed state of the ON (filled-action) track — semantic state-ladder token. */
+  --hisd-switch-track-on-active: var(--color-action-active);
+  --hisd-switch-thumb: var(--color-surface);
+  --hisd-switch-thumb-border: var(--color-text-subtle);
+
+  /* Reset button chrome */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  /* Layout: track is a positioned box; thumb is the ::before pseudo. */
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--hisd-switch-track-inline);
+  block-size: var(--hisd-switch-track-block);
+  min-block-size: var(--space-6);   /* >= 24px (1.5rem) target */
+  min-inline-size: var(--space-6);
+
+  /* Track surface */
+  border-radius: var(--radius-pill);
+  background-color: var(--hisd-switch-track-off);
+  box-shadow: inset 0 0 0 1px var(--hisd-switch-track-off-ring);
+
+  transition-property: background-color, box-shadow;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-standard);
+  vertical-align: middle;
+}
+
+/* Sliding thumb */
+.hisd-switch::before {
+  content: "";
+  position: absolute;
+  inset-block-start: var(--hisd-switch-gap);
+  inset-inline-start: var(--hisd-switch-gap);
+  inline-size: var(--hisd-switch-thumb-size);
+  block-size: var(--hisd-switch-thumb-size);
+  box-sizing: border-box;
+  border-radius: var(--radius-pill);
+  background-color: var(--hisd-switch-thumb);
+  /* Thumb edge uses --color-text-subtle: >=3:1 against both the host surface and
+   * the pale OFF-track fill, so the thumb position is perceivable when OFF. */
+  box-shadow:
+    inset 0 0 0 1px var(--hisd-switch-thumb-border),
+    var(--shadow-1);
+
+  /* Travel = track width - thumb width - (2 * inset). Computed, not magic. */
+  transition-property: inset-inline-start, transform;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-standard);
+}
+
+/* ON state — track fills with action color, thumb slides to the inline-end. */
+.hisd-switch[aria-checked="true"] {
+  background-color: var(--hisd-switch-track-on);
+  box-shadow: inset 0 0 0 1px var(--hisd-switch-track-on);
+}
+
+.hisd-switch[aria-checked="true"]::before {
+  inset-inline-start: calc(
+    var(--hisd-switch-track-inline)
+    - var(--hisd-switch-thumb-size)
+    - var(--hisd-switch-gap)
+  );
+}
+
+/* HOVER (pointer, enabled only) — OFF hover deepens the ring to --color-text-muted
+ * (>=7:1 on surface), staying at or above the resting OFF ring contrast. */
+.hisd-switch:not([disabled]):not([aria-disabled="true"]):hover {
+  box-shadow: inset 0 0 0 1px var(--color-text-muted);
+}
+
+.hisd-switch[aria-checked="true"]:not([disabled]):not([aria-disabled="true"]):hover {
+  background-color: var(--hisd-switch-track-on-hover);
+  box-shadow: inset 0 0 0 1px var(--hisd-switch-track-on-hover);
+}
+
+/* ACTIVE / PRESSED (enabled only) — OFF press deepens the ring one more step to
+ * --color-text (the strongest text token, matching the hover->active progression);
+ * ON press uses the filled-action pressed state-ladder token --color-action-active. */
+.hisd-switch:not([disabled]):not([aria-disabled="true"]):active {
+  box-shadow: inset 0 0 0 1px var(--color-text);
+}
+
+.hisd-switch[aria-checked="true"]:not([disabled]):not([aria-disabled="true"]):active {
+  background-color: var(--hisd-switch-track-on-active);
+  box-shadow: inset 0 0 0 1px var(--hisd-switch-track-on-active);
+}
+
+/* FOCUS — never bare outline:none; always a visible ring. */
+.hisd-switch:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* DISABLED — supports both the native [disabled] attribute and aria-disabled. */
+.hisd-switch[disabled],
+.hisd-switch[aria-disabled="true"] {
+  opacity: 0.38;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* Honor reduced motion: drop the thumb-travel animation entirely.
+ * (The theme also zeroes --duration-* at :root, this is a belt-and-suspenders
+ *  guarantee that the slide cannot animate.) */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-switch,
+  .hisd-switch::before {
+    transition: none;
+  }
+}
+
+/* ---- Forced colors (Windows High Contrast) ------------------------------- *
+ * In forced-colors mode the OS flattens backgrounds, so the ON/OFF state can no
+ * longer be carried by the track fill alone. We let system colors take over
+ * (forced-color-adjust stays auto) and reinforce every state with a border so
+ * the thumb position and the checked state stay distinguishable. */
+@media (forced-colors: active) {
+  /* Track: outline it with system text so the boundary is always visible. */
+  .hisd-switch {
+    border: 1px solid ButtonText;
+    /* Drop the token-based inset ring; the border above is the visible boundary. */
+    box-shadow: none;
+  }
+
+  /* Thumb: ButtonText fill with a CanvasText edge so its position reads against
+   * the flattened track in both OFF and ON positions. */
+  .hisd-switch::before {
+    background-color: ButtonText;
+    box-shadow: inset 0 0 0 1px CanvasText;
+  }
+
+  /* ON: don't rely on fill alone — carry the checked state with a Highlight
+   * border AND flip the thumb to Highlight so the state is unmistakable. */
+  .hisd-switch[aria-checked="true"] {
+    border-color: Highlight;
+    box-shadow: none;
+  }
+
+  .hisd-switch[aria-checked="true"]::before {
+    background-color: Highlight;
+    box-shadow: inset 0 0 0 1px CanvasText;
+  }
+
+  /* Hover/active: keep a visible boundary; system colors handle the rest. */
+  .hisd-switch:not([disabled]):not([aria-disabled="true"]):hover,
+  .hisd-switch:not([disabled]):not([aria-disabled="true"]):active {
+    box-shadow: none;
+  }
+
+  /* Focus: keep the ring, but use the system Highlight color. */
+  .hisd-switch:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Disabled: read as disabled via GrayText on the track and thumb; opacity is
+   * ignored in forced-colors so the border/fill must carry the state. */
+  .hisd-switch[disabled],
+  .hisd-switch[aria-disabled="true"] {
+    opacity: 1;
+    border-color: GrayText;
+  }
+
+  .hisd-switch[disabled]::before,
+  .hisd-switch[aria-disabled="true"]::before {
+    background-color: GrayText;
+    box-shadow: none;
+  }
+
+  .hisd-switch[aria-checked="true"][disabled],
+  .hisd-switch[aria-checked="true"][aria-disabled="true"] {
+    border-color: GrayText;
+  }
+
+  /* Field label paired with a disabled control reads as GrayText. */
+  .hisd-switch-field:has(.hisd-switch[disabled]) .hisd-switch-field__label,
+  .hisd-switch-field:has(.hisd-switch[aria-disabled="true"]) .hisd-switch-field__label {
+    color: GrayText;
+  }
+}
+
+/* ---- Optional field wrapper: label + switch on one row -------------------- */
+.hisd-switch-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+}
+
+.hisd-switch-field__label {
+  cursor: pointer;
+}
+
+.hisd-switch-field__hint {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* Label text dims with a disabled control to keep them visually paired. */
+.hisd-switch-field:has(.hisd-switch[disabled]) .hisd-switch-field__label,
+.hisd-switch-field:has(.hisd-switch[aria-disabled="true"]) .hisd-switch-field__label {
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+}
+
+/* Pushes the control to the inline-end when the field fills its container. */
+.hisd-switch-field--spread {
+  justify-content: space-between;
+}

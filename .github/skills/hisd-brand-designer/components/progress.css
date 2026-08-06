@@ -1,0 +1,328 @@
+/* ==========================================================================
+   HISD Progress — reusable component styles
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css             (token names + light/dark values)
+     - Docs/Design-System/Components.md  (Components + Accessibility Contract)
+     - reference/Conventions.md          (token usage rules)
+
+   Variants in this file:
+     1. .hisd-progress              Linear DETERMINATE bar
+        role="progressbar" + aria-valuenow/valuemin/valuemax. Fill is
+        --color-action on a --color-surface-sunken track, radius --radius-pill.
+        Adds .hisd-progress--complete when valuenow == valuemax (success tint).
+     2. .hisd-progress--indeterminate   Linear INDETERMINATE bar
+        Animated stripe, driven by aria-busy (no aria-valuenow). Animation is
+        paused under prefers-reduced-motion: reduce.
+     3. .hisd-spinner              Circular / spinner variant
+        role="progressbar" (busy) or a labelled status; rotates --color-action
+        against a --color-surface-sunken ring. Paused under reduced motion.
+
+   Rules honored here:
+     - Every COLOR is a semantic var(--color-…) or ramp var(--hisd-…) token.
+       Zero raw hex / rgb / hsl / named colors anywhere in this file.
+     - Spacing / radius / type / shadow / motion come from tokens only
+       (the only literals are 0, 1px hairlines, percentages, and outline width).
+     - CSS LOGICAL properties for layout (inline-size, padding-inline,
+       inset-inline-start, border-inline-…) — never physical left/right.
+       The sole physical primitive is the indeterminate sweep's translateX,
+       which resolves to the x-axis; it is paired with a mirrored [dir="rtl"]
+       keyframe set so the stripe always tracks the inline reading direction.
+     - Visible focus ring on every interactive element; never bare outline:none.
+     - Dark theme inherits from an ancestor [data-theme="dark"] — no
+       component-specific dark-mode color values are declared here.
+     - All animation references --duration-* / --ease-* and is disabled under
+       @media (prefers-reduced-motion: reduce).
+     - Interactive targets are >= 24px via min-block-size / padding.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. LINEAR PROGRESS — shared shell
+   --------------------------------------------------------------------------
+   .hisd-progress is the TRACK. .hisd-progress__fill is the bar that grows.
+   The author sets the fill width inline via --hisd-progress-value (a %) so the
+   same CSS serves any value; JS keeps it in sync with aria-valuenow.
+   -------------------------------------------------------------------------- */
+.hisd-progress {
+  /* Component-scoped vars resolve to semantic tokens (Conventions tier 3). */
+  --hisd-progress-value: 0%;                       /* author-set fill width   */
+  --hisd-progress-track: var(--color-surface-sunken);
+  --hisd-progress-fill: var(--color-action);
+  --hisd-progress-thickness: var(--space-2);       /* 0.5rem default bar      */
+
+  display: block;
+  inline-size: 100%;
+  block-size: var(--hisd-progress-thickness);
+  min-block-size: var(--space-1);                  /* never collapses to 0     */
+  box-sizing: border-box;
+  overflow: hidden;
+
+  background-color: var(--hisd-progress-track);
+  border-radius: var(--radius-pill);
+}
+
+/* Optional larger track for emphasis (e.g. a wizard step bar). */
+.hisd-progress--lg {
+  --hisd-progress-thickness: var(--space-3);       /* 0.75rem */
+}
+
+/* --------------------------------------------------------------------------
+   Determinate fill — width is the value; color is --color-action.
+   -------------------------------------------------------------------------- */
+.hisd-progress__fill {
+  display: block;
+  block-size: 100%;
+  inline-size: var(--hisd-progress-value);
+  max-inline-size: 100%;
+  box-sizing: border-box;
+
+  background-color: var(--hisd-progress-fill);
+  border-radius: inherit;
+
+  /* Smoothly grow as the value changes. Token-driven, zeroed under
+     reduced motion by the theme's --duration-* and the media query below. */
+  transition: inline-size var(--duration-slow) var(--ease-standard),
+              background-color var(--duration-base) var(--ease-standard);
+}
+
+/* --------------------------------------------------------------------------
+   State: COMPLETE — valuenow == valuemax. Fill shifts to the success token
+   so a finished task reads as done, not merely "full". Apply the modifier on
+   the track and set aria-valuenow == aria-valuemax in markup.
+   -------------------------------------------------------------------------- */
+.hisd-progress--complete {
+  --hisd-progress-fill: var(--color-success);
+}
+
+/* --------------------------------------------------------------------------
+   2. State: INDETERMINATE — unknown progress.
+   Markup drops aria-valuenow and sets aria-busy="true". A token-colored stripe
+   sweeps across the track. The stripe is a child fill set to a fixed slice that
+   translates inline; under reduced motion it parks as a static partial bar so
+   the control still reads as "in progress".
+   -------------------------------------------------------------------------- */
+.hisd-progress--indeterminate {
+  position: relative;
+}
+
+.hisd-progress--indeterminate .hisd-progress__fill {
+  /* A slice of the track that travels end to end. Width/percentages only. */
+  inline-size: 40%;
+  transition: none;                                /* travel is the animation */
+  transform: translateX(-100%);
+  animation: hisd-progress-slide var(--duration-slower) var(--ease-standard) infinite;
+  /* --duration-slower (500ms) reads a touch quick for a sweep; lengthen via a
+     multiple of the token so motion still traces back to the scale. */
+  animation-duration: calc(var(--duration-slower) * 3);
+}
+
+/* translateX is a PHYSICAL axis, so the default keyframes sweep start->end of
+   the inline axis only in LTR. In RTL we must mirror the travel, otherwise the
+   stripe runs against the reading direction. Pair each writing direction with
+   its own keyframes (default = LTR; -rtl = mirrored) so the sweep always tracks
+   the inline reading flow, honoring the logical-properties / RTL contract. */
+@keyframes hisd-progress-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }            /* (100/40)% to clear track */
+}
+
+[dir="rtl"] .hisd-progress--indeterminate .hisd-progress__fill {
+  transform: translateX(100%);                     /* park at the RTL start edge */
+  animation-name: hisd-progress-slide-rtl;
+}
+
+@keyframes hisd-progress-slide-rtl {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-250%); }           /* mirror of the LTR sweep    */
+}
+
+/* --------------------------------------------------------------------------
+   3. CIRCULAR / SPINNER variant.
+   A rotating arc: a --color-surface-sunken ring with a --color-action arc on
+   top, built from a conic-gradient mask so the whole thing is one element and
+   every color is a token. Sized by --hisd-spinner-size; >= 24px by default.
+   -------------------------------------------------------------------------- */
+.hisd-spinner {
+  --hisd-spinner-size: var(--space-6);             /* 1.5rem = 24px floor      */
+  --hisd-spinner-thickness: var(--space-1);        /* ring stroke width        */
+  --hisd-spinner-track: var(--color-surface-sunken);
+  --hisd-spinner-arc: var(--color-action);
+
+  display: inline-block;
+  inline-size: var(--hisd-spinner-size);
+  block-size: var(--hisd-spinner-size);
+  min-inline-size: var(--space-6);                 /* >= 24px target           */
+  min-block-size: var(--space-6);
+  box-sizing: border-box;
+  border-radius: var(--radius-pill);
+
+  /* Ring = full track circle with a single rotating action-colored arc.
+     The conic gradient paints the arc; the radial mask punches the center
+     out so only the stroke shows. Both stops use tokens. */
+  background:
+    conic-gradient(
+      var(--hisd-spinner-arc) 0deg 90deg,
+      var(--hisd-spinner-track) 90deg 360deg
+    );
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+      transparent calc(100% - var(--hisd-spinner-thickness)),
+      var(--color-text) calc(100% - var(--hisd-spinner-thickness))
+    );
+  mask:
+    radial-gradient(
+      farthest-side,
+      transparent calc(100% - var(--hisd-spinner-thickness)),
+      var(--color-text) calc(100% - var(--hisd-spinner-thickness))
+    );
+
+  animation: hisd-spinner-rotate var(--duration-slower) linear infinite;
+  animation-duration: calc(var(--duration-slower) * 2);
+}
+
+/* Larger spinner for full-page / section loading. */
+.hisd-spinner--lg {
+  --hisd-spinner-size: var(--space-10);            /* 2.5rem */
+  --hisd-spinner-thickness: var(--space-1);
+}
+
+@keyframes hisd-spinner-rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   Wrapper / label — optional row that pairs a progress control with a text
+   label and a value read-out. Pure layout; colors are text tokens.
+   The value read-out is an aria-live region so updates are announced.
+   -------------------------------------------------------------------------- */
+.hisd-progress-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+}
+
+.hisd-progress-field__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.hisd-progress-field__label {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.hisd-progress-field__value {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+/* Inline spinner + label row (status pattern). */
+.hisd-spinner-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Focus — the progress controls are non-interactive status widgets, so they
+   are not in the tab order. But if an author makes one focusable (e.g. to give
+   a screen-reader user a stable landing point, tabindex="0"), it must show a
+   visible ring and never a bare outline:none. Same rule for the spinner.
+   -------------------------------------------------------------------------- */
+.hisd-progress:focus-visible,
+.hisd-spinner:focus-visible,
+.hisd-progress-field:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable every keyframe animation. The indeterminate bar
+   parks as a static partial fill (still legible as "working"); the spinner
+   stops rotating but the arc remains visible against the ring. The theme file
+   already zeroes --duration-* at :root; this is the belt-and-braces guarantee
+   for the keyframe animations, which media-zeroed durations alone do not stop.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-progress__fill {
+    transition: none;
+  }
+  /* Park the indeterminate sweep in BOTH writing directions. The [dir="rtl"]
+     animation override above out-specifies the bare selector, so its RTL
+     park/animation-name must be neutralized at >= that specificity here, or
+     the sweep would keep running (and stay off-edge) under reduced motion. */
+  .hisd-progress--indeterminate .hisd-progress__fill,
+  [dir="rtl"] .hisd-progress--indeterminate .hisd-progress__fill {
+    animation: none;
+    transform: none;
+    inline-size: 40%;                              /* parked, mid-track        */
+  }
+  .hisd-spinner {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors: active).
+   --------------------------------------------------------------------------
+   These controls convey state through BACKGROUND color alone — the fill vs.
+   track contrast, the success tint on complete, and the spinner's
+   conic/radial-mask arc all flatten when the OS overrides backgrounds, which
+   would leave the bar invisible and the "done" state indistinguishable. We let
+   system colors take over (forced-color-adjust stays auto) but add system-color
+   borders so progress, completion, and the spinner arc survive the flattening.
+   Focus keeps a visible ring using the Highlight system color.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Track: give the rail a system border so its extent is visible once the
+     background is flattened to Canvas. */
+  .hisd-progress {
+    border: 1px solid CanvasText;
+  }
+
+  /* Fill: paint it with a system color and outline it so the FILLED portion is
+     distinguishable from the empty track (background alone won't separate the
+     two). Highlight reads as the active/in-progress portion. */
+  .hisd-progress__fill {
+    background-color: Highlight;
+    /* A 1px inset edge keeps the boundary between fill and track legible even
+       when fill and track would otherwise flatten to the same surface. */
+    border-inline-end: 1px solid CanvasText;
+  }
+
+  /* Complete: background tint alone can't signal "done" here, so re-state
+     completion with a distinct system color (Mark = highlighted/emphasis). */
+  .hisd-progress--complete .hisd-progress__fill {
+    background-color: Mark;
+  }
+
+  /* Spinner: the arc is a conic-gradient behind a radial mask — both vanish
+     when backgrounds flatten. Drop the mask, hide the painted ring, and draw
+     a real bordered ring so the control still reads as a loading indicator.
+     The leading edge uses Highlight to suggest the rotating arc. */
+  .hisd-spinner {
+    background: none;
+    -webkit-mask: none;
+    mask: none;
+    border: var(--hisd-spinner-thickness) solid CanvasText;
+    border-block-start-color: Highlight;
+  }
+
+  /* Focus: keep the ring, swap to a system color so it stays visible. */
+  .hisd-progress:focus-visible,
+  .hisd-spinner:focus-visible,
+  .hisd-progress-field:focus-visible {
+    outline-color: Highlight;
+  }
+}

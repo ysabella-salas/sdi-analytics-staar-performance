@@ -1,0 +1,9 @@
+{
+  "name": "hisd-web-components",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "HISD design-system Web Components — framework-agnostic light-DOM custom elements. Pair with hisd-theme.css + components.css.",
+  "sideEffects": true,
+  "main": "src/index.js"
+}

@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Card — component demo</title>
+
+  <!-- Tokens first (light + dark themes live here), then the component. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="card.css">
+
+  <style>
+    /* Demo-page chrome only — NOT part of the component.
+       Still uses semantic tokens so the page reads correctly in both themes. */
+    body {
+      margin: 0;
+      padding: var(--space-6);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: var(--leading-normal);
+    }
+    .demo-h1 {
+      margin: 0 0 var(--space-2);
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-text);
+    }
+    .demo-lede {
+      margin: 0 0 var(--space-8);
+      max-inline-size: 60ch;
+      color: var(--color-text-muted);
+    }
+    .demo-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: var(--space-8);
+      align-items: start;
+    }
+    .demo-pane {
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      background-color: var(--color-bg);
+    }
+    .demo-pane__title {
+      margin: 0 0 var(--space-5);
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    .demo-label {
+      margin: 0 0 calc(-1 * var(--space-2));
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+    }
+    .demo-status {
+      margin-block-start: var(--space-6);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface-sunken);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+    .demo-snippet {
+      margin-block-start: var(--space-10);
+    }
+    .demo-snippet h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    pre {
+      margin: 0;
+      padding: var(--space-5);
+      overflow: auto;
+      background-color: var(--color-surface-inverse);
+      color: var(--color-text-inverse);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+    }
+    code { font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+
+  <h1 class="demo-h1">HISD Card</h1>
+  <p class="demo-lede">
+    A surface container that groups related content into a scannable unit.
+    Shown below in both themes, each pane exercising every state: default,
+    raised, interactive (hover / focus-visible), selected, and disabled.
+    Interactive cards are a single <code>&lt;a&gt;</code> or
+    <code>&lt;button&gt;</code> root carrying an <code>aria-label</code> that
+    covers the whole intent — no nested interactive elements.
+  </p>
+
+  <div class="demo-columns">
+
+    <!-- ============================ LIGHT ============================ -->
+    <section class="demo-pane" data-theme="light" aria-labelledby="pane-light-title">
+      <h2 class="demo-pane__title" id="pane-light-title">Light theme</h2>
+
+      <div class="demo-grid">
+
+        <p class="demo-label">Default (static)</p>
+        <article class="hisd-card" aria-labelledby="l-default-title">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Enrollment</p>
+            <h3 class="hisd-card__title" id="l-default-title">Register for the 2026–27 school year</h3>
+          </header>
+          <p class="hisd-card__body">
+            Online registration is open for new and returning students. Have a
+            proof of residence and an immunization record ready before you start.
+          </p>
+        </article>
+
+        <p class="demo-label">Raised (promoted content)</p>
+        <article class="hisd-card hisd-card--raised hisd-card--accent-brand" aria-labelledby="l-raised-title">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Featured</p>
+            <h3 class="hisd-card__title" id="l-raised-title">District Calendar 2026–27</h3>
+          </header>
+          <p class="hisd-card__body">
+            Key dates, holidays, and grading periods at a glance. Elevated with
+            <code>--shadow-2</code> in light; the shadow drops and the border
+            strengthens in dark.
+          </p>
+        </article>
+
+        <p class="demo-label">Interactive (hover · Tab to focus · Enter/Space)</p>
+        <a class="hisd-card hisd-card--raised hisd-card--interactive"
+           href="#school-navigator"
+           aria-label="Open the School Navigator to find your zoned campus and compare programs">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Tool</p>
+            <h3 class="hisd-card__title">School Navigator</h3>
+          </header>
+          <p class="hisd-card__body">
+            Find your zoned campus, compare programs, and check transfer windows.
+          </p>
+          <span class="hisd-card__cta" aria-hidden="true">
+            Open the navigator
+            <span class="hisd-card__cta-icon"></span>
+          </span>
+        </a>
+
+        <p class="demo-label">Interactive as &lt;button&gt; (selectable)</p>
+        <button type="button"
+                class="hisd-card hisd-card--raised hisd-card--interactive js-selectable"
+                aria-pressed="false"
+                aria-label="Select the Pre-K program card">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Program</p>
+            <h3 class="hisd-card__title">Pre-K (ages 3–4)</h3>
+          </header>
+          <p class="hisd-card__body">
+            Full-day early-childhood education. Activate to select; the pressed
+            state is announced via <code>aria-pressed</code>.
+          </p>
+        </button>
+
+        <p class="demo-label">Disabled (interactive, not focusable)</p>
+        <a class="hisd-card hisd-card--raised hisd-card--interactive"
+           role="link"
+           aria-disabled="true"
+           aria-label="Summer programs registration — opens April 1 (currently unavailable)">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Summer</p>
+            <h3 class="hisd-card__title">Summer programs</h3>
+          </header>
+          <p class="hisd-card__body">Registration opens April 1.</p>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ============================ DARK ============================= -->
+    <section class="demo-pane" data-theme="dark" aria-labelledby="pane-dark-title">
+      <h2 class="demo-pane__title" id="pane-dark-title">Dark theme</h2>
+
+      <div class="demo-grid">
+
+        <p class="demo-label">Default (static)</p>
+        <article class="hisd-card" aria-labelledby="d-default-title">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Enrollment</p>
+            <h3 class="hisd-card__title" id="d-default-title">Register for the 2026–27 school year</h3>
+          </header>
+          <p class="hisd-card__body">
+            Online registration is open for new and returning students. Have a
+            proof of residence and an immunization record ready before you start.
+          </p>
+        </article>
+
+        <p class="demo-label">Raised (border-led elevation)</p>
+        <article class="hisd-card hisd-card--raised hisd-card--accent-brand" aria-labelledby="d-raised-title">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Featured</p>
+            <h3 class="hisd-card__title" id="d-raised-title">District Calendar 2026–27</h3>
+          </header>
+          <p class="hisd-card__body">
+            Key dates, holidays, and grading periods at a glance. In dark the
+            cast shadow is dropped and the border strengthens to carry elevation.
+          </p>
+        </article>
+
+        <p class="demo-label">Interactive (hover · Tab to focus · Enter/Space)</p>
+        <a class="hisd-card hisd-card--raised hisd-card--interactive"
+           href="#school-navigator"
+           aria-label="Open the School Navigator to find your zoned campus and compare programs">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Tool</p>
+            <h3 class="hisd-card__title">School Navigator</h3>
+          </header>
+          <p class="hisd-card__body">
+            Find your zoned campus, compare programs, and check transfer windows.
+          </p>
+          <span class="hisd-card__cta" aria-hidden="true">
+            Open the navigator
+            <span class="hisd-card__cta-icon"></span>
+          </span>
+        </a>
+
+        <p class="demo-label">Interactive as &lt;button&gt; (selectable)</p>
+        <button type="button"
+                class="hisd-card hisd-card--raised hisd-card--interactive js-selectable"
+                aria-pressed="false"
+                aria-label="Select the Pre-K program card">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Program</p>
+            <h3 class="hisd-card__title">Pre-K (ages 3–4)</h3>
+          </header>
+          <p class="hisd-card__body">
+            Full-day early-childhood education. Activate to select; the pressed
+            state is announced via <code>aria-pressed</code>.
+          </p>
+        </button>
+
+        <p class="demo-label">Disabled (interactive, not focusable)</p>
+        <a class="hisd-card hisd-card--raised hisd-card--interactive"
+           role="link"
+           aria-disabled="true"
+           aria-label="Summer programs registration — opens April 1 (currently unavailable)">
+          <header class="hisd-card__header">
+            <p class="hisd-card__eyebrow">Summer</p>
+            <h3 class="hisd-card__title">Summer programs</h3>
+          </header>
+          <p class="hisd-card__body">Registration opens April 1.</p>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Live region announces selection changes for assistive tech. -->
+  <p class="demo-status" role="status" aria-live="polite" id="demo-status">
+    No program selected.
+  </p>
+
+  <!-- ============================ SNIPPET =========================== -->
+  <section class="demo-snippet" aria-labelledby="snippet-title">
+    <h2 id="snippet-title">Copy-paste snippet</h2>
+    <pre><code>&lt;!-- Static card --&gt;
+&lt;article class="hisd-card" aria-labelledby="card-title"&gt;
+  &lt;header class="hisd-card__header"&gt;
+    &lt;p class="hisd-card__eyebrow"&gt;Enrollment&lt;/p&gt;
+    &lt;h3 class="hisd-card__title" id="card-title"&gt;Register for 2026–27&lt;/h3&gt;
+  &lt;/header&gt;
+  &lt;p class="hisd-card__body"&gt;Online registration is open for new and returning students.&lt;/p&gt;
+&lt;/article&gt;
+
+&lt;!-- Raised, fully clickable card: single &lt;a&gt; root + aria-label,
+     NO nested interactive elements. --&gt;
+&lt;a class="hisd-card hisd-card--raised hisd-card--interactive"
+   href="/school-navigator"
+   aria-label="Open the School Navigator to find your zoned campus and compare programs"&gt;
+  &lt;header class="hisd-card__header"&gt;
+    &lt;p class="hisd-card__eyebrow"&gt;Tool&lt;/p&gt;
+    &lt;h3 class="hisd-card__title"&gt;School Navigator&lt;/h3&gt;
+  &lt;/header&gt;
+  &lt;p class="hisd-card__body"&gt;Find your zoned campus and compare programs.&lt;/p&gt;
+  &lt;span class="hisd-card__cta" aria-hidden="true"&gt;
+    Open the navigator &lt;span class="hisd-card__cta-icon"&gt;&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/a&gt;</code></pre>
+  </section>
+
+  <script>
+    /* ----------------------------------------------------------------------
+       Keyboard + interaction wiring, per the WAI-ARIA APG.
+
+       1. Native <a href> and <button> already handle Enter (and Space for
+          button) — we do NOT re-implement that. We only add the toggle
+          behavior for the selectable button cards and guard disabled links.
+
+       2. Selectable cards are real <button aria-pressed>. The browser fires
+          'click' on both Enter and Space, so a single click handler covers
+          mouse + full keyboard activation without custom keydown code.
+
+       3. aria-disabled links are not natively inert, so we intercept
+          activation (click + Enter) and prevent default.
+       ---------------------------------------------------------------------- */
+    (function () {
+      var statusEl = document.getElementById('demo-status');
+
+      // Selectable button cards — toggle aria-pressed, announce via live region.
+      document.querySelectorAll('.js-selectable').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var nowPressed = card.getAttribute('aria-pressed') !== 'true';
+          card.setAttribute('aria-pressed', String(nowPressed));
+          card.classList.toggle('hisd-card--selected', nowPressed);
+          if (statusEl) {
+            statusEl.textContent = nowPressed
+              ? 'Pre-K (ages 3–4) selected.'
+              : 'No program selected.';
+          }
+        });
+      });
+
+      // Guard aria-disabled interactive cards against activation.
+      document.querySelectorAll('.hisd-card--interactive[aria-disabled="true"]')
+        .forEach(function (card) {
+          var block = function (event) {
+            if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') {
+              return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+          };
+          card.addEventListener('click', block);
+          card.addEventListener('keydown', block);
+        });
+    })();
+  </script>
+
+</body>
+</html>

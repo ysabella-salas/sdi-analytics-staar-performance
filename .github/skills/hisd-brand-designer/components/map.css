@@ -1,0 +1,278 @@
+/* ==========================================================================
+   HISD Map — accessible shell for an interactive map surface
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css             (token names + light/dark values)
+     - Docs/Design-System/Maps-And-Geospatial.md  (the model contract)
+     - Docs/Design-System/Cross-Media.md (the renderer-backed fail-open contract)
+
+   What this file provides — a CONTRACT-SHAPED markup shell, renderer-agnostic
+   (MapLibre, ArcGIS JS, Google Maps, or pure DOM all plug in the same way):
+
+     .hisd-map                  Root region. role="region" + an aria-label.
+     .hisd-map__canvas          The visual map (canvas/WebGL/iframe goes here).
+                                 aria-hidden="true" — semantics live in the DOM list.
+     .hisd-map__sr-skip         An sr-only "Skip the map" link to the list region
+                                 (WCAG 2.4.1 Bypass Blocks for keyboard users).
+     .hisd-map__controls        Token-styled +/- and recenter buttons that the
+                                 renderer wires up (they are the keyboard-pan/zoom
+                                 surface — the canvas itself is not focusable).
+     .hisd-map__list            A real <ul> of map features. THIS is the source of
+                                 truth: every marker on the canvas has a list item
+                                 that is keyboard-operable, focusable, and selectable.
+                                 The canvas mirrors the list, never the other way.
+     .hisd-map__panel           Details panel for a selected feature; toast/live-
+                                 region announcements ride here.
+
+   Rules honored here:
+     - Tokens only (color/space/radius/duration); logical properties throughout.
+     - The DOM is the SOURCE OF TRUTH (renderer-backed contract in Cross-Media).
+       The canvas is decorative; nothing semantic depends on it loading.
+     - Every interactive element ships --focus-ring-width / --color-focus.
+     - prefers-reduced-motion AND forced-colors handled.
+   ========================================================================== */
+
+.hisd-map {
+  /* Component-scoped vars resolve to semantic tokens (Conventions tier 3). */
+  --hisd-map-bg: var(--color-surface);
+  --hisd-map-border: var(--color-border);
+  --hisd-map-shadow: var(--shadow-2);
+  --hisd-map-list-width: 22rem;
+  --hisd-map-panel-bg: var(--color-surface);
+
+  display: grid;
+  /* Mobile-first: single column; the list stacks under the canvas.
+     At width container >= 48rem, splits to a side panel — uses container
+     queries when available (component-context responsiveness). */
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(20rem, 60vh) auto;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 24rem;
+  background-color: var(--hisd-map-bg);
+  border: 1px solid var(--hisd-map-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  container-type: inline-size;
+  container-name: hisd-map;
+  position: relative;
+}
+
+@container hisd-map (min-width: 48rem) {
+  .hisd-map {
+    grid-template-columns: 1fr var(--hisd-map-list-width);
+    grid-template-rows: 1fr;
+  }
+}
+
+/* ----------- the visual canvas ----------- */
+.hisd-map__canvas {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  background-color: var(--color-surface-sunken); /* placeholder while tiles load */
+  /* The renderer (MapLibre / ArcGIS / Google) draws inside this element.
+     The element itself is decorative; readers reach the data via the list. */
+}
+
+/* ----------- skip link (sr-only until focused) ----------- */
+.hisd-map__sr-skip {
+  position: absolute;
+  inset-inline-start: var(--space-2);
+  inset-block-start: var(--space-2);
+  z-index: 2;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  background-color: var(--color-surface);
+  color: var(--color-action);
+  font: inherit;
+  text-decoration: underline;
+  border: 0;
+}
+.hisd-map__sr-skip:focus-visible {
+  inline-size: auto;
+  block-size: auto;
+  padding: var(--space-2) var(--space-3);
+  clip-path: none;
+  border-radius: var(--radius-md);
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--hisd-map-shadow);
+}
+
+/* ----------- map-control cluster (zoom / recenter) ----------- */
+.hisd-map__controls {
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  inset-block-start: var(--space-3);
+  z-index: 2;
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-1);
+}
+
+.hisd-map__control {
+  min-inline-size: var(--target-size-touch);
+  min-block-size: var(--target-size-touch);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.hisd-map__control:hover {
+  background-color: var(--color-surface-hover);
+}
+.hisd-map__control:active {
+  background-color: var(--color-surface-active);
+}
+.hisd-map__control:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}
+.hisd-map__control[disabled] {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+/* ----------- list region (the source of truth) ----------- */
+.hisd-map__list-region {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border-block-start: 1px solid var(--color-border);
+}
+@container hisd-map (min-width: 48rem) {
+  .hisd-map__list-region {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--color-border);
+  }
+}
+
+.hisd-map__search {
+  padding: var(--space-3);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.hisd-map__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.hisd-map__list-item {
+  display: block;
+}
+
+.hisd-map__list-button {
+  inline-size: 100%;
+  text-align: start;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 0;
+  border-block-end: 1px solid var(--color-border);
+  cursor: pointer;
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-block-size: var(--target-size-touch);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.hisd-map__list-button:hover {
+  background-color: var(--color-surface-hover);
+}
+.hisd-map__list-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: calc(-1 * var(--focus-ring-offset)); /* inset, so it doesn't clip */
+}
+.hisd-map__list-button[aria-pressed="true"],
+.hisd-map__list-button[aria-current="true"] {
+  background-color: var(--color-selected);
+  color: var(--color-text-on-selected);
+  border-inline-start: 4px solid var(--color-selected-border);
+}
+
+.hisd-map__list-name {
+  font-weight: 600;
+}
+.hisd-map__list-meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ----------- detail panel (for a selected feature) ----------- */
+.hisd-map__panel {
+  padding: var(--space-4);
+  background-color: var(--hisd-map-panel-bg);
+  border-block-start: 1px solid var(--color-border);
+}
+
+/* ----------- live region (announces selection / pan / zoom changes) ----------- */
+.hisd-map__live {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ----------- empty / loading / error states ----------- */
+.hisd-map__state {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* ----------- reduced motion: kill movement, keep crossfades ----------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-map__control,
+  .hisd-map__list-button {
+    transition: none;
+  }
+}
+
+/* ----------- forced colors: system-color borders + Highlight selection ----------- */
+@media (forced-colors: active) {
+  .hisd-map,
+  .hisd-map__controls,
+  .hisd-map__list-region,
+  .hisd-map__panel {
+    border-color: CanvasText;
+  }
+  .hisd-map__list-button[aria-pressed="true"],
+  .hisd-map__list-button[aria-current="true"] {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+    background-color: Canvas;
+    color: CanvasText;
+    border-inline-start-color: Highlight;
+  }
+  .hisd-map__control:focus-visible,
+  .hisd-map__list-button:focus-visible,
+  .hisd-map__sr-skip:focus-visible {
+    outline-color: Highlight;
+  }
+}

@@ -1,0 +1,24 @@
+// HISD Web Components — import this once to register every <hisd-*> element.
+import './hisd-accordion.js';
+import './hisd-alert.js';
+import './hisd-avatar.js';
+import './hisd-badge.js';
+import './hisd-breadcrumb.js';
+import './hisd-button.js';
+import './hisd-card.js';
+import './hisd-chip.js';
+import './hisd-input-text.js';
+import './hisd-modal.js';
+import './hisd-navbar.js';
+import './hisd-pagination.js';
+import './hisd-progress.js';
+import './hisd-ribbon.js';
+import './hisd-select.js';
+import './hisd-selection-controls.js';
+import './hisd-sidebar.js';
+import './hisd-switch.js';
+import './hisd-table.js';
+import './hisd-tabs.js';
+import './hisd-textarea.js';
+import './hisd-toast.js';
+import './hisd-tooltip.js';

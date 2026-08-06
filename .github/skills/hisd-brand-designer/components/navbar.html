@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Navbar — component demo</title>
+  <!-- Theme tokens MUST load before the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+    /* Page-level demo scaffolding only — not part of the component.
+       Still token-driven so the demo itself stays on-brand. */
+    body {
+      margin: 0;
+      padding: var(--space-8);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: var(--leading-normal);
+    }
+    .demo-title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      margin-block: 0 var(--space-2);
+    }
+    .demo-lede {
+      color: var(--color-text-muted);
+      max-inline-size: 70ch;
+      margin-block: 0 var(--space-8);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .demo-panel {
+      background-color: var(--color-bg);
+      border: var(--space-px) solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      /* Contain the drawer's position:fixed so each theme demo can show its
+         own drawer within its own panel. */
+      position: relative;
+      transform: translateZ(0);
+      overflow: hidden;
+    }
+    .demo-panel__title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      margin-block: 0 var(--space-1);
+    }
+    .demo-panel__note {
+      color: var(--color-text-subtle);
+      font-size: var(--text-sm);
+      margin-block: 0 var(--space-5);
+    }
+    /* Constrain each demo to a narrow viewport so the mobile/collapsed state is
+       reachable without resizing the browser. Below 48rem the navbar collapses
+       to the hamburger + drawer automatically. */
+    .demo-frame {
+      max-inline-size: 44rem;
+    }
+    .demo-frame--narrow {
+      max-inline-size: 26rem;
+    }
+    .demo-state-label {
+      font-size: var(--text-2xs);
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+      margin-block: var(--space-5) var(--space-2);
+    }
+    .demo-mainstub {
+      margin-block-start: var(--space-3);
+      padding: var(--space-3);
+      background-color: var(--color-surface-sunken);
+      border-radius: var(--radius-md);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+    .demo-snippet-heading {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-semibold);
+      margin-block: var(--space-12) var(--space-3);
+    }
+    pre {
+      background-color: var(--color-surface-sunken);
+      border: var(--space-px) solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+      overflow-x: auto;
+      margin: 0;
+    }
+    code {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+    /* Visually-hidden live region (announces drawer open/close to AT). */
+    .demo-visually-hidden {
+      position: absolute;
+      inline-size: var(--space-px);
+      block-size: var(--space-px);
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    /* Inside the constrained demo frames the drawer is scoped to the panel, not
+       the whole window, so the overlay reads as part of the example. */
+    .demo-panel .hisd-navbar__drawer {
+      position: absolute;
+    }
+    /* Force the horizontal/collapsed split inside the demo frames regardless of
+       the real browser width, so BOTH states are visible side by side. */
+    .demo-frame--narrow .hisd-navbar__list { display: none; }
+    .demo-frame--narrow .hisd-navbar__toggle { display: inline-flex; }
+    .demo-frame--narrow .hisd-navbar[data-open="true"] .hisd-navbar__drawer { display: block; }
+  </style>
+</head>
+<body>
+  <h1 class="demo-title">HISD Navbar</h1>
+  <p class="demo-lede">
+    Top navigation per the HISD Navigation contract. A skip-link
+    (<code>href="#main-content"</code>) sits first in DOM order and is hidden
+    until focused. The root is <code>&lt;nav aria-label="Main"&gt;</code>. The
+    active link uses AA-safe <code>--color-action</code> text with a 2&nbsp;px
+    <code>--color-brand</code> underline (the brand accent) and
+    <code>aria-current="page"</code>; hover raises the surface to
+    <code>--color-surface-raised</code>. Below&nbsp;48&nbsp;rem the links
+    collapse behind a hamburger that opens a <code>role="dialog"</code> drawer
+    with a focus trap and Escape-to-close. Each state is shown in both themes.
+    Tab into either example to see the skip-link and focus rings.
+  </p>
+
+  <div class="demo-grid">
+
+    <!-- ===================== LIGHT THEME ===================== -->
+    <section class="demo-panel" data-theme="light" aria-label="Navbar states, light theme">
+      <h2 class="demo-panel__title">Light theme</h2>
+      <p class="demo-panel__note">data-theme="light"</p>
+
+      <!-- ---- Wide / default: full horizontal bar, active + hover ---- -->
+      <p class="demo-state-label">Default · active link · hover</p>
+      <div class="demo-frame">
+        <a class="hisd-navbar__skip-link" href="#main-content-light">Skip to main content</a>
+        <nav class="hisd-navbar" aria-label="Main" data-hisd-navbar>
+          <a class="hisd-navbar__brand" href="#home-light">
+            <span class="hisd-navbar__brand-mark" aria-hidden="true">H</span>
+            <span>Houston ISD</span>
+          </a>
+          <ul class="hisd-navbar__list">
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#schools-light" aria-current="page">Schools</a>
+            </li>
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#enroll-light">Enroll</a>
+            </li>
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#families-light">Families</a>
+            </li>
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#about-light">About</a>
+            </li>
+          </ul>
+          <div class="hisd-navbar__actions">
+            <button type="button"
+                    class="hisd-navbar__toggle"
+                    aria-label="Open main menu"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-controls="hisd-drawer-light">
+              <span class="hisd-navbar__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <!-- Drawer: role="dialog", labelled by its title, hidden until open -->
+          <div class="hisd-navbar__drawer" id="hisd-drawer-light"
+               role="dialog" aria-modal="true" aria-labelledby="hisd-drawer-light-title" hidden>
+            <div class="hisd-navbar__scrim" data-hisd-dismiss></div>
+            <div class="hisd-navbar__panel">
+              <div class="hisd-navbar__panel-header">
+                <h2 class="hisd-navbar__panel-title" id="hisd-drawer-light-title">Menu</h2>
+                <button type="button" class="hisd-navbar__close"
+                        aria-label="Close main menu" data-hisd-dismiss>
+                  <span class="hisd-navbar__close-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <ul class="hisd-navbar__panel-list">
+                <li><a class="hisd-navbar__panel-link" href="#schools-light" aria-current="page">Schools</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#enroll-light">Enroll</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#families-light">Families</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#about-light">About</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <p class="demo-mainstub" id="main-content-light" tabindex="-1">
+          Main content lands here — the skip-link targets this region.
+        </p>
+      </div>
+
+      <!-- ---- Collapsed / mobile: hamburger + drawer (open the dialog) ---- -->
+      <p class="demo-state-label">Mobile collapsed · drawer dialog</p>
+      <div class="demo-frame demo-frame--narrow">
+        <a class="hisd-navbar__skip-link" href="#main-content-light-m">Skip to main content</a>
+        <nav class="hisd-navbar" aria-label="Main" data-hisd-navbar>
+          <a class="hisd-navbar__brand" href="#home-light-m">
+            <span class="hisd-navbar__brand-mark" aria-hidden="true">H</span>
+            <span>Houston ISD</span>
+          </a>
+          <ul class="hisd-navbar__list">
+            <li class="hisd-navbar__item"><a class="hisd-navbar__link" href="#schools-light-m" aria-current="page">Schools</a></li>
+            <li class="hisd-navbar__item"><a class="hisd-navbar__link" href="#enroll-light-m">Enroll</a></li>
+            <li class="hisd-navbar__item"><a class="hisd-navbar__link" href="#families-light-m">Families</a></li>
+          </ul>
+          <div class="hisd-navbar__actions">
+            <button type="button"
+                    class="hisd-navbar__toggle"
+                    aria-label="Open main menu"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-controls="hisd-drawer-light-m">
+              <span class="hisd-navbar__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="hisd-navbar__drawer" id="hisd-drawer-light-m"
+               role="dialog" aria-modal="true" aria-labelledby="hisd-drawer-light-m-title" hidden>
+            <div class="hisd-navbar__scrim" data-hisd-dismiss></div>
+            <div class="hisd-navbar__panel">
+              <div class="hisd-navbar__panel-header">
+                <h2 class="hisd-navbar__panel-title" id="hisd-drawer-light-m-title">Menu</h2>
+                <button type="button" class="hisd-navbar__close"
+                        aria-label="Close main menu" data-hisd-dismiss>
+                  <span class="hisd-navbar__close-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <ul class="hisd-navbar__panel-list">
+                <li><a class="hisd-navbar__panel-link" href="#schools-light-m" aria-current="page">Schools</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#enroll-light-m">Enroll</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#families-light-m">Families</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <p class="demo-mainstub" id="main-content-light-m" tabindex="-1">
+          Press the hamburger, then try Escape and Tab inside the drawer.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== DARK THEME ===================== -->
+    <section class="demo-panel" data-theme="dark" aria-label="Navbar states, dark theme">
+      <h2 class="demo-panel__title">Dark theme</h2>
+      <p class="demo-panel__note">data-theme="dark"</p>
+
+      <p class="demo-state-label">Default · active link · hover</p>
+      <div class="demo-frame">
+        <a class="hisd-navbar__skip-link" href="#main-content-dark">Skip to main content</a>
+        <nav class="hisd-navbar" aria-label="Main" data-hisd-navbar>
+          <a class="hisd-navbar__brand" href="#home-dark">
+            <span class="hisd-navbar__brand-mark" aria-hidden="true">H</span>
+            <span>Houston ISD</span>
+          </a>
+          <ul class="hisd-navbar__list">
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#schools-dark" aria-current="page">Schools</a>
+            </li>
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#enroll-dark">Enroll</a>
+            </li>
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#families-dark">Families</a>
+            </li>
+            <li class="hisd-navbar__item">
+              <a class="hisd-navbar__link" href="#about-dark">About</a>
+            </li>
+          </ul>
+          <div class="hisd-navbar__actions">
+            <button type="button"
+                    class="hisd-navbar__toggle"
+                    aria-label="Open main menu"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-controls="hisd-drawer-dark">
+              <span class="hisd-navbar__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="hisd-navbar__drawer" id="hisd-drawer-dark"
+               role="dialog" aria-modal="true" aria-labelledby="hisd-drawer-dark-title" hidden>
+            <div class="hisd-navbar__scrim" data-hisd-dismiss></div>
+            <div class="hisd-navbar__panel">
+              <div class="hisd-navbar__panel-header">
+                <h2 class="hisd-navbar__panel-title" id="hisd-drawer-dark-title">Menu</h2>
+                <button type="button" class="hisd-navbar__close"
+                        aria-label="Close main menu" data-hisd-dismiss>
+                  <span class="hisd-navbar__close-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <ul class="hisd-navbar__panel-list">
+                <li><a class="hisd-navbar__panel-link" href="#schools-dark" aria-current="page">Schools</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#enroll-dark">Enroll</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#families-dark">Families</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#about-dark">About</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <p class="demo-mainstub" id="main-content-dark" tabindex="-1">
+          Main content lands here — the skip-link targets this region.
+        </p>
+      </div>
+
+      <p class="demo-state-label">Mobile collapsed · drawer dialog</p>
+      <div class="demo-frame demo-frame--narrow">
+        <a class="hisd-navbar__skip-link" href="#main-content-dark-m">Skip to main content</a>
+        <nav class="hisd-navbar" aria-label="Main" data-hisd-navbar>
+          <a class="hisd-navbar__brand" href="#home-dark-m">
+            <span class="hisd-navbar__brand-mark" aria-hidden="true">H</span>
+            <span>Houston ISD</span>
+          </a>
+          <ul class="hisd-navbar__list">
+            <li class="hisd-navbar__item"><a class="hisd-navbar__link" href="#schools-dark-m" aria-current="page">Schools</a></li>
+            <li class="hisd-navbar__item"><a class="hisd-navbar__link" href="#enroll-dark-m">Enroll</a></li>
+            <li class="hisd-navbar__item"><a class="hisd-navbar__link" href="#families-dark-m">Families</a></li>
+          </ul>
+          <div class="hisd-navbar__actions">
+            <button type="button"
+                    class="hisd-navbar__toggle"
+                    aria-label="Open main menu"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-controls="hisd-drawer-dark-m">
+              <span class="hisd-navbar__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="hisd-navbar__drawer" id="hisd-drawer-dark-m"
+               role="dialog" aria-modal="true" aria-labelledby="hisd-drawer-dark-m-title" hidden>
+            <div class="hisd-navbar__scrim" data-hisd-dismiss></div>
+            <div class="hisd-navbar__panel">
+              <div class="hisd-navbar__panel-header">
+                <h2 class="hisd-navbar__panel-title" id="hisd-drawer-dark-m-title">Menu</h2>
+                <button type="button" class="hisd-navbar__close"
+                        aria-label="Close main menu" data-hisd-dismiss>
+                  <span class="hisd-navbar__close-icon" aria-hidden="true"></span>
+                </button>
+              </div>
+              <ul class="hisd-navbar__panel-list">
+                <li><a class="hisd-navbar__panel-link" href="#schools-dark-m" aria-current="page">Schools</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#enroll-dark-m">Enroll</a></li>
+                <li><a class="hisd-navbar__panel-link" href="#families-dark-m">Families</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <p class="demo-mainstub" id="main-content-dark-m" tabindex="-1">
+          Press the hamburger, then try Escape and Tab inside the drawer.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Polite live region: announces the drawer open/close to assistive tech. -->
+  <div class="demo-visually-hidden" aria-live="polite" data-hisd-live></div>
+
+  <h2 class="demo-snippet-heading">Copy-paste snippet</h2>
+  <pre><code>&lt;!-- HISD Navbar. Requires hisd-theme.css + navbar.css.
+     The skip-link MUST be first in DOM order. --&gt;
+&lt;a class="hisd-navbar__skip-link" href="#main-content"&gt;Skip to main content&lt;/a&gt;
+
+&lt;nav class="hisd-navbar" aria-label="Main" data-hisd-navbar&gt;
+  &lt;a class="hisd-navbar__brand" href="/"&gt;
+    &lt;span class="hisd-navbar__brand-mark" aria-hidden="true"&gt;H&lt;/span&gt;
+    &lt;span&gt;Houston ISD&lt;/span&gt;
+  &lt;/a&gt;
+
+  &lt;ul class="hisd-navbar__list"&gt;
+    &lt;li class="hisd-navbar__item"&gt;
+      &lt;a class="hisd-navbar__link" href="/schools" aria-current="page"&gt;Schools&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="hisd-navbar__item"&gt;
+      &lt;a class="hisd-navbar__link" href="/enroll"&gt;Enroll&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="hisd-navbar__item"&gt;
+      &lt;a class="hisd-navbar__link" href="/families"&gt;Families&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;div class="hisd-navbar__actions"&gt;
+    &lt;button type="button" class="hisd-navbar__toggle"
+            aria-label="Open main menu" aria-haspopup="dialog"
+            aria-expanded="false" aria-controls="hisd-drawer"&gt;
+      &lt;span class="hisd-navbar__toggle-icon" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="hisd-navbar__drawer" id="hisd-drawer" role="dialog"
+       aria-modal="true" aria-labelledby="hisd-drawer-title" hidden&gt;
+    &lt;div class="hisd-navbar__scrim" data-hisd-dismiss&gt;&lt;/div&gt;
+    &lt;div class="hisd-navbar__panel"&gt;
+      &lt;div class="hisd-navbar__panel-header"&gt;
+        &lt;h2 class="hisd-navbar__panel-title" id="hisd-drawer-title"&gt;Menu&lt;/h2&gt;
+        &lt;button type="button" class="hisd-navbar__close"
+                aria-label="Close main menu" data-hisd-dismiss&gt;
+          &lt;span class="hisd-navbar__close-icon" aria-hidden="true"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;ul class="hisd-navbar__panel-list"&gt;
+        &lt;li&gt;&lt;a class="hisd-navbar__panel-link" href="/schools" aria-current="page"&gt;Schools&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a class="hisd-navbar__panel-link" href="/enroll"&gt;Enroll&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a class="hisd-navbar__panel-link" href="/families"&gt;Families&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+
+  <script>
+    // ----------------------------------------------------------------------
+    // HISD Navbar — drawer behavior per WAI-ARIA APG "Dialog (Modal)".
+    //
+    // The bar itself needs no JS: links are plain <a>, the active link is
+    // styled purely from aria-current="page", and hover/focus are CSS. The
+    // only scripted behavior is the mobile drawer:
+    //
+    //   - Hamburger <button> toggles the dialog. Native buttons already fire
+    //     on Enter and Space, so no extra key handling is needed to OPEN.
+    //   - On open: reveal the dialog, set aria-expanded="true", move focus to
+    //     the close button, trap Tab / Shift+Tab inside the panel, and
+    //     announce the change in a polite live region.
+    //   - Escape, the close button, and the scrim all dismiss; focus returns
+    //     to the hamburger that opened it.
+    // ----------------------------------------------------------------------
+    (function () {
+      var FOCUSABLE = [
+        'a[href]', 'button:not([disabled])', 'input:not([disabled])',
+        'select:not([disabled])', 'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(',');
+
+      var liveRegion = document.querySelector('[data-hisd-live]');
+
+      function announce(msg) {
+        if (liveRegion) { liveRegion.textContent = msg; }
+      }
+
+      document.querySelectorAll('[data-hisd-navbar]').forEach(function (nav) {
+        var toggle = nav.querySelector('.hisd-navbar__toggle');
+        var drawer = nav.querySelector('.hisd-navbar__drawer');
+        if (!toggle || !drawer) { return; }
+        var panel = drawer.querySelector('.hisd-navbar__panel');
+
+        function visibleFocusable() {
+          return Array.prototype.filter.call(
+            panel.querySelectorAll(FOCUSABLE),
+            function (el) { return el.offsetParent !== null || el === document.activeElement; }
+          );
+        }
+
+        function openDrawer() {
+          nav.setAttribute('data-open', 'true');
+          drawer.hidden = false;
+          toggle.setAttribute('aria-expanded', 'true');
+          // Move focus into the dialog (the close button is a safe landing).
+          var closeBtn = panel.querySelector('.hisd-navbar__close');
+          if (closeBtn) { closeBtn.focus(); }
+          announce('Main menu opened');
+          document.addEventListener('keydown', onKeydown, true);
+        }
+
+        function closeDrawer() {
+          nav.removeAttribute('data-open');
+          drawer.hidden = true;
+          toggle.setAttribute('aria-expanded', 'false');
+          announce('Main menu closed');
+          document.removeEventListener('keydown', onKeydown, true);
+          // Return focus to the trigger per the APG.
+          toggle.focus();
+        }
+
+        function isOpen() {
+          return toggle.getAttribute('aria-expanded') === 'true';
+        }
+
+        function onKeydown(event) {
+          if (!isOpen()) { return; }
+
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            closeDrawer();
+            return;
+          }
+
+          // Tab trap: keep focus cycling within the panel.
+          if (event.key === 'Tab') {
+            var items = visibleFocusable();
+            if (items.length === 0) { return; }
+            var first = items[0];
+            var last = items[items.length - 1];
+            var active = document.activeElement;
+
+            if (event.shiftKey && active === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && active === last) {
+              event.preventDefault();
+              first.focus();
+            } else if (!panel.contains(active)) {
+              // Focus escaped the panel — pull it back in.
+              event.preventDefault();
+              first.focus();
+            }
+          }
+        }
+
+        toggle.addEventListener('click', function () {
+          if (isOpen()) { closeDrawer(); } else { openDrawer(); }
+        });
+
+        // Scrim + close button both dismiss.
+        drawer.querySelectorAll('[data-hisd-dismiss]').forEach(function (el) {
+          el.addEventListener('click', function () { closeDrawer(); });
+        });
+
+        // Activating a link inside the drawer closes it (single-page demo).
+        panel.querySelectorAll('.hisd-navbar__panel-link').forEach(function (link) {
+          link.addEventListener('click', function () { closeDrawer(); });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

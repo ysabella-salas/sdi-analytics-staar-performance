@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Alert — component demo</title>
+
+  <!-- Theme tokens FIRST, then the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="alert.css">
+
+  <style>
+    /* Demo-page scaffolding only — not part of the component. Uses tokens. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .demo-head {
+      padding: var(--space-6) var(--space-6) 0;
+    }
+    .demo-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-text);
+    }
+    .demo-head p {
+      margin-block: var(--space-2) 0;
+      max-inline-size: 60ch;
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    .demo-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: stretch;
+      padding: var(--space-6);
+    }
+    .demo-panel {
+      flex: 1 1 26rem;
+      box-sizing: border-box;
+      padding: var(--space-6);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .demo-panel > h2 {
+      margin-block: 0 var(--space-1);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-panel > p {
+      margin-block: 0 var(--space-5);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    .demo-row {
+      margin-block-end: var(--space-5);
+    }
+    .demo-row > h3 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle);
+    }
+    .demo-snippet {
+      padding: 0 var(--space-6) var(--space-8);
+    }
+    .demo-snippet h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-snippet pre {
+      margin: 0;
+      padding: var(--space-4);
+      overflow-x: auto;
+      background-color: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+    .demo-snippet code {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+  </style>
+</head>
+<body>
+  <header class="demo-head">
+    <h1>HISD Alert</h1>
+    <p>
+      Inline status banner. <code>role="alert"</code> (assertive) for errors,
+      <code>role="status"</code> (polite) otherwise. Four semantic variants,
+      each with a tinted surface, a matching-color leading icon, a heading and
+      body in the text token, and an optional dismiss button. Meaning is carried
+      by icon shape, the accent rail, and text — never color alone. Both themes
+      are shown side by side, each demonstrating every state.
+    </p>
+  </header>
+
+  <div class="demo-wrap">
+
+    <!-- ================= LIGHT THEME ================= -->
+    <section class="demo-panel" data-theme="light" aria-label="Alert states in the light theme">
+      <h2>Light theme</h2>
+      <p>Default theme. All states.</p>
+
+      <!-- INFO — role=status (non-urgent, polite) -->
+      <div class="demo-row">
+        <h3>Info — role=status</h3>
+        <div class="hisd-alert hisd-alert--info" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Report card window is open</p>
+            <p class="hisd-alert__message">Grades for the spring term can be submitted through June 27.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS — role=status -->
+      <div class="demo-row">
+        <h3>Success — role=status</h3>
+        <div class="hisd-alert hisd-alert--success" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Enrollment saved</p>
+            <p class="hisd-alert__message">The student's course schedule has been updated.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WARNING — role=status, persists -->
+      <div class="demo-row">
+        <h3>Warning — role=status</h3>
+        <div class="hisd-alert hisd-alert--warning" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Session ending soon</p>
+            <p class="hisd-alert__message">You will be signed out in 5 minutes unless you continue working.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DANGER — role=alert (assertive, interrupts) -->
+      <div class="demo-row">
+        <h3>Danger — role=alert</h3>
+        <div class="hisd-alert hisd-alert--danger" role="alert">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Could not save changes</p>
+            <p class="hisd-alert__message">The network connection was lost. Check your connection and try again.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISMISSIBLE — info with a dismiss button -->
+      <div class="demo-row">
+        <h3>Dismissible</h3>
+        <div class="hisd-alert hisd-alert--info" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">New attendance dashboard</p>
+            <p class="hisd-alert__message">Real-time daily attendance is now available on the home page.</p>
+          </div>
+          <button type="button" class="hisd-alert__dismiss" data-hisd-alert-dismiss aria-label="Dismiss this message">
+            <span class="hisd-alert__dismiss-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- WITH ACTIONS — danger, dismissible, with action buttons -->
+      <div class="demo-row">
+        <h3>With actions + dismiss</h3>
+        <div class="hisd-alert hisd-alert--danger" role="alert">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Unsaved changes will be lost</p>
+            <p class="hisd-alert__message">You navigated away before saving the IEP draft.</p>
+          </div>
+          <div class="hisd-alert__actions">
+            <button type="button" class="hisd-alert__action">Save draft</button>
+            <button type="button" class="hisd-alert__action">Discard</button>
+          </div>
+          <button type="button" class="hisd-alert__dismiss" data-hisd-alert-dismiss aria-label="Dismiss this message">
+            <span class="hisd-alert__dismiss-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= DARK THEME ================= -->
+    <section class="demo-panel" data-theme="dark" aria-label="Alert states in the dark theme">
+      <h2>Dark theme</h2>
+      <p>Inherited from <code>data-theme="dark"</code>. Same markup, same states.</p>
+
+      <!-- INFO -->
+      <div class="demo-row">
+        <h3>Info — role=status</h3>
+        <div class="hisd-alert hisd-alert--info" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Report card window is open</p>
+            <p class="hisd-alert__message">Grades for the spring term can be submitted through June 27.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="demo-row">
+        <h3>Success — role=status</h3>
+        <div class="hisd-alert hisd-alert--success" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Enrollment saved</p>
+            <p class="hisd-alert__message">The student's course schedule has been updated.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WARNING -->
+      <div class="demo-row">
+        <h3>Warning — role=status</h3>
+        <div class="hisd-alert hisd-alert--warning" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Session ending soon</p>
+            <p class="hisd-alert__message">You will be signed out in 5 minutes unless you continue working.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DANGER -->
+      <div class="demo-row">
+        <h3>Danger — role=alert</h3>
+        <div class="hisd-alert hisd-alert--danger" role="alert">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Could not save changes</p>
+            <p class="hisd-alert__message">The network connection was lost. Check your connection and try again.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISMISSIBLE -->
+      <div class="demo-row">
+        <h3>Dismissible</h3>
+        <div class="hisd-alert hisd-alert--info" role="status">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">New attendance dashboard</p>
+            <p class="hisd-alert__message">Real-time daily attendance is now available on the home page.</p>
+          </div>
+          <button type="button" class="hisd-alert__dismiss" data-hisd-alert-dismiss aria-label="Dismiss this message">
+            <span class="hisd-alert__dismiss-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- WITH ACTIONS -->
+      <div class="demo-row">
+        <h3>With actions + dismiss</h3>
+        <div class="hisd-alert hisd-alert--danger" role="alert">
+          <span class="hisd-alert__icon" aria-hidden="true"></span>
+          <div class="hisd-alert__body">
+            <p class="hisd-alert__title">Unsaved changes will be lost</p>
+            <p class="hisd-alert__message">You navigated away before saving the IEP draft.</p>
+          </div>
+          <div class="hisd-alert__actions">
+            <button type="button" class="hisd-alert__action">Save draft</button>
+            <button type="button" class="hisd-alert__action">Discard</button>
+          </div>
+          <button type="button" class="hisd-alert__dismiss" data-hisd-alert-dismiss aria-label="Dismiss this message">
+            <span class="hisd-alert__dismiss-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= COPY-PASTE SNIPPET ================= -->
+  <section class="demo-snippet" aria-label="Canonical markup">
+    <h2>Copy-paste snippet</h2>
+    <pre><code>&lt;!-- role="alert" for errors (assertive); role="status" otherwise (polite). --&gt;
+&lt;div class="hisd-alert hisd-alert--danger" role="alert"&gt;
+  &lt;span class="hisd-alert__icon" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;div class="hisd-alert__body"&gt;
+    &lt;p class="hisd-alert__title"&gt;Could not save changes&lt;/p&gt;
+    &lt;p class="hisd-alert__message"&gt;The network connection was lost. Try again.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;!-- Optional dismiss: icon-only, so it carries an aria-label. --&gt;
+  &lt;button type="button" class="hisd-alert__dismiss"
+          data-hisd-alert-dismiss aria-label="Dismiss this message"&gt;
+    &lt;span class="hisd-alert__dismiss-icon" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Variants: hisd-alert--success | --warning | --danger | --info --&gt;</code></pre>
+  </section>
+
+  <script>
+    // Dismiss behavior. Native <button> already fires "click" on Enter and
+    // Space per the WAI-ARIA APG (button pattern), so we listen for click and
+    // do not re-handle keys — that would double-fire. The button is keyboard
+    // reachable and focusable by default.
+    //
+    // On dismiss we animate the banner out (collapse + fade) and remove it on
+    // animationend; under prefers-reduced-motion the keyframe is disabled in
+    // CSS, so we remove immediately instead of waiting for an event that the
+    // browser may emit with zero duration.
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      function removeAlert(alert) {
+        if (alert && alert.parentNode) {
+          alert.parentNode.removeChild(alert);
+        }
+      }
+
+      function dismiss(alert) {
+        if (!alert || alert.dataset.state === 'leaving') return;
+        if (reduceMotion.matches) {
+          removeAlert(alert);
+          return;
+        }
+        alert.dataset.state = 'leaving';
+        alert.addEventListener('animationend', function handler() {
+          alert.removeEventListener('animationend', handler);
+          removeAlert(alert);
+        });
+      }
+
+      document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('[data-hisd-alert-dismiss]');
+        if (!trigger) return;
+        dismiss(trigger.closest('.hisd-alert'));
+      });
+    })();
+  </script>
+</body>
+</html>

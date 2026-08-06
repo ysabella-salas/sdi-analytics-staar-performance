@@ -1,0 +1,234 @@
+/* HISD Textarea — reusable component styles.
+ *
+ * Multi-line form control. Shares the input-text shell (border / focus / error /
+ * surface / text tokens) but is multi-line: vertical resize, a min-block-size of
+ * ~3 rows. Label sits above; helper and error wire to the control via
+ * aria-describedby in markup. Focus is rendered as a 2px solid --color-focus
+ * outline (with outline-offset), so only border-color animates on state change.
+ *
+ * Requires assets/hisd-theme.css (the token layer) to be linked first.
+ *
+ * Token discipline: every color is a semantic var(--color-…) or ramp var(--hisd-…)
+ * token. Spacing / radius / type / shadow / motion all come from tokens. Logical
+ * properties only. Dark mode is inherited from [data-theme="dark"] on an ancestor —
+ * this file carries no component-specific dark-mode color.
+ */
+
+/* ── Field wrapper: a vertical stack of label / control / message ─────────── */
+.hisd-textarea-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  inline-size: 100%;
+  /* allow-measure: intentional line-length cap, not a token.
+   * The token layer (hisd-theme.css) defines no measure/line-length scale, so
+   * this default reading measure is an explicit raw value. Consumers can
+   * override it with a width utility. */
+  max-inline-size: 32rem;
+}
+
+/* ── Label: always above the control, never a placeholder substitute ──────── */
+.hisd-textarea-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+}
+
+/* Required marker — color is reinforced by the glyph, never color alone. */
+.hisd-textarea-required {
+  margin-inline-start: var(--space-1);
+  color: var(--color-danger);
+}
+
+/* ── Control: the shared input shell, multi-line ──────────────────────────── */
+.hisd-textarea-control {
+  /* Box */
+  display: block;
+  inline-size: 100%;
+  box-sizing: border-box;
+
+  /* ~3 rows tall at rest; grows as the user drags or types. 24px+ target. */
+  min-block-size: calc(var(--space-10) + var(--space-px));
+
+  /* Multi-line affordances */
+  resize: block;
+  overflow: auto;
+
+  /* Spacing — comfortable inline padding, balanced block padding */
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+
+  /* Shell */
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: var(--space-px) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  /* Type */
+  font-family: inherit;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+
+  /* Motion — token-driven, killed under reduced-motion below.
+   * Only border-color animates; the focus ring is an outline (instant by
+   * design, and outline is not animated for forced-colors safety). */
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-textarea-control::placeholder {
+  color: var(--color-text-subtle);
+  opacity: 1; /* normalize Firefox's dimmed placeholder */
+}
+
+/* Hover — firm up the border to signal interactivity */
+.hisd-textarea-control:hover:not(:disabled):not([aria-invalid="true"]) {
+  border-color: var(--color-border-strong);
+}
+
+/* Focus — 2px action ring rendered with `outline` (a real outline, so it stays
+ * visible for forced-colors / high-contrast users), offset 2px off the shell.
+ * Border also shifts to --color-action to reinforce the focused state. */
+.hisd-textarea-control:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+  border-color: var(--color-action);
+}
+
+/* Fallback for engines without :focus-visible on form fields (kept consistent) */
+.hisd-textarea-control:focus {
+  border-color: var(--color-action);
+}
+
+/* Error — danger border; label + message echo it in markup/below.
+ * Driven by aria-invalid so the visual state can never drift from the a11y state. */
+.hisd-textarea-control[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.hisd-textarea-control[aria-invalid="true"]:focus-visible {
+  outline-color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+/* When the field is in error, the label turns danger too (set via modifier). */
+.hisd-textarea-field[data-invalid="true"] .hisd-textarea-label {
+  color: var(--color-danger);
+}
+
+/* Disabled — dim and inert per the system delta (Components.md line 37:
+ * opacity: 0.38 AND pointer-events: none). pointer-events:none makes the
+ * control fully inert, so cursor:not-allowed is intentionally omitted —
+ * the cursor never renders over a pointer-event-free element anyway. */
+.hisd-textarea-control:disabled {
+  background-color: var(--color-surface-sunken);
+  border-color: var(--color-border);
+  color: var(--color-text-subtle);
+  opacity: 0.38;
+  pointer-events: none;
+  resize: none;
+}
+
+/* ── Messages: helper + error, wired via aria-describedby in markup ───────── */
+.hisd-textarea-message {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.hisd-textarea-helper {
+  color: var(--color-text-muted);
+}
+
+.hisd-textarea-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-weight: var(--weight-medium);
+}
+
+/* Leading error glyph — monochrome SVG data-URI, fill is currentColor so it
+ * inherits --color-danger. This is the single permitted inline-color exception. */
+.hisd-textarea-error::before {
+  content: "";
+  flex: none;
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  /* nudge the 16px glyph onto the text baseline of an --text-sm line */
+  margin-block-start: var(--space-px);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-textarea-error-icon) center / contain no-repeat;
+  mask: var(--hisd-textarea-error-icon) center / contain no-repeat;
+}
+
+/* Optional character counter, right-aligned under the control */
+.hisd-textarea-count {
+  align-self: flex-end;
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.hisd-textarea-count[data-over="true"] {
+  color: var(--color-danger);
+  font-weight: var(--weight-medium);
+}
+
+/* ── Icon source ──────────────────────────────────────────────────────────── */
+/* A single monochrome alert triangle, drawn with currentColor. */
+.hisd-textarea-field {
+  --hisd-textarea-error-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 21h22L12 2Zm0 6a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1Zm0 9.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg>');
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-textarea-control {
+    transition: none;
+  }
+}
+
+/* ── Forced colors (Windows High Contrast) ────────────────────────────────────
+ * Let the OS flatten brand colors to system colors (forced-color-adjust stays
+ * auto). We only reinforce what backgrounds alone can no longer convey: the
+ * focus ring stays visible (Highlight), error keeps a distinguishing border,
+ * and disabled reads as disabled via GrayText. System-color keywords only. */
+@media (forced-colors: active) {
+  .hisd-textarea-control {
+    /* Use the field surface + a real system border so the control is framed. */
+    background-color: Canvas;
+    color: CanvasText;
+    border-color: CanvasText;
+  }
+
+  /* Focus ring must stay visible — re-pin to a system highlight color. */
+  .hisd-textarea-control:focus-visible {
+    outline-color: Highlight;
+    border-color: Highlight;
+  }
+
+  /* Error can't rely on the danger background/border tint once flattened, so
+   * carry the invalid state with a thicker border that survives forced colors. */
+  .hisd-textarea-control[aria-invalid="true"] {
+    border-width: 2px;
+    border-color: CanvasText;
+  }
+
+  .hisd-textarea-control[aria-invalid="true"]:focus-visible {
+    outline-color: Highlight;
+    border-color: Highlight;
+  }
+
+  /* Disabled must read as disabled: GrayText for text and frame. */
+  .hisd-textarea-control:disabled {
+    color: GrayText;
+    border-color: GrayText;
+    opacity: 1; /* opacity is ignored in forced colors; GrayText does the work */
+  }
+
+  /* Over-limit counter loses its danger color; keep it bold so it still stands
+   * out from the at-rest counter once the OS recolors text. */
+  .hisd-textarea-count[data-over="true"] {
+    font-weight: var(--weight-bold);
+  }
+}

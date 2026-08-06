@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 612 558"><defs><style>
+      .st0 {
+        fill: #eabd38;
+      }
+
+      .st1 {
+        fill: none;
+      }
+
+      .st2 {
+        fill: #e5b417;
+      }
+
+      .st3 {
+        fill: #e3b10d;
+      }
+
+      .st4 {
+        fill: #eec554;
+      }
+
+      .st5 {
+        fill: #e6b620;
+      }
+
+      .st6 {
+        fill: #edc451;
+      }
+
+      .st7 {
+        fill: #e4b211;
+      }
+
+      .st8 {
+        fill: #f3d079;
+      }
+
+      .st9 {
+        fill: #f2ce72;
+      }
+
+      .st10 {
+        fill: #ecc147;
+      }
+
+      .st11 {
+        fill: #f2ce73;
+      }
+
+      .st12 {
+        fill: #e5b419;
+      }
+
+      .st13 {
+        fill: #eabd37;
+      }
+
+      .st14 {
+        fill: #e6b61d;
+      }
+
+      .st15 {
+        fill: #e6b61e;
+      }
+
+      .st16 {
+        fill: #ecc146;
+      }
+
+      .st17 {
+        fill: #e8ba2d;
+      }
+
+      .st18 {
+        fill: #e7b928;
+      }
+
+      .st19 {
+        fill: #e4b314;
+      }
+
+      .st20 {
+        fill: #e9bb30;
+      }
+
+      .st21 {
+        fill: #f3d07a;
+      }
+
+      .st22 {
+        fill: #efc85c;
+      }
+
+      .st23 {
+        fill: #f3d17c;
+      }
+
+      .st24 {
+        fill: #f4d280;
+      }
+
+      .st25 {
+        fill: #eabe39;
+      }
+
+      .st26 {
+        fill: #eec759;
+      }
+
+      .st27 {
+        fill: #e6b51c;
+      }
+
+      .st28 {
+        fill: #67a2b9;
+      }
+
+      .st29 {
+        fill: #eec75a;
+      }
+
+      .st30 {
+        fill: #ecc24a;
+      }
+
+      .st31 {
+        fill: #e7b824;
+      }
+
+      .st32 {
+        fill: #e6b722;
+      }
+
+      .st33 {
+        fill: #e3b00a;
+      }
+
+      .st34 {
+        fill: #ebbf3e;
+      }
+
+      .st35 {
+        fill: #f3d078;
+      }
+
+      .st36 {
+        fill: #e8ba2b;
+      }
+
+      .st37 {
+        fill: #f1cc6a;
+      }
+
+      .st38 {
+        fill: #e9bc35;
+      }
+
+      .st39 {
+        fill: #e8ba2e;
+      }
+
+      .st40 {
+        fill: #e8bb2f;
+      }
+
+      .st41 {
+        fill: #edc552;
+      }
+
+      .st42 {
+        fill: #ebc143;
+      }
+
+      .st43 {
+        fill: #efc85d;
+      }
+
+      .st44 {
+        fill: #edc34d;
+      }
+
+      .st45 {
+        fill: #efc85e;
+      }
+
+      .st46 {
+        fill: #eabe3a;
+      }
+
+      .st47 {
+        fill: #e8ba2c;
+      }
+
+      .st48 {
+        fill: #e6b61f;
+      }
+
+      .st49 {
+        fill: #eabf3d;
+      }
+
+      .st50 {
+        fill: #ebc144;
+      }
+
+      .st51 {
+        fill: #e9bd36;
+      }
+
+      .st52 {
+        fill: #f2ce71;
+      }
+
+      .st53 {
+        fill: #f0c962;
+      }
+
+      .st54 {
+        fill: #efc85f;
+      }
+
+      .st55 {
+        fill: #f1cc6d;
+      }
+
+      .st56 {
+        fill: #e5b51b;
+      }
+
+      .st57 {
+        fill: #f2cf75;
+      }
+
+      .st58 {
+        fill: #f2cd70;
+      }
+
+      .st59 {
+        fill: #efc960;
+      }
+
+      .st60 {
+        fill: #efc961;
+      }
+
+      .st61 {
+        fill: #ecc34b;
+      }
+
+      .st62 {
+        fill: #edc553;
+      }
+
+      .st63 {
+        fill: #edc450;
+      }
+
+      .st64 {
+        fill: #f2cf74;
+      }
+
+      .st65 {
+        fill: #e9bc34;
+      }
+
+      .st66 {
+        fill: #eabf3c;
+      }
+
+      .st67 {
+        fill: #f0cb67;
+      }
+
+      .st68 {
+        fill: #e9bc32;
+      }
+
+      .st69 {
+        fill: #e4b210;
+      }
+
+      .st70 {
+        fill: #e5b418;
+      }
+
+      .st71 {
+        fill: #e8b92a;
+      }
+
+      .st72 {
+        fill: #ebc042;
+      }
+
+      .st73 {
+        fill: #ecc34c;
+      }
+
+      .st74 {
+        fill: #f4d17e;
+      }
+
+      .st75 {
+        fill: #f4d27f;
+      }
+
+      .st76 {
+        fill: #e4b212;
+      }
+
+      .st77 {
+        fill: #ebbf3f;
+      }
+
+      .st78 {
+        fill: #eec658;
+      }
+
+      .st79 {
+        fill: #f0ca64;
+      }
+
+      .st80 {
+        fill: #eabe3b;
+      }
+
+      .st81 {
+        fill: #f4d17d;
+      }
+
+      .st82 {
+        fill: #e3b00b;
+      }
+
+      .st83 {
+        fill: #eec656;
+      }
+
+      .st84 {
+        fill: #f0ca65;
+      }
+
+      .st85 {
+        fill: #e5b315;
+      }
+
+      .st86 {
+        fill: #e5b316;
+      }
+
+      .st87 {
+        fill: #eec657;
+      }
+
+      .st88 {
+        fill: #f3cf77;
+      }
+
+      .st89 {
+        fill: #f1cd6e;
+      }
+
+      .st90 {
+        fill: #f3cf76;
+      }
+
+      .st91 {
+        fill: #ebc040;
+      }
+
+      .st92 {
+        fill: #ebc041;
+      }
+
+      .st93 {
+        fill: #e3b10c;
+      }
+
+      .st94 {
+        fill: #f0ca66;
+      }
+
+      .st95 {
+        fill: #e9bb31;
+      }
+
+      .st96 {
+        fill: #edc34e;
+      }
+
+      .st97 {
+        fill: #efc75b;
+      }
+
+      .st98 {
+        fill: #e8b929;
+      }
+
+      .st99 {
+        fill: #eec655;
+      }
+
+      .st100 {
+        fill: #e4b313;
+      }
+
+      .st101 {
+        fill: #da8055;
+      }
+
+      .st102 {
+        fill: #f3d17b;
+      }
+
+      .st103 {
+        fill: #edc44f;
+      }
+
+      .st104 {
+        fill: #ecc249;
+      }
+
+      .st105 {
+        fill: #e9bc33;
+      }
+
+      .st106 {
+        fill: #f0ca63;
+      }
+
+      .st107 {
+        fill: #e4b10e;
+      }
+
+      .st108 {
+        fill: #e6b721;
+      }
+
+      .st109 {
+        fill: #f2cd6f;
+      }
+
+      .st110 {
+        fill: #f1cc6c;
+      }
+
+      .st111 {
+        fill: #e7b826;
+      }
+
+      .st112 {
+        fill: #e7b723;
+      }
+
+      .st113 {
+        fill: #ecc248;
+      }
+
+      .st114 {
+        fill: #e5b51a;
+      }
+
+      .st115 {
+        clip-path: url(#clippath);
+      }
+
+      .st116 {
+        fill: #f1cb68;
+      }
+
+      .st117 {
+        fill: #e7b827;
+      }
+
+      .st118 {
+        fill: #f1cc6b;
+      }
+
+      .st119 {
+        fill: #e7b825;
+      }
+
+      .st120 {
+        fill: #e4b10f;
+      }
+
+      .st121 {
+        fill: #f1cb69;
+      }
+    </style><clipPath id="clippath"><path class="st1" d="M355,210.2c-.2,2.9,1.4,5.7.6,8.6-.4.6-.9,1-1.7,1-.8,0-1.6,0-2.4,0-28.3,0-56.6,0-84.9,0-1.3,0-2.8.6-4-1.1.1-1.9-.5-4.2.6-6.4-.6-3,1.4-5.6,1.4-8.6,0-1.3,1.7-1.9,1.4-3.3,3.3-6,7.1-11.6,12.4-15.9,2.3-1.8,4.7-3.5,7.2-4.9,3.7-2.1,7.4-4.1,11.6-5.1,5.3-1.4,10.6-2.4,16-1.7,8.1,1,15.8,3.4,22.3,8.5,2.5,2,5,4.1,7.1,6.7,3.4,4,6.1,8.4,8.5,12.9,1.1,2.1,2,4.2,2.4,6.6.2,1,.8,1.9,1.2,2.8ZM315.3,150.1c.3-6.6-.1-13.1.7-19.7.6-4.9.3-9.9.6-14.9.4-6.6.7-13.1.9-19.7.1-6.7,1.1-13.4.8-20.1,0-.3,0-.7,0-1,1.1-2.6.7-5.4.5-8.1-.3-4-2.3-6.6-5.9-7.8-2.3-.8-4.2-.3-5.5.2-4.3,2.5-5.2,5.8-5,9.9.5,6.9-.3,13.8.6,20.8.7,5,0,10.2.6,15.3.7,6.3,1.3,12.6,1.4,18.9.2,8.9,1.2,17.7.9,26.6,0,2.3,0,4.5,0,6.6.8,1.1,1.6,2,2.6,2.6h3.7c1.1-.6,1.8-1.5,2.7-2.7-.2-2.3.5-4.5.6-6.8ZM361.9,112.4c-.4-1.7.9-2.9,1.4-4.4,1.9-5.2,4.2-10.3,7-15.2,1.2-2.1,2.7-4.1,3.3-6.6.5-2,1.2-3.8,2.1-5.5v-4.6c-2.9-6-7.5-6.8-13.5-2.5-1.9,3.1-2.9,6.4-4.2,9.7-2.6,6.7-5,13.4-7.7,20-2,4.9-3,10.1-5.4,14.8-2,4.1-3.6,8.4-5,12.8-1.1,3.4-2.3,6.8-4,10-2.8,5.5-4.5,11.5-6.9,17.1-.9,2.1-.7,3.9.6,5.7,2.3,1.7,4.5,1.7,6.8-.3,1-1.9,1.9-3.9,2.9-6,4-8.2,7.9-16.4,11.9-24.6,2.4-4.9,4.8-9.9,7.2-14.8,1-2.1,1.8-4.3,3.6-5.9h0ZM289.4,158c-1.7-4-3.2-8.2-4.8-12.2-2.3-5.6-5-11.1-6.7-16.9-1-3.1-2-6.2-3.5-9.1-1.3-2.5-2.3-5.1-3-7.8-.6-2.6-1.7-5.1-2.7-7.6-2.4-6.4-4.9-12.7-7.4-19.1-1.3-3.2-2.6-6.4-4-9.6-.9-2.2-2.7-3.8-4.9-4.4-4.4-1.3-7.8.6-9.6,5.1v4.4c.6,1.3,1.2,2.5,1.6,3.8.7,2.1,1.4,4.2,2.6,6.1,1.9,3.2,3.8,6.4,5.3,9.7,3.1,7.1,6,14.2,9.4,21.1,3.7,7.4,7.4,14.8,10.7,22.4,2.3,5.4,5.5,10.4,7.6,15.8.4.9.9,1.7,1.4,2.7,1.2,2.5,4.1,3,7.4,1.4,1.6-2,1.5-3.8.7-5.9ZM251.9,215.3c-.7-1.8-2.2-2.3-3.8-2.2-6.6.3-13.1-.7-19.7-.8-3.8,0-7.7-.2-11.5-.5-5.3-.4-10.6-.7-15.9-.8-8.1-.2-16.2,0-24.3,0-3.1,0-6.3-.4-9.4-.9-4.1-.7-8-.9-11.3.3-4.8,3.2-6,6.9-4.1,10.7,1.8,2.9,3.9,4,6.4,5,4.7-.1,9.6-.8,14.5-1.3,4.6-.5,9.3-.4,13.9-.7,9.6-.7,19.3.5,29-.7,3.5-.4,7-.5,10.5-.6,6-.2,12-1.2,18-.8,1.3,0,2.7-.1,3.5.5,3.3-.5,4.9-2.3,5.7-5.3-.5-.7-1.1-1.2-1.3-1.8ZM452,209.7c-3.3.3-6.7,1-10,1.1-10.6.4-21.1-.6-31.7.7-3.9.5-7.9.2-11.9.6-6.4.6-12.9-.2-19.4.8-2.5.4-5,.1-7.5,0-1.6,0-3.2.2-4.4,1.3-1.3,1.5-1.4,3.3-1.1,5.2.7.9,1.4,1.7,2.5,2.4,5.1.3,10.3-.1,15.5.6,4,.6,8.1.3,12.2.6,4.8.4,9.7.9,14.6.9,5.6,0,11.2.1,16.8,0,5.7-.2,11.3,1.1,17,.8.5,0,.9,0,1.4,0,4.9.8,9.8,1.4,14.4,1.3,2.8-1,4.8-2.4,5.6-3.6,2.8-5.7,1-9.1-3.1-12-3.3-1.4-7.1-1-10.8-.6ZM198.3,116.8c4.5,4,9.1,7.8,13.4,12.1,4.4,4.3,9.1,8.3,13.4,12.6,2.7,2.6,5.2,5.4,8.2,7.7,4.9,3.8,9.7,7.8,14,12.4,5.5,5.8,11.2,11.3,17.2,16.3,3.2.9,5.1-.5,6.4-3.2v-2.3c-1.2-1.8-2.4-3.4-3.9-4.8-2-1.9-3.8-3.9-5.8-5.8-2.9-2.7-5.1-6.1-7.7-9-5.6-6.1-11.9-11.6-16.9-18.3-2.1-2.8-4.8-5.1-7.1-7.8-3-3.6-6.5-6.7-9.5-10.2-3-3.5-6.6-6.6-9.8-10-1.9-2-4.1-3.5-6.9-3.8-6.6,1.7-7.8,3.3-7.6,10.2.5,1.5,1.5,2.8,2.7,3.9ZM422.2,106.9c-2.4-3.8-6.8-4.9-10.8-2.9-1,.5-1.6,1.2-2.4,1.9-5.5,5.3-10.6,10.9-15.9,16.4-4,4.2-7.6,8.8-11.9,12.7-.2.2-.4.3-.5.5-3.2,5-7.6,9-11.8,13.1-1.2,1.2-2.5,2.4-3.6,3.7-2.2,2.8-4.4,5.7-7,8.3-2.2,2.2-4.4,4.3-6.5,6.5-1.7,1.7-3.4,3.3-4.4,5.5-.2,1.7.1,3.2,1.3,4.4,1.6,1.2,3.4,1.4,5.2.9,4.6-4.5,9.9-8.4,14.1-13.4,2.4-2.9,5.3-5.2,7.9-7.8.6-.7,1.3-1.3,2-1.8,3.1-2.5,6.3-4.8,9.2-7.5,5.1-4.7,9.9-9.7,15.1-14.3,4-3.5,7.8-7.3,11.7-10.9.4-.4.9-.6,1.4-1,2.7-2.5,5.8-4.7,7.4-8.1v-4.8c-.3-.5-.4-.9-.7-1.3ZM251.5,189.3c-3.7-1.5-7.4-3.2-11.1-4.9-4.4-2-8.8-3.9-13.4-5.6-4.7-1.7-9.3-3.3-13.5-6.1-1.1-.7-2.4-1.2-3.7-1.6-2.8-.8-5.5-1.8-8.2-3-6.1-2.7-11.8-6-18-8.7-4.8-2.1-9.7-4.2-14.8-5.3q-5.4,1.5-7.6,6.3v3.5c.9,1.4,1.8,2.8,2.6,4.2,1.6.8,3.2,1.8,5,2.1,2.9.6,5.6,1.5,8.3,2.5,3,1,6,1.9,8.8,3.1,8.1,3.4,16.3,6.2,24.5,9.2,8.1,3,16.4,5.2,24.5,8.2,4.6,1.7,9.4,3.1,13.9,5.1,1.5.7,3.1,1.4,4.9.9,1.5-1,2.6-2.3,3.2-4.3-.8-3.3-3.2-4.6-5.7-5.6ZM413.2,183.6c.4-.9,1.4-1.1,2.2-1.3,5.7-1.7,11-4.3,16.6-6.3,4.7-1.7,9.3-3.6,14.2-4.9,2.9-.8,5.9-1.2,8.4-3.3.8-1.5,2.1-2.6,2.5-4.4v-3.3c-.6-1.1-1.1-2.2-1.7-3.3-.3-.2-.6-.5-.9-.7-2.3-1.5-4.6-2.8-7.5-1.5-.7.3-1.6,0-2.4.1h.1c-1.6,1.4-3.5,1.8-5.6,2.1h0c-.7.9-1.7,1.2-2.8,1.4h.1c-.4,1.1-1.4.5-2.2.7h0c-.3.3-.5.8-.8.9-6,2.3-11.5,5.6-17.3,8.4-1.1.5-2.3,1.1-3.4,1.3-3.5.8-6.7,2.3-9.8,4.2-2,1.2-4.2,2.1-6.4,3-3.7,1.6-7.6,2.6-11.3,4.3-2.3,1.1-4.7,2.1-7.1,3.2-4.3,1.9-8.6,3.8-13,5.6-2.2.9-3.7,2.5-4.3,4.8.4,1.9,1.5,3.3,3.2,4.4,1.9.4,3.6-.5,5.4-1.1,6.2-2.4,12.3-4.9,18.6-6.8,7.5-2.3,14.9-4.6,22.2-7.4.9-.3,1.8-.2,2.7-.4h0Z"/></clipPath></defs><g class="st115"><rect class="st78" x="361.2" y="153.4" width="1.8" height="46.2"/><rect class="st26" x="363.1" y="153.4" width="1.9" height="46.2"/><rect class="st29" x="365" y="153.4" width="1.9" height="46.2"/><rect class="st97" x="366.9" y="153.4" width="1.9" height="46.2"/><rect class="st22" x="368.8" y="153.4" width="1.9" height="46.2"/><rect class="st43" x="370.7" y="153.4" width="1.9" height="46.2"/><rect class="st45" x="372.6" y="153.4" width="1.9" height="46.2"/><rect class="st54" x="374.5" y="153.4" width="1.9" height="46.2"/><rect class="st59" x="376.4" y="153.4" width="1.9" height="46.2"/><rect class="st60" x="378.3" y="153.4" width="1.9" height="46.2"/><rect class="st53" x="380.2" y="153.4" width="1.9" height="46.2"/><rect class="st106" x="382.1" y="153.4" width="1.9" height="46.2"/><rect class="st79" x="384" y="153.4" width="1.9" height="46.2"/><rect class="st84" x="385.9" y="153.4" width="1.9" height="46.2"/><rect class="st94" x="387.8" y="153.4" width="1.9" height="46.2"/><rect class="st67" x="389.8" y="153.4" width="1.9" height="46.2"/><rect class="st116" x="391.7" y="153.4" width="1.9" height="46.2"/><rect class="st121" x="393.6" y="153.4" width="1.9" height="46.2"/><rect class="st37" x="395.5" y="153.4" width="1.9" height="46.2"/><rect class="st118" x="397.4" y="153.4" width="1.9" height="46.2"/><rect class="st110" x="399.3" y="153.4" width="1.9" height="46.2"/><rect class="st55" x="401.2" y="153.4" width="1.9" height="46.2"/><rect class="st89" x="403.1" y="153.4" width="1.9" height="46.2"/><rect class="st109" x="405" y="153.4" width="1.9" height="46.2"/><rect class="st58" x="406.9" y="153.4" width="1.9" height="46.2"/><rect class="st52" x="408.8" y="153.4" width="1.9" height="46.2"/><rect class="st9" x="410.7" y="153.4" width="1.9" height="46.2"/><rect class="st11" x="412.6" y="153.4" width="1.9" height="46.2"/><rect class="st64" x="414.5" y="153.4" width="1.9" height="46.2"/><rect class="st57" x="416.4" y="153.4" width="1.9" height="46.2"/><rect class="st90" x="418.3" y="153.4" width="1.9" height="46.2"/><rect class="st88" x="420.2" y="153.4" width="1.9" height="46.2"/><rect class="st35" x="422.2" y="153.4" width="1.9" height="46.2"/><rect class="st8" x="424.1" y="153.4" width="1.9" height="46.2"/><rect class="st21" x="426" y="153.4" width="1.9" height="46.2"/><rect class="st102" x="427.9" y="153.4" width="1.9" height="46.2"/><rect class="st23" x="429.8" y="153.4" width="1.9" height="46.2"/><rect class="st81" x="431.7" y="153.4" width="1.9" height="46.2"/><rect class="st74" x="433.6" y="153.4" width="1.9" height="46.2"/><rect class="st75" x="435.5" y="153.4" width="1.9" height="46.2"/><rect class="st24" x="437.4" y="153.4" width="1.9" height="46.2"/><rect class="st24" x="439.3" y="153.4" width="17.8" height="46.2"/><rect class="st33" x="161.4" y="154.1" width="53" height="45.6"/><rect class="st33" x="214.4" y="154.1" width="1.9" height="45.6"/><rect class="st82" x="216.3" y="154.1" width="1.9" height="45.6"/><rect class="st93" x="218.2" y="154.1" width="1.9" height="45.6"/><rect class="st3" x="220.1" y="154.1" width="1.9" height="45.6"/><rect class="st107" x="222" y="154.1" width="1.9" height="45.6"/><rect class="st120" x="223.9" y="154.1" width="1.9" height="45.6"/><rect class="st69" x="225.8" y="154.1" width="1.9" height="45.6"/><rect class="st7" x="227.7" y="154.1" width="1.9" height="45.6"/><rect class="st76" x="229.6" y="154.1" width="1.9" height="45.6"/><rect class="st100" x="231.6" y="154.1" width="1.9" height="45.6"/><rect class="st19" x="233.5" y="154.1" width="1.9" height="45.6"/><rect class="st85" x="235.4" y="154.1" width="1.9" height="45.6"/><rect class="st86" x="237.3" y="154.1" width="1.9" height="45.6"/><rect class="st2" x="239.2" y="154.1" width="1.9" height="45.6"/><rect class="st70" x="241.1" y="154.1" width="1.9" height="45.6"/><rect class="st12" x="243" y="154.1" width="1.9" height="45.6"/><rect class="st114" x="244.9" y="154.1" width="1.9" height="45.6"/><rect class="st56" x="246.8" y="154.1" width="1.9" height="45.6"/><rect class="st27" x="248.7" y="154.1" width="1.9" height="45.6"/><rect class="st14" x="250.6" y="154.1" width="1.9" height="45.6"/><rect class="st15" x="252.5" y="154.1" width="1.9" height="45.6"/><rect class="st48" x="254.4" y="154.1" width="1.9" height="45.6"/><rect class="st5" x="256.3" y="154.1" width=".9" height="45.6"/><rect class="st63" x="347.4" y="102" width=".4" height="76.3"/><rect class="st6" x="347.8" y="102" width="1.9" height="76.3"/><rect class="st41" x="349.7" y="102" width="1.9" height="76.3"/><rect class="st62" x="351.6" y="102" width="1.9" height="76.3"/><rect class="st4" x="353.5" y="102" width="1.9" height="76.3"/><rect class="st99" x="355.4" y="102" width="1.9" height="76.3"/><rect class="st83" x="357.3" y="102" width="1.9" height="76.3"/><rect class="st87" x="359.3" y="102" width="1.9" height="76.3"/><rect class="st78" x="361.2" y="102" width="1.9" height="76.3"/><rect class="st26" x="363.1" y="102" width="1.9" height="76.3"/><rect class="st29" x="365" y="102" width="1.9" height="76.3"/><rect class="st97" x="366.9" y="102" width="1.9" height="76.3"/><rect class="st22" x="368.8" y="102" width="1.9" height="76.3"/><rect class="st43" x="370.7" y="102" width="1.9" height="76.3"/><rect class="st45" x="372.6" y="102" width="1.9" height="76.3"/><rect class="st54" x="374.5" y="102" width="1.9" height="76.3"/><rect class="st59" x="376.4" y="102" width="1.9" height="76.3"/><rect class="st60" x="378.3" y="102" width="1.9" height="76.3"/><rect class="st53" x="380.2" y="102" width="1.9" height="76.3"/><rect class="st106" x="382.1" y="102" width="1.9" height="76.3"/><rect class="st79" x="384" y="102" width="1.9" height="76.3"/><rect class="st84" x="385.9" y="102" width="1.9" height="76.3"/><rect class="st94" x="387.8" y="102" width="1.9" height="76.3"/><rect class="st67" x="389.8" y="102" width="1.9" height="76.3"/><rect class="st116" x="391.7" y="102" width="1.9" height="76.3"/><rect class="st121" x="393.6" y="102" width="1.9" height="76.3"/><rect class="st37" x="395.5" y="102" width="1.9" height="76.3"/><rect class="st118" x="397.4" y="102" width="1.9" height="76.3"/><rect class="st110" x="399.3" y="102" width="1.9" height="76.3"/><rect class="st55" x="401.2" y="102" width="1.9" height="76.3"/><rect class="st89" x="403.1" y="102" width="1.9" height="76.3"/><rect class="st109" x="405" y="102" width="1.9" height="76.3"/><rect class="st58" x="406.9" y="102" width="1.9" height="76.3"/><rect class="st52" x="408.8" y="102" width="1.9" height="76.3"/><rect class="st9" x="410.7" y="102" width="1.9" height="76.3"/><rect class="st11" x="412.6" y="102" width="1.9" height="76.3"/><rect class="st64" x="414.5" y="102" width="1.9" height="76.3"/><rect class="st57" x="416.4" y="102" width="1.9" height="76.3"/><rect class="st90" x="418.3" y="102" width="1.9" height="76.3"/><rect class="st88" x="420.2" y="102" width="1.9" height="76.3"/><rect class="st35" x="422.2" y="102" width=".7" height="76.3"/><rect class="st33" x="195.4" y="102.7" width="19" height="76"/><rect class="st33" x="214.4" y="102.7" width="1.9" height="76"/><rect class="st82" x="216.3" y="102.7" width="1.9" height="76"/><rect class="st93" x="218.2" y="102.7" width="1.9" height="76"/><rect class="st3" x="220.1" y="102.7" width="1.9" height="76"/><rect class="st107" x="222" y="102.7" width="1.9" height="76"/><rect class="st120" x="223.9" y="102.7" width="1.9" height="76"/><rect class="st69" x="225.8" y="102.7" width="1.9" height="76"/><rect class="st7" x="227.7" y="102.7" width="1.9" height="76"/><rect class="st76" x="229.6" y="102.7" width="1.9" height="76"/><rect class="st100" x="231.6" y="102.7" width="1.9" height="76"/><rect class="st19" x="233.5" y="102.7" width="1.9" height="76"/><rect class="st85" x="235.4" y="102.7" width="1.9" height="76"/><rect class="st86" x="237.3" y="102.7" width="1.9" height="76"/><rect class="st2" x="239.2" y="102.7" width="1.9" height="76"/><rect class="st70" x="241.1" y="102.7" width="1.9" height="76"/><rect class="st12" x="243" y="102.7" width="1.9" height="76"/><rect class="st114" x="244.9" y="102.7" width="1.9" height="76"/><rect class="st56" x="246.8" y="102.7" width="1.9" height="76"/><rect class="st27" x="248.7" y="102.7" width="1.9" height="76"/><rect class="st14" x="250.6" y="102.7" width="1.9" height="76"/><rect class="st15" x="252.5" y="102.7" width="1.9" height="76"/><rect class="st48" x="254.4" y="102.7" width="1.9" height="76"/><rect class="st5" x="256.3" y="102.7" width="1.9" height="76"/><rect class="st108" x="258.2" y="102.7" width="1.9" height="76"/><rect class="st32" x="260.1" y="102.7" width="1.9" height="76"/><rect class="st112" x="262" y="102.7" width="1.9" height="76"/><rect class="st31" x="264" y="102.7" width="1.9" height="76"/><rect class="st119" x="265.9" y="102.7" width="1.9" height="76"/><rect class="st111" x="267.8" y="102.7" width="1.9" height="76"/><rect class="st117" x="269.7" y="102.7" width="1.2" height="76"/><rect class="st29" x="365.8" y="208.9" width="1.1" height="17.2"/><rect class="st97" x="366.9" y="208.9" width="1.9" height="17.2"/><rect class="st22" x="368.8" y="208.9" width="1.9" height="17.2"/><rect class="st43" x="370.7" y="208.9" width="1.9" height="17.2"/><rect class="st45" x="372.6" y="208.9" width="1.9" height="17.2"/><rect class="st54" x="374.5" y="208.9" width="1.9" height="17.2"/><rect class="st59" x="376.4" y="208.9" width="1.9" height="17.2"/><rect class="st60" x="378.3" y="208.9" width="1.9" height="17.2"/><rect class="st53" x="380.2" y="208.9" width="1.9" height="17.2"/><rect class="st106" x="382.1" y="208.9" width="1.9" height="17.2"/><rect class="st79" x="384" y="208.9" width="1.9" height="17.2"/><rect class="st84" x="385.9" y="208.9" width="1.9" height="17.2"/><rect class="st94" x="387.8" y="208.9" width="1.9" height="17.2"/><rect class="st67" x="389.8" y="208.9" width="1.9" height="17.2"/><rect class="st116" x="391.7" y="208.9" width="1.9" height="17.2"/><rect class="st121" x="393.6" y="208.9" width="1.9" height="17.2"/><rect class="st37" x="395.5" y="208.9" width="1.9" height="17.2"/><rect class="st118" x="397.4" y="208.9" width="1.9" height="17.2"/><rect class="st110" x="399.3" y="208.9" width="1.9" height="17.2"/><rect class="st55" x="401.2" y="208.9" width="1.9" height="17.2"/><rect class="st89" x="403.1" y="208.9" width="1.9" height="17.2"/><rect class="st109" x="405" y="208.9" width="1.9" height="17.2"/><rect class="st58" x="406.9" y="208.9" width="1.9" height="17.2"/><rect class="st52" x="408.8" y="208.9" width="1.9" height="17.2"/><rect class="st9" x="410.7" y="208.9" width="1.9" height="17.2"/><rect class="st11" x="412.6" y="208.9" width="1.9" height="17.2"/><rect class="st64" x="414.5" y="208.9" width="1.9" height="17.2"/><rect class="st57" x="416.4" y="208.9" width="1.9" height="17.2"/><rect class="st90" x="418.3" y="208.9" width="1.9" height="17.2"/><rect class="st88" x="420.2" y="208.9" width="1.9" height="17.2"/><rect class="st35" x="422.2" y="208.9" width="1.9" height="17.2"/><rect class="st8" x="424.1" y="208.9" width="1.9" height="17.2"/><rect class="st21" x="426" y="208.9" width="1.9" height="17.2"/><rect class="st102" x="427.9" y="208.9" width="1.9" height="17.2"/><rect class="st23" x="429.8" y="208.9" width="1.9" height="17.2"/><rect class="st81" x="431.7" y="208.9" width="1.9" height="17.2"/><rect class="st74" x="433.6" y="208.9" width="1.9" height="17.2"/><rect class="st75" x="435.5" y="208.9" width="1.9" height="17.2"/><rect class="st24" x="437.4" y="208.9" width="1.9" height="17.2"/><rect class="st24" x="439.3" y="208.9" width="29.4" height="17.2"/><rect class="st33" x="149.9" y="209.1" width="64.5" height="16.9"/><rect class="st33" x="214.4" y="209.1" width="1.9" height="16.9"/><rect class="st82" x="216.3" y="209.1" width="1.9" height="16.9"/><rect class="st93" x="218.2" y="209.1" width="1.9" height="16.9"/><rect class="st3" x="220.1" y="209.1" width="1.9" height="16.9"/><rect class="st107" x="222" y="209.1" width="1.9" height="16.9"/><rect class="st120" x="223.9" y="209.1" width="1.9" height="16.9"/><rect class="st69" x="225.8" y="209.1" width="1.9" height="16.9"/><rect class="st7" x="227.7" y="209.1" width="1.9" height="16.9"/><rect class="st76" x="229.6" y="209.1" width="1.9" height="16.9"/><rect class="st100" x="231.6" y="209.1" width="1.9" height="16.9"/><rect class="st19" x="233.5" y="209.1" width="1.9" height="16.9"/><rect class="st85" x="235.4" y="209.1" width="1.9" height="16.9"/><rect class="st86" x="237.3" y="209.1" width="1.9" height="16.9"/><rect class="st2" x="239.2" y="209.1" width="1.9" height="16.9"/><rect class="st70" x="241.1" y="209.1" width="1.9" height="16.9"/><rect class="st12" x="243" y="209.1" width="1.9" height="16.9"/><rect class="st114" x="244.9" y="209.1" width="1.9" height="16.9"/><rect class="st56" x="246.8" y="209.1" width="1.9" height="16.9"/><rect class="st27" x="248.7" y="209.1" width="1.9" height="16.9"/><rect class="st14" x="250.6" y="209.1" width="1.9" height="16.9"/><rect class="st15" x="252.5" y="209.1" width=".7" height="16.9"/><rect class="st70" x="242.8" y="70" width=".2" height="95.5"/><rect class="st12" x="243" y="70" width="1.9" height="95.5"/><rect class="st114" x="244.9" y="70" width="1.9" height="95.5"/><rect class="st56" x="246.8" y="70" width="1.9" height="95.5"/><rect class="st27" x="248.7" y="70" width="1.9" height="95.5"/><rect class="st14" x="250.6" y="70" width="1.9" height="95.5"/><rect class="st15" x="252.5" y="70" width="1.9" height="95.5"/><rect class="st48" x="254.4" y="70" width="1.9" height="95.5"/><rect class="st5" x="256.3" y="70" width="1.9" height="95.5"/><rect class="st108" x="258.2" y="70" width="1.9" height="95.5"/><rect class="st32" x="260.1" y="70" width="1.9" height="95.5"/><rect class="st112" x="262" y="70" width="1.9" height="95.5"/><rect class="st31" x="264" y="70" width="1.9" height="95.5"/><rect class="st119" x="265.9" y="70" width="1.9" height="95.5"/><rect class="st111" x="267.8" y="70" width="1.9" height="95.5"/><rect class="st117" x="269.7" y="70" width="1.9" height="95.5"/><rect class="st18" x="271.6" y="70" width="1.9" height="95.5"/><rect class="st98" x="273.5" y="70" width="1.9" height="95.5"/><rect class="st71" x="275.4" y="70" width="1.9" height="95.5"/><rect class="st36" x="277.3" y="70" width="1.9" height="95.5"/><rect class="st47" x="279.2" y="70" width="1.9" height="95.5"/><rect class="st17" x="281.1" y="70" width="1.9" height="95.5"/><rect class="st39" x="283" y="70" width="1.9" height="95.5"/><rect class="st40" x="284.9" y="70" width="1.9" height="95.5"/><rect class="st20" x="286.8" y="70" width="1.9" height="95.5"/><rect class="st95" x="288.7" y="70" width="1.6" height="95.5"/><rect class="st16" x="328.1" y="69.4" width=".7" height="96.1"/><rect class="st10" x="328.8" y="69.4" width="1.9" height="96.1"/><rect class="st113" x="330.7" y="69.4" width="1.9" height="96.1"/><rect class="st104" x="332.6" y="69.4" width="1.9" height="96.1"/><rect class="st30" x="334.5" y="69.4" width="1.9" height="96.1"/><rect class="st61" x="336.4" y="69.4" width="1.9" height="96.1"/><rect class="st73" x="338.3" y="69.4" width="1.9" height="96.1"/><rect class="st44" x="340.2" y="69.4" width="1.9" height="96.1"/><rect class="st96" x="342.1" y="69.4" width="1.9" height="96.1"/><rect class="st103" x="344" y="69.4" width="1.9" height="96.1"/><rect class="st63" x="345.9" y="69.4" width="1.9" height="96.1"/><rect class="st6" x="347.8" y="69.4" width="1.9" height="96.1"/><rect class="st41" x="349.7" y="69.4" width="1.9" height="96.1"/><rect class="st62" x="351.6" y="69.4" width="1.9" height="96.1"/><rect class="st4" x="353.5" y="69.4" width="1.9" height="96.1"/><rect class="st99" x="355.4" y="69.4" width="1.9" height="96.1"/><rect class="st83" x="357.3" y="69.4" width="1.9" height="96.1"/><rect class="st87" x="359.3" y="69.4" width="1.9" height="96.1"/><rect class="st78" x="361.2" y="69.4" width="1.9" height="96.1"/><rect class="st26" x="363.1" y="69.4" width="1.9" height="96.1"/><rect class="st29" x="365" y="69.4" width="1.9" height="96.1"/><rect class="st97" x="366.9" y="69.4" width="1.9" height="96.1"/><rect class="st22" x="368.8" y="69.4" width="1.9" height="96.1"/><rect class="st43" x="370.7" y="69.4" width="1.9" height="96.1"/><rect class="st45" x="372.6" y="69.4" width="1.9" height="96.1"/><rect class="st54" x="374.5" y="69.4" width="1.1" height="96.1"/><rect class="st13" x="302" y="58" width="0" height="101.6"/><rect class="st0" x="302.1" y="58" width="1.9" height="101.6"/><rect class="st25" x="304" y="58" width="1.9" height="101.6"/><rect class="st46" x="305.9" y="58" width="1.9" height="101.6"/><rect class="st80" x="307.8" y="58" width="1.9" height="101.6"/><rect class="st66" x="309.7" y="58" width="1.9" height="101.6"/><rect class="st49" x="311.6" y="58" width="1.9" height="101.6"/><rect class="st34" x="313.5" y="58" width="1.9" height="101.6"/><rect class="st77" x="315.4" y="58" width="1.9" height="101.6"/><rect class="st91" x="317.3" y="58" width="1.9" height="101.6"/><rect class="st92" x="319.2" y="58" width=".1" height="101.6"/><rect class="st112" x="262.2" y="172" width="1.8" height="48.4"/><rect class="st31" x="264" y="172" width="1.9" height="48.4"/><rect class="st119" x="265.9" y="172" width="1.9" height="48.4"/><rect class="st111" x="267.8" y="172" width="1.9" height="48.4"/><rect class="st117" x="269.7" y="172" width="1.9" height="48.4"/><rect class="st18" x="271.6" y="172" width="1.9" height="48.4"/><rect class="st98" x="273.5" y="172" width="1.9" height="48.4"/><rect class="st71" x="275.4" y="172" width="1.9" height="48.4"/><rect class="st36" x="277.3" y="172" width="1.9" height="48.4"/><rect class="st47" x="279.2" y="172" width="1.9" height="48.4"/><rect class="st17" x="281.1" y="172" width="1.9" height="48.4"/><rect class="st39" x="283" y="172" width="1.9" height="48.4"/><rect class="st40" x="284.9" y="172" width="1.9" height="48.4"/><rect class="st20" x="286.8" y="172" width="1.9" height="48.4"/><rect class="st95" x="288.7" y="172" width="1.9" height="48.4"/><rect class="st68" x="290.6" y="172" width="1.9" height="48.4"/><rect class="st105" x="292.5" y="172" width="1.9" height="48.4"/><rect class="st65" x="294.4" y="172" width="1.9" height="48.4"/><rect class="st38" x="296.4" y="172" width="1.9" height="48.4"/><rect class="st51" x="298.3" y="172" width="1.9" height="48.4"/><rect class="st13" x="300.2" y="172" width="1.9" height="48.4"/><rect class="st0" x="302.1" y="172" width="1.9" height="48.4"/><rect class="st25" x="304" y="172" width="1.9" height="48.4"/><rect class="st46" x="305.9" y="172" width="1.9" height="48.4"/><rect class="st80" x="307.8" y="172" width="1.9" height="48.4"/><rect class="st66" x="309.7" y="172" width="1.9" height="48.4"/><rect class="st49" x="311.6" y="172" width="1.9" height="48.4"/><rect class="st34" x="313.5" y="172" width="1.9" height="48.4"/><rect class="st77" x="315.4" y="172" width="1.9" height="48.4"/><rect class="st91" x="317.3" y="172" width="1.9" height="48.4"/><rect class="st92" x="319.2" y="172" width="1.9" height="48.4"/><rect class="st72" x="321.1" y="172" width="1.9" height="48.4"/><rect class="st42" x="323" y="172" width="1.9" height="48.4"/><rect class="st50" x="324.9" y="172" width="1.9" height="48.4"/><rect class="st16" x="326.9" y="172" width="1.9" height="48.4"/><rect class="st10" x="328.8" y="172" width="1.9" height="48.4"/><rect class="st113" x="330.7" y="172" width="1.9" height="48.4"/><rect class="st104" x="332.6" y="172" width="1.9" height="48.4"/><rect class="st30" x="334.5" y="172" width="1.9" height="48.4"/><rect class="st61" x="336.4" y="172" width="1.9" height="48.4"/><rect class="st73" x="338.3" y="172" width="1.9" height="48.4"/><rect class="st44" x="340.2" y="172" width="1.9" height="48.4"/><rect class="st96" x="342.1" y="172" width="1.9" height="48.4"/><rect class="st103" x="344" y="172" width="1.9" height="48.4"/><rect class="st63" x="345.9" y="172" width="1.9" height="48.4"/><rect class="st6" x="347.8" y="172" width="1.9" height="48.4"/><rect class="st41" x="349.7" y="172" width="1.9" height="48.4"/><rect class="st62" x="351.6" y="172" width="1.9" height="48.4"/><rect class="st4" x="353.5" y="172" width="1.9" height="48.4"/><rect class="st99" x="355.4" y="172" width="1" height="48.4"/></g><g><path class="st101" d="M91.6,277.6c-2.1-7.7-8.8-11.3-15-11.3s-9.8,3.1-9.8,6.6c0,5.7,8.7,7.8,19.2,11.6,12.9,4.7,26.4,12,26.4,26.9s-13.6,27.1-33.8,27.1-31-10-36.7-26.3l20-5.3c2.2,6.6,8.4,13.1,17.6,13.1s10.9-3.5,10.9-7.7c0-6.9-10.2-8.7-22.6-13.4-10.4-4-22.4-9.7-22.4-24.9s13.6-25.8,32.5-25.8,29.7,10.2,33.8,23.8l-20.1,5.5Z"/><path class="st101" d="M198.9,250.1v48.2c0,26-15.4,40.3-38.3,40.3s-38.3-14.3-38.3-40.3v-48.2h20.8v47.7c0,14.9,6.1,21.3,17.5,21.3s17.5-6.4,17.5-21.3v-47.7h20.8Z"/><path class="st101" d="M291.4,250.1v86.7h-19.6l-17.7-24.2c-7.9-10.9-19.6-27.4-19.7-27.4h-.1c-.1,0,.1,13.4.1,32.3v19.2h-20.8v-86.7h19.6l18.5,24.8c5.6,7.4,18.8,26.1,19,26.1h.1c.1,0-.1-15.4-.1-31.1v-19.8h20.8Z"/><path class="st101" d="M357.1,336.9l-16.1-28.3h-10.7v28.3h-20.8v-86.7h32.3c21.8,0,34.9,11.9,34.9,29.7s-5.6,20.3-15.6,25l19.2,32h-23.3ZM330.3,290.2h14.4c7.4,0,10.4-5.6,10.4-10.3s-3-10.3-10.4-10.3h-14.4v20.6Z"/><path class="st101" d="M392.5,336.9v-86.7h20.8v86.7h-20.8Z"/><path class="st101" d="M473.9,277.6c-2.1-7.7-8.8-11.3-15-11.3s-9.8,3.1-9.8,6.6c0,5.7,8.7,7.8,19.2,11.6,12.9,4.7,26.4,12,26.4,26.9s-13.6,27.1-33.8,27.1-31-10-36.7-26.3l20-5.3c2.2,6.6,8.4,13.1,17.6,13.1s10.9-3.5,10.9-7.7c0-6.9-10.2-8.7-22.6-13.4-10.4-4-22.4-9.7-22.4-24.9s13.6-25.8,32.5-25.8,29.7,10.2,33.8,23.8l-20.1,5.5Z"/><path class="st101" d="M570.1,317.4v19.5h-63.8v-86.7h63.1v19.5h-42.3v14.3h33.1v18.2h-33.1v15.4h43Z"/><path class="st28" d="M122.9,386.1c-4-5-11.4-8.1-18.2-8.1-14.4,0-23.3,10.3-23.3,24.5s9.8,24.3,23.3,24.3,16.2-4.2,19.8-10.2l21.1,5.5c-7.2,15.4-22.7,25.5-40.9,25.5s-45-19-45-45.1,20.1-45.1,45-45.1,31.7,9.2,39.4,23l-21.2,5.6Z"/><path class="st28" d="M219.8,426.5v19.5h-63.8v-86.7h63.1v19.5h-42.3v14.3h33.1v18.2h-33.1v15.4h43Z"/><path class="st28" d="M314.7,359.2v86.7h-19.6l-17.7-24.2c-7.9-10.9-19.6-27.4-19.7-27.4h-.1c-.1,0,.1,13.4.1,32.3v19.2h-20.8v-86.7h19.6l18.5,24.8c5.6,7.4,18.8,26.1,19,26.1h.1c.1,0-.1-15.4-.1-31.1v-19.8h20.8Z"/><path class="st28" d="M397.6,359.2v19.5h-26.4v67.3h-20.8v-67.3h-26v-19.5h73.2Z"/><path class="st28" d="M471.1,426.5v19.5h-63.8v-86.7h63.1v19.5h-42.3v14.3h33.1v18.2h-33.1v15.4h43Z"/><path class="st28" d="M535.8,445.9l-16.1-28.3h-10.7v28.3h-20.8v-86.7h32.3c21.8,0,34.9,11.9,34.9,29.7s-5.6,20.3-15.6,25l19.2,32h-23.3ZM509,399.2h14.4c7.4,0,10.4-5.6,10.4-10.3s-3-10.3-10.4-10.3h-14.4v20.6Z"/><path class="st28" d="M165.2,473v26.1h-4.1v-11.4h-12.7v11.4h-4.1v-26.1h4.1v10.8h12.7v-10.8h4.1Z"/><path class="st28" d="M191.1,472.5c7.5,0,13.6,5.7,13.6,13.6s-6.1,13.6-13.6,13.6-13.5-5.7-13.5-13.6,6-13.6,13.5-13.6ZM191.1,495.6c5.3,0,9.3-3.9,9.3-9.5s-3.9-9.5-9.3-9.5-9.3,3.8-9.3,9.5,3.9,9.5,9.3,9.5Z"/><path class="st28" d="M238.5,473v15c0,7.5-4.1,11.6-11,11.6s-10.9-4.1-10.9-11.6v-15h4.1v15c0,5.2,2.3,7.8,6.8,7.8s6.9-2.5,6.9-7.8v-15h4.1Z"/><path class="st28" d="M265.8,480.6c-.6-2.9-3.1-4.5-5.8-4.5s-4.9,1.4-4.9,3.5,3.3,3.3,6.6,4.4c3.7,1.2,8.4,3,8.4,7.9s-3.9,7.8-9.7,7.8-9.2-3.2-10.3-7.7l3.9-1.1c.5,2.7,2.8,5.1,6.5,5.1s5.2-1.7,5.2-3.9c0-3.2-4-3.9-7.7-5.1-3.1-1-7.2-2.5-7.2-7s3.9-7.3,9.3-7.3,8.6,2.9,9.6,7l-3.9,1.1Z"/><path class="st28" d="M300.4,473v3.9h-8.5v22.2h-4.1v-22.2h-8.4v-3.9h21Z"/><path class="st28" d="M323.1,472.5c7.5,0,13.6,5.7,13.6,13.6s-6.1,13.6-13.6,13.6-13.5-5.7-13.5-13.6,6-13.6,13.5-13.6ZM323.1,495.6c5.3,0,9.3-3.9,9.3-9.5s-3.9-9.5-9.3-9.5-9.3,3.8-9.3,9.5,3.9,9.5,9.3,9.5Z"/><path class="st28" d="M370.9,473v26.1h-3.9l-9.5-12.8c-2.3-3.2-4.5-6.4-4.6-6.4h0s0,3.5,0,8.2v11.1h-4.1v-26.1h3.9l9.6,12.8c1.9,2.5,4.5,6.2,4.5,6.2h0s0-3.8,0-7.9v-11.1h4.1Z"/><path class="st28" d="M402.4,499.1v-26.1h4.1v26.1h-4.1Z"/><path class="st28" d="M434.5,480.6c-.6-2.9-3.1-4.5-5.8-4.5s-4.9,1.4-4.9,3.5,3.3,3.3,6.6,4.4c3.7,1.2,8.4,3,8.4,7.9s-3.9,7.8-9.7,7.8-9.2-3.2-10.3-7.7l3.9-1.1c.5,2.7,2.8,5.1,6.5,5.1s5.2-1.7,5.2-3.9c0-3.2-4-3.9-7.7-5.1-3.1-1-7.2-2.5-7.2-7s3.9-7.3,9.3-7.3,8.6,2.9,9.6,7l-3.9,1.1Z"/><path class="st28" d="M462.2,473c7.4,0,13.5,5.3,13.5,13.1s-6,12.9-13.3,12.9h-11.3v-26.1h11.1ZM462.4,495.2c4.8,0,9-3.4,9-9s-4.2-9.3-9.2-9.3h-7v18.3h7.1Z"/></g></svg>

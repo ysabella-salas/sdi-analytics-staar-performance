@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme-source="system">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HISD Web Components — demo</title>
+<link rel="stylesheet" href="../../assets/hisd-theme.css">
+<link rel="stylesheet" href="../../components/components.css">
+<style>
+  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);line-height:var(--leading-normal)}
+  header{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-5) var(--space-6);background:var(--color-brand);color:var(--color-on-action)}
+  header h1{font-family:var(--font-display);font-size:var(--text-xl);margin:0}
+  .toggle{margin-inline-start:auto;font:inherit;font-weight:600;border:none;border-radius:var(--radius-pill);padding:var(--space-2) var(--space-4);background:var(--color-surface);color:var(--color-text);cursor:pointer}
+  .toggle:focus-visible{outline:2px solid var(--color-on-action);outline-offset:2px}
+  main{max-width:880px;margin:0 auto;padding:var(--space-8) var(--space-6);display:flex;flex-direction:column;gap:var(--space-8)}
+  section{display:flex;flex-direction:column;gap:var(--space-4)}
+  h2{font-family:var(--font-display);color:var(--color-brand);font-size:var(--text-2xl);margin:0;border-block-end:2px solid var(--color-border);padding-block-end:var(--space-2)}
+  .row{display:flex;flex-wrap:wrap;gap:var(--space-4);align-items:center}
+  p.note{color:var(--color-text-muted);font-size:var(--text-sm);margin:0}
+</style>
+</head>
+<body>
+<header>
+  <h1>HISD Web Components</h1>
+  <button class="toggle" onclick="var h=document.documentElement;h.dataset.theme=(h.dataset.theme==='dark'?'light':'dark')">Toggle theme</button>
+</header>
+<main>
+  <p class="note">Live framework-agnostic custom elements, styled entirely by the design-system CSS. Toggle the theme — every element re-themes through tokens.</p>
+
+  <section>
+    <h2>Buttons</h2>
+    <div class="row">
+      <hisd-button variant="action">Action</hisd-button>
+      <hisd-button variant="secondary">Secondary</hisd-button>
+      <hisd-button variant="ghost">Ghost</hisd-button>
+      <hisd-button variant="danger">Delete</hisd-button>
+      <hisd-button variant="action" disabled>Disabled</hisd-button>
+      <hisd-button variant="action" loading>Saving</hisd-button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Chips</h2>
+    <div class="row">
+      <hisd-chip selectable>Mathematics</hisd-chip>
+      <hisd-chip selectable selected>Bilingüe</hisd-chip>
+      <hisd-chip selectable>Athletics</hisd-chip>
+    </div>
+  </section>
+
+  <section>
+    <h2>Switch</h2>
+    <div class="row">
+      <hisd-switch label="Email notifications" checked></hisd-switch>
+      <hisd-switch label="SMS alerts"></hisd-switch>
+    </div>
+  </section>
+
+  <section>
+    <h2>Badges</h2>
+    <div class="row">
+      <hisd-badge variant="danger" count="3"></hisd-badge>
+      <hisd-badge variant="success">Active</hisd-badge>
+      <hisd-badge variant="info">New</hisd-badge>
+    </div>
+  </section>
+
+  <section>
+    <h2>Progress</h2>
+    <div class="row" style="width:100%">
+      <hisd-progress value="62"></hisd-progress>
+    </div>
+  </section>
+
+  <section>
+    <h2>Alert</h2>
+    <hisd-alert variant="success" title="Enrollment saved" message="Your changes were saved to the student record." dismissible></hisd-alert>
+    <hisd-alert variant="warning" title="Heads up" message="This window closes Friday at 5 p.m."></hisd-alert>
+  </section>
+
+  <section>
+    <h2>Avatars</h2>
+    <div class="row">
+      <hisd-avatar size="md" initials="JS"></hisd-avatar>
+      <hisd-avatar size="lg" initials="HD"></hisd-avatar>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ribbon</h2>
+    <p class="note">
+      The Ribbon is a <strong>solid brand-color field</strong> overlaid with soft,
+      white, low-opacity "bayou current" strokes that sweep edge-to-edge across it.
+      The static field+strokes SVG is always present (the no-JS / reduced-motion
+      floor); on a capable client, <code>animate</code> overlays the WebGL2 core
+      that flow-warps the strokes. The composition is chosen with the
+      <code>lines</code> attribute (a named PRESET) or a raw integer
+      <code>seed</code> — and because the static SVG and the animated tier are both
+      generated from the shared line kit, they render the <strong>same</strong>
+      composition. The <code>field</code> attribute overrides the field color per
+      section (any CSS color). Use the header "Toggle theme" button to see light
+      and dark (the strokes read more strongly on the darker field).
+    </p>
+
+    <p class="note"><strong>Variant gallery</strong> — named presets, animated. Same kit, different deterministic compositions.</p>
+    <div class="row" style="flex-direction:column;align-items:stretch;width:100%;gap:var(--space-3)">
+      <p class="note"><code>lines="currents"</code> (default)</p>
+      <hisd-ribbon lines="currents" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note"><code>lines="delta"</code></p>
+      <hisd-ribbon lines="delta" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note"><code>lines="bayou"</code></p>
+      <hisd-ribbon lines="bayou" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note"><code>lines="crossing"</code></p>
+      <hisd-ribbon lines="crossing" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note"><code>lines="weave"</code></p>
+      <hisd-ribbon lines="weave" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note"><code>lines="loops"</code></p>
+      <hisd-ribbon lines="loops" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note">Raw seed — <code>seed="42"</code> (any integer is a valid, deterministic composition)</p>
+      <hisd-ribbon seed="42" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+    </div>
+
+    <p class="note" style="margin-block-start:var(--space-5)"><strong>Field-color overrides</strong> — composition + per-section brand color.</p>
+    <div class="row" style="flex-direction:column;align-items:stretch;width:100%;gap:var(--space-3)">
+      <p class="note">Purple field — <code>field="#7A2D8F" lines="delta"</code></p>
+      <hisd-ribbon field="#7A2D8F" lines="delta" animate style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note">Deep-teal field, higher intensity — <code>field="#026252" lines="channels" intensity="0.9"</code></p>
+      <hisd-ribbon field="#026252" lines="channels" animate intensity="0.9" style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+
+      <p class="note">Static (no <code>animate</code>) — <code>field="#00A3AF" lines="bend"</code> (the reduced-motion / no-JS floor)</p>
+      <hisd-ribbon field="#00A3AF" lines="bend" style="width:100%;--hisd-ribbon-h:160px"></hisd-ribbon>
+    </div>
+
+    <p class="note" style="margin-block-start:var(--space-5)">Fan divider (constrained-media accent — not the canonical device)</p>
+    <hisd-ribbon variant="fan" animate style="width:100%"></hisd-ribbon>
+  </section>
+</main>
+
+<script type="module" src="./src/index.js"></script>
+</body>
+</html>

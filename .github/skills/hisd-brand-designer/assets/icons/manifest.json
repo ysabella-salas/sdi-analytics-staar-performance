@@ -1,0 +1,367 @@
+[
+  {
+    "name": "account_circle",
+    "source_variant": "account_circle_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/account_circle/materialsymbolsrounded/account_circle_wght500fill1_24px.svg"
+  },
+  {
+    "name": "add",
+    "source_variant": "add_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/add/materialsymbolsrounded/add_wght500fill1_24px.svg"
+  },
+  {
+    "name": "apps",
+    "source_variant": "apps_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/apps/materialsymbolsrounded/apps_wght500fill1_24px.svg"
+  },
+  {
+    "name": "arrow_back",
+    "source_variant": "arrow_back_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/arrow_back/materialsymbolsrounded/arrow_back_wght500fill1_24px.svg"
+  },
+  {
+    "name": "arrow_downward",
+    "source_variant": "arrow_downward_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/arrow_downward/materialsymbolsrounded/arrow_downward_wght500fill1_24px.svg"
+  },
+  {
+    "name": "arrow_forward",
+    "source_variant": "arrow_forward_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/arrow_forward/materialsymbolsrounded/arrow_forward_wght500fill1_24px.svg"
+  },
+  {
+    "name": "arrow_upward",
+    "source_variant": "arrow_upward_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/arrow_upward/materialsymbolsrounded/arrow_upward_wght500fill1_24px.svg"
+  },
+  {
+    "name": "assignment",
+    "source_variant": "assignment_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/assignment/materialsymbolsrounded/assignment_wght500fill1_24px.svg"
+  },
+  {
+    "name": "attach_file",
+    "source_variant": "attach_file_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/attach_file/materialsymbolsrounded/attach_file_wght500fill1_24px.svg"
+  },
+  {
+    "name": "backpack",
+    "source_variant": "backpack_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/backpack/materialsymbolsrounded/backpack_wght500fill1_24px.svg"
+  },
+  {
+    "name": "badge",
+    "source_variant": "badge_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/badge/materialsymbolsrounded/badge_wght500fill1_24px.svg"
+  },
+  {
+    "name": "calendar_month",
+    "source_variant": "calendar_month_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/calendar_month/materialsymbolsrounded/calendar_month_wght500fill1_24px.svg"
+  },
+  {
+    "name": "call",
+    "source_variant": "call_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/call/materialsymbolsrounded/call_wght500fill1_24px.svg"
+  },
+  {
+    "name": "cancel",
+    "source_variant": "cancel_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/cancel/materialsymbolsrounded/cancel_wght500fill1_24px.svg"
+  },
+  {
+    "name": "chat",
+    "source_variant": "chat_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/chat/materialsymbolsrounded/chat_wght500fill1_24px.svg"
+  },
+  {
+    "name": "check",
+    "source_variant": "check_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/check/materialsymbolsrounded/check_wght500fill1_24px.svg"
+  },
+  {
+    "name": "check_circle",
+    "source_variant": "check_circle_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/check_circle/materialsymbolsrounded/check_circle_wght500fill1_24px.svg"
+  },
+  {
+    "name": "chevron_left",
+    "source_variant": "chevron_left_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/chevron_left/materialsymbolsrounded/chevron_left_wght500fill1_24px.svg"
+  },
+  {
+    "name": "chevron_right",
+    "source_variant": "chevron_right_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/chevron_right/materialsymbolsrounded/chevron_right_wght500fill1_24px.svg"
+  },
+  {
+    "name": "close",
+    "source_variant": "close_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/close/materialsymbolsrounded/close_wght500fill1_24px.svg"
+  },
+  {
+    "name": "content_copy",
+    "source_variant": "content_copy_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/content_copy/materialsymbolsrounded/content_copy_wght500fill1_24px.svg"
+  },
+  {
+    "name": "delete",
+    "source_variant": "delete_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/delete/materialsymbolsrounded/delete_wght500fill1_24px.svg"
+  },
+  {
+    "name": "description",
+    "source_variant": "description_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/description/materialsymbolsrounded/description_wght500fill1_24px.svg"
+  },
+  {
+    "name": "do_not_disturb_on",
+    "source_variant": "do_not_disturb_on_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/do_not_disturb_on/materialsymbolsrounded/do_not_disturb_on_wght500fill1_24px.svg"
+  },
+  {
+    "name": "done",
+    "source_variant": "done_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/done/materialsymbolsrounded/done_wght500fill1_24px.svg"
+  },
+  {
+    "name": "download",
+    "source_variant": "download_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/download/materialsymbolsrounded/download_wght500fill1_24px.svg"
+  },
+  {
+    "name": "edit",
+    "source_variant": "edit_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/edit/materialsymbolsrounded/edit_wght500fill1_24px.svg"
+  },
+  {
+    "name": "error",
+    "source_variant": "error_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/error/materialsymbolsrounded/error_wght500fill1_24px.svg"
+  },
+  {
+    "name": "event",
+    "source_variant": "event_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/event/materialsymbolsrounded/event_wght500fill1_24px.svg"
+  },
+  {
+    "name": "expand_less",
+    "source_variant": "expand_less_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/expand_less/materialsymbolsrounded/expand_less_wght500fill1_24px.svg"
+  },
+  {
+    "name": "expand_more",
+    "source_variant": "expand_more_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/expand_more/materialsymbolsrounded/expand_more_wght500fill1_24px.svg"
+  },
+  {
+    "name": "favorite",
+    "source_variant": "favorite_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/favorite/materialsymbolsrounded/favorite_wght500fill1_24px.svg"
+  },
+  {
+    "name": "filter_alt",
+    "source_variant": "filter_alt_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/filter_alt/materialsymbolsrounded/filter_alt_wght500fill1_24px.svg"
+  },
+  {
+    "name": "folder",
+    "source_variant": "folder_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/folder/materialsymbolsrounded/folder_wght500fill1_24px.svg"
+  },
+  {
+    "name": "grade",
+    "source_variant": "grade_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/grade/materialsymbolsrounded/grade_wght500fill1_24px.svg"
+  },
+  {
+    "name": "group",
+    "source_variant": "group_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/group/materialsymbolsrounded/group_wght500fill1_24px.svg"
+  },
+  {
+    "name": "help",
+    "source_variant": "help_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/help/materialsymbolsrounded/help_wght500fill1_24px.svg"
+  },
+  {
+    "name": "home",
+    "source_variant": "home_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/home/materialsymbolsrounded/home_wght500fill1_24px.svg"
+  },
+  {
+    "name": "image",
+    "source_variant": "image_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/image/materialsymbolsrounded/image_wght500fill1_24px.svg"
+  },
+  {
+    "name": "info",
+    "source_variant": "info_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/info/materialsymbolsrounded/info_wght500fill1_24px.svg"
+  },
+  {
+    "name": "language",
+    "source_variant": "language_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/language/materialsymbolsrounded/language_wght500fill1_24px.svg"
+  },
+  {
+    "name": "lightbulb",
+    "source_variant": "lightbulb_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/lightbulb/materialsymbolsrounded/lightbulb_wght500fill1_24px.svg"
+  },
+  {
+    "name": "link",
+    "source_variant": "link_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/link/materialsymbolsrounded/link_wght500fill1_24px.svg"
+  },
+  {
+    "name": "location_on",
+    "source_variant": "location_on_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/location_on/materialsymbolsrounded/location_on_wght500fill1_24px.svg"
+  },
+  {
+    "name": "lock",
+    "source_variant": "lock_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/lock/materialsymbolsrounded/lock_wght500fill1_24px.svg"
+  },
+  {
+    "name": "lock_open",
+    "source_variant": "lock_open_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/lock_open/materialsymbolsrounded/lock_open_wght500fill1_24px.svg"
+  },
+  {
+    "name": "mail",
+    "source_variant": "mail_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/mail/materialsymbolsrounded/mail_wght500fill1_24px.svg"
+  },
+  {
+    "name": "map",
+    "source_variant": "map_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/map/materialsymbolsrounded/map_wght500fill1_24px.svg"
+  },
+  {
+    "name": "menu",
+    "source_variant": "menu_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/menu/materialsymbolsrounded/menu_wght500fill1_24px.svg"
+  },
+  {
+    "name": "menu_book",
+    "source_variant": "menu_book_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/menu_book/materialsymbolsrounded/menu_book_wght500fill1_24px.svg"
+  },
+  {
+    "name": "more_horiz",
+    "source_variant": "more_horiz_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/more_horiz/materialsymbolsrounded/more_horiz_wght500fill1_24px.svg"
+  },
+  {
+    "name": "more_vert",
+    "source_variant": "more_vert_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/more_vert/materialsymbolsrounded/more_vert_wght500fill1_24px.svg"
+  },
+  {
+    "name": "north_east",
+    "source_variant": "north_east_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/north_east/materialsymbolsrounded/north_east_wght500fill1_24px.svg"
+  },
+  {
+    "name": "notifications",
+    "source_variant": "notifications_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/notifications/materialsymbolsrounded/notifications_wght500fill1_24px.svg"
+  },
+  {
+    "name": "open_in_new",
+    "source_variant": "open_in_new_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/open_in_new/materialsymbolsrounded/open_in_new_wght500fill1_24px.svg"
+  },
+  {
+    "name": "person",
+    "source_variant": "person_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/person/materialsymbolsrounded/person_wght500fill1_24px.svg"
+  },
+  {
+    "name": "print",
+    "source_variant": "print_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/print/materialsymbolsrounded/print_wght500fill1_24px.svg"
+  },
+  {
+    "name": "redo",
+    "source_variant": "redo_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/redo/materialsymbolsrounded/redo_wght500fill1_24px.svg"
+  },
+  {
+    "name": "refresh",
+    "source_variant": "refresh_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/refresh/materialsymbolsrounded/refresh_wght500fill1_24px.svg"
+  },
+  {
+    "name": "remove",
+    "source_variant": "remove_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/remove/materialsymbolsrounded/remove_wght500fill1_24px.svg"
+  },
+  {
+    "name": "save",
+    "source_variant": "save_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/save/materialsymbolsrounded/save_wght500fill1_24px.svg"
+  },
+  {
+    "name": "school",
+    "source_variant": "school_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/school/materialsymbolsrounded/school_wght500fill1_24px.svg"
+  },
+  {
+    "name": "search",
+    "source_variant": "search_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/search/materialsymbolsrounded/search_wght500fill1_24px.svg"
+  },
+  {
+    "name": "settings",
+    "source_variant": "settings_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/settings/materialsymbolsrounded/settings_wght500fill1_24px.svg"
+  },
+  {
+    "name": "share",
+    "source_variant": "share_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/share/materialsymbolsrounded/share_wght500fill1_24px.svg"
+  },
+  {
+    "name": "sort",
+    "source_variant": "sort_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/sort/materialsymbolsrounded/sort_wght500fill1_24px.svg"
+  },
+  {
+    "name": "star",
+    "source_variant": "star_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/star/materialsymbolsrounded/star_wght500fill1_24px.svg"
+  },
+  {
+    "name": "translate",
+    "source_variant": "translate_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/translate/materialsymbolsrounded/translate_wght500fill1_24px.svg"
+  },
+  {
+    "name": "undo",
+    "source_variant": "undo_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/undo/materialsymbolsrounded/undo_wght500fill1_24px.svg"
+  },
+  {
+    "name": "upload",
+    "source_variant": "upload_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/upload/materialsymbolsrounded/upload_wght500fill1_24px.svg"
+  },
+  {
+    "name": "visibility",
+    "source_variant": "visibility_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/visibility/materialsymbolsrounded/visibility_wght500fill1_24px.svg"
+  },
+  {
+    "name": "visibility_off",
+    "source_variant": "visibility_off_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/visibility_off/materialsymbolsrounded/visibility_off_wght500fill1_24px.svg"
+  },
+  {
+    "name": "warning",
+    "source_variant": "warning_wght500fill1_24px.svg",
+    "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/warning/materialsymbolsrounded/warning_wght500fill1_24px.svg"
+  }
+]

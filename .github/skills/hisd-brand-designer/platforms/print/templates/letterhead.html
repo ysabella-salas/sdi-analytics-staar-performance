@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Letterhead</title>
+  <link rel="stylesheet" href="../print.css">
+</head>
+<body>
+
+  <!-- Repeats on every printed page (Chrome fallback) -->
+  <div class="print-running-header">
+    Houston Independent School District
+    <span class="right">Official Correspondence</span>
+  </div>
+  <div class="print-running-footer">
+    Hattie Mae White Educational Support Center &middot; 4400 West 18th Street, Houston, TX 77092
+    <span class="right page-counter"></span>
+  </div>
+
+  <div class="screen-page">
+
+    <!-- Ribbon + masthead -->
+    <div class="hisd-ribbon" aria-hidden="true"></div>
+
+    <header class="hisd-masthead">
+      <img class="hisd-logo" src="../assets/logos/full-dark-grey.svg"
+           alt="Houston Independent School District">
+      <div class="t-meta" style="text-align:right;">
+        Office of Communications<br>
+        4400 West 18th Street<br>
+        Houston, TX 77092<br>
+        houstonisd.org
+      </div>
+    </header>
+
+    <hr class="hisd-footrule">
+
+    <!-- Date + recipient -->
+    <div class="hisd-addressblock t-body">
+      June 20, 2026<br><br>
+      Dr. Jordan Alvarez<br>
+      Principal, Sample Elementary School<br>
+      1234 Learning Lane<br>
+      Houston, TX 77000
+    </div>
+
+    <p class="t-body">Dear Dr. Alvarez,</p>
+
+    <p class="t-body">
+      Thank you for your continued partnership with the Houston Independent School
+      District. This letterhead template demonstrates the correct placement of the
+      brand ribbon, the district logo, and the running header and footer that repeat
+      on every printed page. The body type uses the brand sans-serif with an Arial
+      fallback so the document reproduces cleanly even where the brand fonts are not
+      installed.
+    </p>
+
+    <p class="t-body">
+      Widow and orphan control is enabled throughout, so paragraphs that span a page
+      break will not leave a single dangling line stranded at the top or bottom of a
+      page. Brand fills such as the ribbon are set with <em>print-color-adjust: exact</em>,
+      which forces the teal band to print rather than being dropped by the browser's
+      default ink-saving behavior.
+    </p>
+
+    <div class="hisd-callout t-body">
+      To reproduce this letter for a professional print run, supply your printer with the
+      Pantone and CMYK builds in <strong>color-reference.md</strong> &mdash; not the
+      on-screen hex values. Teal is <strong>PMS 7467&nbsp;C</strong> /
+      CMYK&nbsp;78&nbsp;15&nbsp;31&nbsp;0.
+    </div>
+
+    <p class="t-body">
+      Please reach out to the Office of Communications with any questions about applying
+      the HISD brand to district correspondence.
+    </p>
+
+    <div class="hisd-signature">
+      Sincerely,<br><br><br>
+      <span class="name">Alejandro Banegas</span><br>
+      Creative Director, Houston Independent School District
+    </div>
+
+  </div>
+
+  <p class="screen-note">
+    Screen preview only. To produce a PDF: open in Chrome &rarr; Cmd-P (Ctrl-P) &rarr;
+    "Save as PDF", paper US Letter, margins "Default", and enable
+    <strong>"Background graphics"</strong> so the teal ribbon prints.
+  </p>
+
+</body>
+</html>

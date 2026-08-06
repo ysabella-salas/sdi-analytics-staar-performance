@@ -1,0 +1,29 @@
+{
+  "name": "hisd-ribbon-gl",
+  "version": "1.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Framework-agnostic, zero-dependency raw-WebGL2 core for the animated HISD Ribbon (rung 2 of the progressive-enhancement ladder).",
+  "main": "core.js",
+  "exports": {
+    ".": "./core.js",
+    "./capabilities": "./capabilities.js",
+    "./tokens": "./tokens.js",
+    "./scene": "./scene.js",
+    "./shaders": "./shaders/index.js"
+  },
+  "files": [
+    "core.js",
+    "capabilities.js",
+    "tokens.js",
+    "scene.js",
+    "shaders/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node tests/ribbon-gl.smoke.mjs"
+  },
+  "sideEffects": false,
+  "dependencies": {},
+  "devDependencies": {}
+}

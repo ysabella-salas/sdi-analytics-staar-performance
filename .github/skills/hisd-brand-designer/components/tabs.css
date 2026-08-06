@@ -1,0 +1,301 @@
+/* ==========================================================================
+   HISD Tabs
+   Organizes content at the same level of hierarchy — not sub-navigation.
+   Built entirely from semantic + reference tokens in hisd-theme.css.
+
+   Contract (Docs/Design-System/Components.md → "Tabs"):
+     Structure   role="tablist" wraps role="tab"; each role="tabpanel"
+                 links back via aria-controls / aria-labelledby.
+     Active tab  border-block-end: 2px solid --color-action,
+                 text --color-action, font-weight 600 (--weight-semibold).
+     Inactive    text --color-text-muted.
+     Keyboard    Arrow Left/Right move + auto-activate; Home/End first/last
+                 (automatic activation, per WAI-ARIA APG).
+     Overflow    horizontal scroll with fade masks at --color-bg;
+                 tabs NEVER wrap to a second line.
+
+   States: active, inactive, hover, focus-visible, disabled.
+   Light is the default; dark inherits from an ancestor [data-theme="dark"]
+   via the semantic tokens — no component-specific dark hex.
+
+   Logical properties throughout (padding-inline, border-block-end, …) so the
+   component is RTL-ready and tolerates >=40% text expansion (Spanish).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Component-scoped tokens — resolve to semantic tokens only.
+   These let a consumer retheme one tab set without overriding every rule.
+   The fade-edge color tracks the page background per the contract.
+   -------------------------------------------------------------------------- */
+.hisd-tabs {
+  --hisd-tabs-text: var(--color-text-muted);
+  --hisd-tabs-text-active: var(--color-action);
+  --hisd-tabs-accent: var(--color-action);
+  --hisd-tabs-border: var(--color-border);
+  --hisd-tabs-fade: var(--color-bg);
+  /* Width of the scroll fade at each inline edge. */
+  --hisd-tabs-fade-size: var(--space-8);
+  /* Min interactive target (WCAG 2.2 SC 2.5.8). 24px = --space-6. */
+  --hisd-tabs-min-size: var(--space-6);
+
+  display: block;
+  font-family: var(--font-sans);
+}
+
+/* --------------------------------------------------------------------------
+   The scroll viewport. Holds the tablist and the two edge fades. The fades
+   are painted overlays in --color-bg (the contract's "fade mask at
+   --color-bg"); they sit above the scrolling strip but never intercept
+   pointer or focus because of pointer-events: none.
+   -------------------------------------------------------------------------- */
+.hisd-tabs__viewport {
+  position: relative;
+  /* The shared divider that the active tab's accent sits on top of. */
+  border-block-end: 1px solid var(--hisd-tabs-border);
+}
+
+.hisd-tabs__viewport::before,
+.hisd-tabs__viewport::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inline-size: var(--hisd-tabs-fade-size);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Leading (inline-start) edge fade — solid at the start edge, clearing toward
+   content. The gradient direction is bound to the inline axis via a local var
+   so it flips correctly under RTL (overridden in the [dir="rtl"] rule below). */
+.hisd-tabs__viewport::before {
+  inset-inline-start: 0;
+  background-image: linear-gradient(
+    var(--hisd-tabs-fade-start, to right),
+    var(--hisd-tabs-fade),
+    transparent
+  );
+}
+
+/* Trailing (inline-end) edge fade. */
+.hisd-tabs__viewport::after {
+  inset-inline-end: 0;
+  background-image: linear-gradient(
+    var(--hisd-tabs-fade-end, to left),
+    var(--hisd-tabs-fade),
+    transparent
+  );
+}
+
+/* RTL: the inline axis reverses, so the start-edge fade must run to the left
+   and the end-edge fade to the right. Logical positioning already moved the
+   pseudo-elements; this only re-points the gradient sweep. */
+[dir="rtl"] .hisd-tabs__viewport::before { --hisd-tabs-fade-start: to left; }
+[dir="rtl"] .hisd-tabs__viewport::after  { --hisd-tabs-fade-end: to right; }
+
+/* --------------------------------------------------------------------------
+   The tablist — a single horizontal, non-wrapping, scrollable strip.
+   Overflow scrolls; tabs never wrap to a second line (contract).
+   -------------------------------------------------------------------------- */
+.hisd-tabs__list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Keep the strip on one line and let it scroll. */
+  white-space: nowrap;
+  /* Smooth, momentum-style scroll when a tab is brought into view. */
+  scroll-behavior: smooth;
+  /* Snap each tab cleanly to the leading edge on programmatic scroll. */
+  scroll-snap-type: x proximity;
+  scrollbar-width: none; /* Firefox: hide the native bar; the fades imply scroll. */
+}
+
+/* Hide the scrollbar visually (WebKit/Blink) — scrolling stays keyboard- and
+   wheel-accessible, and the edge fades signal that more tabs exist. */
+.hisd-tabs__list::-webkit-scrollbar {
+  block-size: 0;
+  inline-size: 0;
+}
+
+.hisd-tabs__list > li {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+/* --------------------------------------------------------------------------
+   A single tab. Native <button> so Enter/Space and focus come for free.
+   Inactive by default: muted text, transparent accent border so the active
+   state only swaps the color (no layout shift between states).
+   -------------------------------------------------------------------------- */
+.hisd-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+
+  /* >=24px target via padding; block padding also clears the min-size. */
+  min-block-size: var(--hisd-tabs-min-size);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  margin: 0;
+
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+
+  color: var(--hisd-tabs-text);
+  background-color: transparent;
+  border: 0;
+  /* Reserve the 2px accent now (transparent) so activating it adds no height. */
+  border-block-end: var(--space-0\.5) solid transparent;
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+/* Hover (only on enabled, non-active tabs) — deepen toward body ink to signal
+   affordance without pre-empting the active accent color. */
+.hisd-tabs__tab:hover:not([aria-selected="true"]):not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+}
+
+/* Visible focus ring for every tab. Never suppressed without a replacement. */
+.hisd-tabs__tab:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+  /* Round the ring slightly so it reads as a focus indicator, not a box. */
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Active tab — the contract's exact treatment:
+     border-block-end 2px solid --color-action, text --color-action, weight 600.
+   -------------------------------------------------------------------------- */
+.hisd-tabs__tab[aria-selected="true"] {
+  color: var(--hisd-tabs-text-active);
+  font-weight: var(--weight-semibold);
+  border-block-end-color: var(--hisd-tabs-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Disabled — non-interactive, removed from the roving tab order in markup
+   (tabindex="-1") and visually de-emphasized. Supports both a real
+   <button>:disabled and an [aria-disabled="true"] element.
+   -------------------------------------------------------------------------- */
+.hisd-tabs__tab:disabled,
+.hisd-tabs__tab[aria-disabled="true"] {
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+  border-block-end-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Panels. Exactly one is visible at a time; the rest carry the `hidden`
+   attribute. Panels are focusable (tabindex="0") so keyboard users can scroll
+   panel content that has no inherent focus stop.
+   -------------------------------------------------------------------------- */
+.hisd-tabs__panel {
+  padding-block: var(--space-4);
+  padding-inline: var(--space-1);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* The native `hidden` attribute hides inactive panels; assert it strongly so a
+   utility `display` rule elsewhere can't accidentally reveal them. */
+.hisd-tabs__panel[hidden] {
+  display: none;
+}
+
+/* Panels are scroll/landmark targets, not buttons; give them the same visible
+   ring when focused by keyboard. */
+.hisd-tabs__panel:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Optional leading icon inside a tab. Drawn as a monochrome SVG mask filled
+   with currentColor, so it tracks the tab's text color in every theme and
+   state. This (a currentColor monochrome icon) is the sole permitted
+   non-token color usage.
+   -------------------------------------------------------------------------- */
+.hisd-tabs__icon {
+  flex: 0 0 auto;
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-tabs-icon, none) center / contain no-repeat;
+  mask: var(--hisd-tabs-icon, none) center / contain no-repeat;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — kill the smooth scroll and color transitions so nothing
+   animates. Duration tokens are already zeroed at :root by the theme; this is
+   the belt-and-suspenders for the non-tokenized scroll-behavior.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-tabs__list {
+    scroll-behavior: auto;
+  }
+  .hisd-tabs__tab {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast). The OS flattens our token-driven
+   backgrounds and text colors to its own palette, so the active tab — which
+   normally reads via text color + the 2px accent underline — can lose its
+   distinction. We let system colors take over by default (forced-color-adjust
+   stays auto) and only add structural cues the OS keeps: borders/outlines for
+   the selected state, Highlight for focus, and GrayText for disabled. No
+   forced-color-adjust:none, no hex — system color keywords only.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* The shared divider under the strip — pin it to a visible system color. */
+  .hisd-tabs__viewport {
+    border-block-end-color: CanvasText;
+  }
+
+  /* The edge fades paint over content in forced-colors and add no information,
+     so suppress them rather than let a flattened gradient obscure tabs. */
+  .hisd-tabs__viewport::before,
+  .hisd-tabs__viewport::after {
+    display: none;
+  }
+
+  /* Active tab: don't rely on the (now-flattened) accent color alone. Keep the
+     2px underline AND outline the tab with Highlight so "selected" survives the
+     OS color flattening. */
+  .hisd-tabs__tab[aria-selected="true"] {
+    border-block-end-color: Highlight;
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+
+  /* Focus ring: keep it visible and distinct from the selected outline. */
+  .hisd-tabs__tab:focus-visible,
+  .hisd-tabs__panel:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Disabled tabs must read as disabled — GrayText is the system disabled ink. */
+  .hisd-tabs__tab:disabled,
+  .hisd-tabs__tab[aria-disabled="true"] {
+    color: GrayText;
+  }
+}

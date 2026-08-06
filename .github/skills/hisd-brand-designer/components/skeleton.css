@@ -1,0 +1,213 @@
+/* ==========================================================================
+   HISD Skeleton — reusable loading-placeholder styles
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css             (token names + light/dark values)
+     - Docs/Design-System/Components.md  (Components + Accessibility Contract)
+     - Docs/Design-System/Motion.md      (the tiered reduced-motion model)
+     - reference/Conventions.md          (token usage rules)
+
+   What this file provides:
+     1. .hisd-skeleton              A loading "bone" — a tokenized sunken block
+        with a sheen sweep. Modifiers --text / --title / --circle shape it.
+     2. .hisd-skeleton-group        The loading region wrapper. Carry
+        aria-busy="true" and aria-hidden="true" on it (the bones are
+        decorative); announce "Loading…" / "Cargando…" in a SEPARATE
+        aria-live="polite" region so the state reaches assistive tech.
+     3. .hisd-skeleton-reveal       The real content, faded in over
+        --duration-crossfade when [data-loaded="true"] flips. This is the
+        canonical skeleton-to-content crossfade.
+     4. .hisd-media-frame           A CLS-proof image box: it reserves space via
+        aspect-ratio and a placeholder fill, then fades the image in on load.
+
+   Rules honored here:
+     - Every COLOR is a semantic var(--color-…) token. Zero raw hex/rgb/hsl.
+     - Spacing / radius / motion come from tokens only.
+     - CSS LOGICAL properties for layout; the sole physical primitive is the
+       sheen's translateX, paired with a mirrored [dir="rtl"] keyframe set.
+     - The sheen is MOVEMENT: it animates a @keyframes loop and so is paused
+       under prefers-reduced-motion AND forced-colors. The content crossfade is
+       OPACITY-only and uses --duration-crossfade, which reduced motion retains
+       (shortened to 120ms) — so "content arrived" still reads. See Motion.md.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. The bone. A sunken block with an inline-traveling sheen highlight.
+   Authors size it with inline-size / block-size or the modifiers below; the
+   sheen and radius are token-driven.
+   -------------------------------------------------------------------------- */
+.hisd-skeleton {
+  /* Component-scoped vars resolve to semantic tokens (Conventions tier 3). */
+  --hisd-skeleton-base: var(--color-surface-sunken);
+  --hisd-skeleton-sheen: var(--color-surface);
+
+  display: block;
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+  min-block-size: var(--space-4);
+  box-sizing: border-box;
+
+  background-color: var(--hisd-skeleton-base);
+  border-radius: var(--radius-md);
+}
+
+/* The sheen — a light band that sweeps along the inline axis. It is a child
+   pseudo-element so the base fill stays a clean token color. */
+.hisd-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--hisd-skeleton-sheen) 50%,
+    transparent 100%
+  );
+  opacity: 0.6;
+  animation: hisd-skeleton-sheen calc(var(--duration-slower) * 2.4)
+             var(--ease-standard) infinite;
+}
+
+@keyframes hisd-skeleton-sheen {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+/* translateX is a PHYSICAL axis: mirror the sweep in RTL so the sheen always
+   travels with the reading direction (same contract as the progress sweep). */
+[dir="rtl"] .hisd-skeleton::after {
+  animation-name: hisd-skeleton-sheen-rtl;
+}
+
+@keyframes hisd-skeleton-sheen-rtl {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
+
+/* Shape modifiers. */
+.hisd-skeleton--text {
+  block-size: 1em;
+  margin-block: 0.25em;
+  border-radius: var(--radius-pill);
+}
+
+.hisd-skeleton--title {
+  block-size: 1.5em;
+  margin-block-end: var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.hisd-skeleton--circle {
+  inline-size: var(--space-12);
+  block-size: var(--space-12);
+  border-radius: var(--radius-pill);
+}
+
+/* The last text line of a paragraph reads as short. */
+.hisd-skeleton--text.hisd-skeleton--short {
+  inline-size: 60%;
+}
+
+/* --------------------------------------------------------------------------
+   2. The loading region. Put aria-busy + aria-hidden here.
+   -------------------------------------------------------------------------- */
+.hisd-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   3. Skeleton-to-content crossfade. The real content starts hidden and fades
+   in on --duration-crossfade when the loaded flag flips. OPACITY only — no
+   movement — so reduced motion keeps it (at 120ms) rather than cutting it.
+   -------------------------------------------------------------------------- */
+.hisd-skeleton-reveal {
+  opacity: 0;
+  transition: opacity var(--duration-crossfade) var(--ease-standard);
+}
+
+.hisd-skeleton-reveal[data-loaded="true"] {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   4. CLS-proof media frame. Reserves layout via aspect-ratio and a placeholder
+   fill (set --hisd-media-placeholder to a dominant color), then fades the image
+   in on load. Markup: a frame element wrapping <img> (or <picture><img>), with
+   the image carrying width/height OR the frame an aspect-ratio, loading="lazy"
+   by default, and the LCP hero image switched to loading="eager"
+   fetchpriority="high". JS flips data-loaded="true" on the img 'load' event.
+   -------------------------------------------------------------------------- */
+.hisd-media-frame {
+  display: block;
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: var(--hisd-media-ratio, 16 / 9);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--hisd-media-placeholder, var(--color-surface-sunken));
+}
+
+.hisd-media-frame > img,
+.hisd-media-frame > picture > img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--duration-crossfade) var(--ease-standard);
+}
+
+.hisd-media-frame > img[data-loaded="true"],
+.hisd-media-frame > picture > img[data-loaded="true"] {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Focus — the bones are decorative and never focusable. But .hisd-skeleton-reveal
+   and .hisd-media-frame routinely wrap real interactive content (a result card
+   that is a link, a clickable thumbnail), so if one is made focusable it must
+   show a visible ring and never a bare outline:none.
+   -------------------------------------------------------------------------- */
+.hisd-skeleton-reveal:focus-visible,
+.hisd-media-frame:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — the sheen is movement, so pause it: the bone parks as a
+   static sunken fill (still legible as "loading"). The crossfade is NOT
+   touched here — it rides --duration-crossfade, which the theme retains at
+   120ms under reduce, so content still arrives with a brief fade.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-skeleton::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast). The sunken fill and the sheen both
+   flatten, which would make a bone invisible. Drop the sheen, and outline the
+   bone with a system color so its extent stays visible. The media frame gets a
+   system border for the same reason.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .hisd-skeleton {
+    border: 1px solid GrayText;
+  }
+  .hisd-skeleton::after {
+    animation: none;
+    background: none;
+    opacity: 0;
+  }
+  .hisd-media-frame {
+    border: 1px solid CanvasText;
+  }
+}

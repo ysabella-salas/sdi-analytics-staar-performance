@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Map — Component Demo</title>
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="map.css">
+  <style>
+    body { margin: 0; font-family: var(--font-sans); color: var(--color-text);
+           background-color: var(--color-bg); line-height: var(--leading-normal); }
+    .demo-page { max-inline-size: 80rem; margin-inline: auto;
+                 padding-inline: var(--space-6); padding-block: var(--space-8); }
+    .demo-page > h1 { font-family: var(--font-display); font-size: var(--text-4xl);
+                      margin-block: 0 var(--space-2); }
+    .demo-intro { color: var(--color-text-muted); max-inline-size: 52rem;
+                  margin-block: 0 var(--space-6); }
+    .demo-toggle { font: inherit; font-weight: 600; cursor: pointer;
+                   border: 1px solid var(--color-border); border-radius: var(--radius-pill);
+                   padding-inline: var(--space-4); padding-block: var(--space-2);
+                   background-color: var(--color-surface); color: var(--color-text);
+                   margin-block-end: var(--space-6); }
+    .demo-toggle:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus); outline-offset: var(--focus-ring-offset); }
+    .demo-shell { block-size: 32rem; }
+    .demo-canvas-placeholder { position: absolute; inset: 0; display: grid; place-items: center;
+                               color: var(--color-text-muted); font-style: italic; }
+    .snippet { margin-block-start: var(--space-8); }
+    .snippet pre { background-color: var(--color-surface-sunken); border: 1px solid var(--color-border);
+                   border-radius: var(--radius-md); padding: var(--space-4); overflow-x: auto;
+                   font-family: var(--font-mono); font-size: var(--text-sm); }
+    code { font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <h1>Map</h1>
+    <p class="demo-intro">
+      A renderer-agnostic shell for an interactive map (MapLibre, ArcGIS, or Google Maps plug into
+      <code>.hisd-map__canvas</code>). The DOM <strong>list</strong> beside the canvas is the source of truth:
+      every marker has a focusable, keyboard-operable list item, and selection flows from the list to the
+      canvas (never the other way). The canvas is <code>aria-hidden</code>; the visible skip link lets a
+      keyboard user bypass it. The renderer-backed fail-open contract from <em>Cross-Media</em> means a
+      missing renderer leaves the page usable.
+    </p>
+    <button class="demo-toggle" type="button"
+      onclick="var h=document.documentElement;h.dataset.theme=(h.dataset.theme==='dark'?'light':'dark')">
+      Toggle theme</button>
+
+    <section class="hisd-map demo-shell" role="region" aria-label="HISD campuses near you">
+      <a href="#hisd-map-list" class="hisd-map__sr-skip" type="button">Skip the map, jump to list of campuses</a>
+
+      <div class="hisd-map__canvas" aria-hidden="true">
+        <div class="demo-canvas-placeholder">Map canvas (MapLibre / ArcGIS / Google plugs in here)</div>
+      </div>
+
+      <div class="hisd-map__controls" role="group" aria-label="Map controls">
+        <button class="hisd-map__control" type="button" aria-label="Zoom in">+</button>
+        <button class="hisd-map__control" type="button" aria-label="Zoom out">−</button>
+        <button class="hisd-map__control" type="button" aria-label="Recenter on the district">⌂</button>
+      </div>
+
+      <div class="hisd-map__list-region">
+        <div class="hisd-map__search">
+          <label for="map-search" class="visually-hidden">Search by school name or address</label>
+          <input id="map-search" type="search" placeholder="Search campuses or address…"
+                 style="inline-size:100%;padding:var(--space-2) var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-md);font:inherit;background-color:var(--color-surface);color:var(--color-text)">
+        </div>
+        <ul id="hisd-map-list" class="hisd-map__list" aria-label="Campuses">
+          <li class="hisd-map__list-item">
+            <button class="hisd-map__list-button" type="button" aria-pressed="true" aria-current="true">
+              <span class="hisd-map__list-name">Wharton Dual Language Academy</span>
+              <span class="hisd-map__list-meta">K–8 · Magnet · 1.2 mi · Spanish/English immersion</span>
+            </button>
+          </li>
+          <li class="hisd-map__list-item">
+            <button class="hisd-map__list-button" type="button" aria-pressed="false">
+              <span class="hisd-map__list-name">Bellaire High School</span>
+              <span class="hisd-map__list-meta">9–12 · Zoned · 2.4 mi · IB World School</span>
+            </button>
+          </li>
+          <li class="hisd-map__list-item">
+            <button class="hisd-map__list-button" type="button" aria-pressed="false">
+              <span class="hisd-map__list-name">Travis Elementary</span>
+              <span class="hisd-map__list-meta">K–5 · Zoned · 0.8 mi</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <p class="hisd-map__live" role="status" aria-live="polite">Map ready. Mapa listo.</p>
+    </section>
+
+    <section class="snippet">
+      <h2 style="font-family:var(--font-display);font-size:var(--text-2xl);margin-block:0 var(--space-3)">Markup contract</h2>
+      <pre><code>&lt;section class="hisd-map" role="region" aria-label="HISD campuses near you"&gt;
+  &lt;a href="#campus-list" class="hisd-map__sr-skip"&gt;Skip the map, jump to list&lt;/a&gt;
+  &lt;!-- The canvas is decorative; the renderer plugs in here --&gt;
+  &lt;div class="hisd-map__canvas" aria-hidden="true"&gt;&lt;/div&gt;
+  &lt;div class="hisd-map__controls" role="group" aria-label="Map controls"&gt;
+    &lt;button class="hisd-map__control" type="button" aria-label="Zoom in"&gt;+&lt;/button&gt;
+    &lt;button class="hisd-map__control" type="button" aria-label="Zoom out"&gt;−&lt;/button&gt;
+    &lt;button class="hisd-map__control" type="button" aria-label="Recenter"&gt;⌂&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="hisd-map__list-region"&gt;
+    &lt;div class="hisd-map__search"&gt;&lt;input type="search" …&gt;&lt;/div&gt;
+    &lt;!-- The list is the source of truth. Each &lt;button&gt; selects its feature on the canvas. --&gt;
+    &lt;ul id="campus-list" class="hisd-map__list" aria-label="Campuses"&gt;
+      &lt;li class="hisd-map__list-item"&gt;
+        &lt;button class="hisd-map__list-button" type="button" aria-pressed="true"&gt;
+          &lt;span class="hisd-map__list-name"&gt;…&lt;/span&gt;
+          &lt;span class="hisd-map__list-meta"&gt;…&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;p class="hisd-map__live" role="status" aria-live="polite"&gt;…bilingual announcements…&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+    </section>
+  </main>
+</body>
+</html>

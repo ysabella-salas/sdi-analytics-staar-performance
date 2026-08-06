@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Tabs — component demo</title>
+
+  <!-- Theme tokens FIRST, then the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="tabs.css">
+
+  <style>
+    /* Demo-page scaffolding only — not part of the component. Uses tokens. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .demo-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: stretch;
+      padding: var(--space-6);
+    }
+    .demo-panel {
+      flex: 1 1 24rem;
+      min-inline-size: 0; /* allow the inner tablist to shrink + scroll */
+      box-sizing: border-box;
+      padding: var(--space-6);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .demo-panel > h2 {
+      margin-block: 0 var(--space-4);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-row {
+      margin-block-end: var(--space-6);
+    }
+    .demo-row > h3 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle);
+    }
+    .page-head {
+      padding: var(--space-6) var(--space-6) 0;
+    }
+    .page-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-text);
+    }
+    .page-head p {
+      margin-block: var(--space-2) 0;
+      max-inline-size: 64ch;
+      color: var(--color-text-muted);
+    }
+    .snippet {
+      margin: var(--space-6);
+      padding: var(--space-5);
+      background-color: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .snippet h2 {
+      margin-block: 0 var(--space-3);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+    .snippet pre {
+      margin: 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+    /* Visually hidden but available to assistive tech. */
+    .demo-visually-hidden {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>HISD Tabs</h1>
+    <p>
+      Tabs organize content at the same level of hierarchy. Each panel below
+      shows every state — active, inactive, hover, focus, and disabled — plus
+      an overflow set that scrolls horizontally with fade masks at
+      <code>--color-bg</code>. The right panel is forced to
+      <code>data-theme="dark"</code>; the component inherits dark purely through
+      semantic tokens — no component-specific dark CSS. Keyboard: Arrow
+      Left/Right move and auto-activate, Home/End jump to first/last.
+    </p>
+  </header>
+
+  <!-- Single polite live region: announces which panel became active. -->
+  <div id="tabs-live" class="demo-visually-hidden" role="status" aria-live="polite"></div>
+
+  <div class="demo-wrap">
+
+    <!-- ============================ LIGHT ============================ -->
+    <section class="demo-panel" data-theme="light" aria-label="Tabs states in light theme">
+      <h2>Light theme</h2>
+
+      <!-- Standard tab set: active + inactive + a disabled tab. -->
+      <div class="demo-row">
+        <h3>Active, inactive &amp; disabled</h3>
+        <div class="hisd-tabs">
+          <div class="hisd-tabs__viewport">
+            <ul class="hisd-tabs__list" role="tablist" aria-label="School enrollment (light)">
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="l-tab-overview" aria-controls="l-panel-overview"
+                        aria-selected="true" tabindex="0">Overview</button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="l-tab-eligibility" aria-controls="l-panel-eligibility"
+                        aria-selected="false" tabindex="-1">Eligibility</button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="l-tab-bilingue" aria-controls="l-panel-bilingue"
+                        aria-selected="false" tabindex="-1">Bilingüe</button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="l-tab-archived" aria-controls="l-panel-archived"
+                        aria-selected="false" tabindex="-1" disabled>Archived</button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="hisd-tabs__panel" role="tabpanel" id="l-panel-overview"
+               aria-labelledby="l-tab-overview" tabindex="0">
+            <p>Overview of the enrollment process for the 2026–2027 school year.</p>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="l-panel-eligibility"
+               aria-labelledby="l-tab-eligibility" tabindex="0" hidden>
+            <p>Eligibility criteria, residency requirements, and required documents.</p>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="l-panel-bilingue"
+               aria-labelledby="l-tab-bilingue" tabindex="0" hidden>
+            <p>Programas bilingües e información para familias de doble idioma.</p>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="l-panel-archived"
+               aria-labelledby="l-tab-archived" tabindex="0" hidden>
+            <p>Archived cycles are read-only (this tab is disabled in the demo).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overflow set: too many tabs to fit; scrolls with edge fades. -->
+      <div class="demo-row">
+        <h3>Overflow (scrolls horizontally, fades at the edges)</h3>
+        <div class="hisd-tabs">
+          <div class="hisd-tabs__viewport">
+            <ul class="hisd-tabs__list" role="tablist" aria-label="District departments (light)">
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-1" aria-controls="lo-panel-1" aria-selected="true"  tabindex="0">Academics</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-2" aria-controls="lo-panel-2" aria-selected="false" tabindex="-1">Athletics</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-3" aria-controls="lo-panel-3" aria-selected="false" tabindex="-1">Transportation</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-4" aria-controls="lo-panel-4" aria-selected="false" tabindex="-1">Nutrition Services</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-5" aria-controls="lo-panel-5" aria-selected="false" tabindex="-1">Special Education</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-6" aria-controls="lo-panel-6" aria-selected="false" tabindex="-1">Family &amp; Community</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="lo-tab-7" aria-controls="lo-panel-7" aria-selected="false" tabindex="-1">Technology</button></li>
+            </ul>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-1" aria-labelledby="lo-tab-1" tabindex="0"><p>Academics: curriculum, assessment, and instructional programs.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-2" aria-labelledby="lo-tab-2" tabindex="0" hidden><p>Athletics: UIL programs, schedules, and eligibility.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-3" aria-labelledby="lo-tab-3" tabindex="0" hidden><p>Transportation: bus routes, eligibility zones, and contacts.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-4" aria-labelledby="lo-tab-4" tabindex="0" hidden><p>Nutrition Services: meal programs and applications.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-5" aria-labelledby="lo-tab-5" tabindex="0" hidden><p>Special Education: services, evaluations, and family resources.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-6" aria-labelledby="lo-tab-6" tabindex="0" hidden><p>Family &amp; Community: engagement, volunteering, and events.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="lo-panel-7" aria-labelledby="lo-tab-7" tabindex="0" hidden><p>Technology: devices, accounts, and help desk.</p></div>
+        </div>
+      </div>
+
+      <!-- Tabs with leading monochrome icons (aria-hidden; label is the text). -->
+      <div class="demo-row">
+        <h3>With leading icons</h3>
+        <div class="hisd-tabs">
+          <div class="hisd-tabs__viewport">
+            <ul class="hisd-tabs__list" role="tablist" aria-label="Account (light)">
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab" id="li-tab-1" aria-controls="li-panel-1" aria-selected="true" tabindex="0">
+                  <span class="hisd-tabs__icon" aria-hidden="true" style="--hisd-tabs-icon: url('data:image/svg+xml;utf8,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 16 16&quot;&gt;&lt;path d=&quot;M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-3.3 0-6 1.8-6 4V15h12v-1.5c0-2.2-2.7-4-6-4Z&quot;/&gt;&lt;/svg&gt;');"></span>
+                  Profile
+                </button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab" id="li-tab-2" aria-controls="li-panel-2" aria-selected="false" tabindex="-1">
+                  <span class="hisd-tabs__icon" aria-hidden="true" style="--hisd-tabs-icon: url('data:image/svg+xml;utf8,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 16 16&quot;&gt;&lt;path d=&quot;M8 1.5 2 4v4c0 3.4 2.5 5.6 6 6.5 3.5-.9 6-3.1 6-6.5V4L8 1.5Z&quot;/&gt;&lt;/svg&gt;');"></span>
+                  Security
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="li-panel-1" aria-labelledby="li-tab-1" tabindex="0"><p>Profile: name, contact details, and preferred language.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="li-panel-2" aria-labelledby="li-tab-2" tabindex="0" hidden><p>Security: password, sign-in history, and two-factor settings.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ DARK ============================ -->
+    <section class="demo-panel" data-theme="dark" aria-label="Tabs states in dark theme">
+      <h2>Dark theme</h2>
+
+      <div class="demo-row">
+        <h3>Active, inactive &amp; disabled</h3>
+        <div class="hisd-tabs">
+          <div class="hisd-tabs__viewport">
+            <ul class="hisd-tabs__list" role="tablist" aria-label="School enrollment (dark)">
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="d-tab-overview" aria-controls="d-panel-overview"
+                        aria-selected="true" tabindex="0">Overview</button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="d-tab-eligibility" aria-controls="d-panel-eligibility"
+                        aria-selected="false" tabindex="-1">Eligibility</button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="d-tab-bilingue" aria-controls="d-panel-bilingue"
+                        aria-selected="false" tabindex="-1">Bilingüe</button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab"
+                        id="d-tab-archived" aria-controls="d-panel-archived"
+                        aria-selected="false" tabindex="-1" disabled>Archived</button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="hisd-tabs__panel" role="tabpanel" id="d-panel-overview"
+               aria-labelledby="d-tab-overview" tabindex="0">
+            <p>Overview of the enrollment process for the 2026–2027 school year.</p>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="d-panel-eligibility"
+               aria-labelledby="d-tab-eligibility" tabindex="0" hidden>
+            <p>Eligibility criteria, residency requirements, and required documents.</p>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="d-panel-bilingue"
+               aria-labelledby="d-tab-bilingue" tabindex="0" hidden>
+            <p>Programas bilingües e información para familias de doble idioma.</p>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="d-panel-archived"
+               aria-labelledby="d-tab-archived" tabindex="0" hidden>
+            <p>Archived cycles are read-only (this tab is disabled in the demo).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Overflow (scrolls horizontally, fades at the edges)</h3>
+        <div class="hisd-tabs">
+          <div class="hisd-tabs__viewport">
+            <ul class="hisd-tabs__list" role="tablist" aria-label="District departments (dark)">
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-1" aria-controls="do-panel-1" aria-selected="true"  tabindex="0">Academics</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-2" aria-controls="do-panel-2" aria-selected="false" tabindex="-1">Athletics</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-3" aria-controls="do-panel-3" aria-selected="false" tabindex="-1">Transportation</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-4" aria-controls="do-panel-4" aria-selected="false" tabindex="-1">Nutrition Services</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-5" aria-controls="do-panel-5" aria-selected="false" tabindex="-1">Special Education</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-6" aria-controls="do-panel-6" aria-selected="false" tabindex="-1">Family &amp; Community</button></li>
+              <li role="presentation"><button type="button" class="hisd-tabs__tab" role="tab" id="do-tab-7" aria-controls="do-panel-7" aria-selected="false" tabindex="-1">Technology</button></li>
+            </ul>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-1" aria-labelledby="do-tab-1" tabindex="0"><p>Academics: curriculum, assessment, and instructional programs.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-2" aria-labelledby="do-tab-2" tabindex="0" hidden><p>Athletics: UIL programs, schedules, and eligibility.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-3" aria-labelledby="do-tab-3" tabindex="0" hidden><p>Transportation: bus routes, eligibility zones, and contacts.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-4" aria-labelledby="do-tab-4" tabindex="0" hidden><p>Nutrition Services: meal programs and applications.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-5" aria-labelledby="do-tab-5" tabindex="0" hidden><p>Special Education: services, evaluations, and family resources.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-6" aria-labelledby="do-tab-6" tabindex="0" hidden><p>Family &amp; Community: engagement, volunteering, and events.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="do-panel-7" aria-labelledby="do-tab-7" tabindex="0" hidden><p>Technology: devices, accounts, and help desk.</p></div>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>With leading icons</h3>
+        <div class="hisd-tabs">
+          <div class="hisd-tabs__viewport">
+            <ul class="hisd-tabs__list" role="tablist" aria-label="Account (dark)">
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab" id="di-tab-1" aria-controls="di-panel-1" aria-selected="true" tabindex="0">
+                  <span class="hisd-tabs__icon" aria-hidden="true" style="--hisd-tabs-icon: url('data:image/svg+xml;utf8,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 16 16&quot;&gt;&lt;path d=&quot;M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-3.3 0-6 1.8-6 4V15h12v-1.5c0-2.2-2.7-4-6-4Z&quot;/&gt;&lt;/svg&gt;');"></span>
+                  Profile
+                </button>
+              </li>
+              <li role="presentation">
+                <button type="button" class="hisd-tabs__tab" role="tab" id="di-tab-2" aria-controls="di-panel-2" aria-selected="false" tabindex="-1">
+                  <span class="hisd-tabs__icon" aria-hidden="true" style="--hisd-tabs-icon: url('data:image/svg+xml;utf8,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 16 16&quot;&gt;&lt;path d=&quot;M8 1.5 2 4v4c0 3.4 2.5 5.6 6 6.5 3.5-.9 6-3.1 6-6.5V4L8 1.5Z&quot;/&gt;&lt;/svg&gt;');"></span>
+                  Security
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="di-panel-1" aria-labelledby="di-tab-1" tabindex="0"><p>Profile: name, contact details, and preferred language.</p></div>
+          <div class="hisd-tabs__panel" role="tabpanel" id="di-panel-2" aria-labelledby="di-tab-2" tabindex="0" hidden><p>Security: password, sign-in history, and two-factor settings.</p></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================ SNIPPET ============================ -->
+  <section class="snippet" aria-label="Copy-paste markup">
+    <h2>Copy-paste snippet</h2>
+    <pre><code>&lt;div class="hisd-tabs"&gt;
+  &lt;div class="hisd-tabs__viewport"&gt;
+    &lt;ul class="hisd-tabs__list" role="tablist" aria-label="School enrollment"&gt;
+      &lt;li role="presentation"&gt;
+        &lt;button type="button" class="hisd-tabs__tab" role="tab"
+                id="tab-overview" aria-controls="panel-overview"
+                aria-selected="true" tabindex="0"&gt;Overview&lt;/button&gt;
+      &lt;/li&gt;
+      &lt;li role="presentation"&gt;
+        &lt;button type="button" class="hisd-tabs__tab" role="tab"
+                id="tab-eligibility" aria-controls="panel-eligibility"
+                aria-selected="false" tabindex="-1"&gt;Eligibility&lt;/button&gt;
+      &lt;/li&gt;
+      &lt;li role="presentation"&gt;
+        &lt;button type="button" class="hisd-tabs__tab" role="tab"
+                id="tab-archived" aria-controls="panel-archived"
+                aria-selected="false" tabindex="-1" disabled&gt;Archived&lt;/button&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+
+  &lt;div class="hisd-tabs__panel" role="tabpanel" id="panel-overview"
+       aria-labelledby="tab-overview" tabindex="0"&gt;
+    Overview content…
+  &lt;/div&gt;
+  &lt;div class="hisd-tabs__panel" role="tabpanel" id="panel-eligibility"
+       aria-labelledby="tab-eligibility" tabindex="0" hidden&gt;
+    Eligibility content…
+  &lt;/div&gt;
+  &lt;div class="hisd-tabs__panel" role="tabpanel" id="panel-archived"
+       aria-labelledby="tab-archived" tabindex="0" hidden&gt;
+    Archived content…
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Automatic activation: Arrow Left/Right move + activate;
+     Home/End jump to first/last enabled tab; roving tabindex keeps a
+     single tab stop. Wire with the script in this demo (WAI-ARIA APG). --&gt;</code></pre>
+  </section>
+
+  <script>
+    // ======================================================================
+    // HISD Tabs — WAI-ARIA APG "Tabs with Automatic Activation".
+    // One handler set per .hisd-tabs widget. Roving tabindex keeps exactly one
+    // tab in the page tab order; Arrow/Home/End move focus AND activate the
+    // newly focused tab (automatic activation). Disabled tabs are skipped.
+    // ======================================================================
+    var liveRegion = document.getElementById('tabs-live');
+
+    document.querySelectorAll('.hisd-tabs').forEach(function (widget) {
+      var tablist = widget.querySelector('[role="tablist"]');
+      if (!tablist) return;
+
+      // Enabled tabs only — disabled tabs are not focus/activation targets.
+      var tabs = Array.prototype.filter.call(
+        tablist.querySelectorAll('[role="tab"]'),
+        function (t) { return !t.disabled && t.getAttribute('aria-disabled') !== 'true'; }
+      );
+
+      function panelFor(tab) {
+        return document.getElementById(tab.getAttribute('aria-controls'));
+      }
+
+      // Activate a tab: update roving tabindex + aria-selected, swap panels,
+      // move focus, scroll the tab into view, and announce the change.
+      function activate(tab, setFocus) {
+        tabs.forEach(function (t) {
+          var selected = t === tab;
+          t.setAttribute('aria-selected', String(selected));
+          t.tabIndex = selected ? 0 : -1;
+          var panel = panelFor(t);
+          if (panel) { panel.hidden = !selected; }
+        });
+
+        if (setFocus !== false) { tab.focus(); }
+
+        // Bring the active tab fully into the scrollable strip.
+        if (typeof tab.scrollIntoView === 'function') {
+          tab.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+        }
+
+        if (liveRegion) {
+          liveRegion.textContent = tab.textContent.trim() + ' tab selected';
+        }
+      }
+
+      // Click / pointer activation.
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () { activate(tab, false); });
+      });
+
+      // Keyboard: roving focus with automatic activation.
+      tablist.addEventListener('keydown', function (event) {
+        var current = document.activeElement;
+        var index = tabs.indexOf(current);
+        if (index === -1) { return; }
+
+        var next = null;
+        switch (event.key) {
+          case 'ArrowRight':
+          case 'ArrowDown':
+            next = tabs[(index + 1) % tabs.length];
+            break;
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            next = tabs[(index - 1 + tabs.length) % tabs.length];
+            break;
+          case 'Home':
+            next = tabs[0];
+            break;
+          case 'End':
+            next = tabs[tabs.length - 1];
+            break;
+          default:
+            return; // let other keys (Enter/Space/Tab) behave natively
+        }
+
+        event.preventDefault();
+        activate(next, true);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1632 2112" preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">
+  <title>HISD Ribbon</title>
+  <rect width="1632" height="2112" fill="var(--ribbon-field-bg, #00A3AF)"/>
+  <g fill="none" stroke="var(--ribbon-stroke, #ffffff)" stroke-linecap="round" opacity="var(--ribbon-stroke-opacity, 0.16)">
+    <g class="hisd-ribbon__layer hisd-ribbon__layer--a">
+      <path d="M-90,146.5 C185.1,1133.8 839.5,1325.3 1722,960.5" stroke-width="163" opacity="0.80"/>
+      <path d="M-90,1891.1 C727,2719.3 931.4,767.5 1722,1479.4" stroke-width="134" opacity="0.86"/>
+    </g>
+    <g class="hisd-ribbon__layer hisd-ribbon__layer--b">
+      <path d="M238.1,-90 C578.8,802.1 929.8,877.8 1270.5,-90" stroke-width="162" opacity="0.87"/>
+      <path d="M-90,972.6 C415.1,1149 412.4,1330.7 -90,1507.1" stroke-width="118" opacity="0.94"/>
+    </g>
+  </g>
+</svg>

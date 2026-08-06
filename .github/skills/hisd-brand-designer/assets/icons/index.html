@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme-source="system">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HISD Icon Set — Material Symbols Contact Sheet</title>
+<link rel="stylesheet" href="../hisd-theme.css" />
+<style>
+  /* All colors paint through semantic tokens from ../hisd-theme.css — no raw hex. */
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background: var(--color-bg);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 72rem; margin-inline: auto; padding: var(--space-8) var(--space-6) var(--space-16); }
+
+  header.head {
+    display: flex; flex-wrap: wrap; gap: var(--space-4);
+    align-items: flex-end; justify-content: space-between;
+    margin-block-end: var(--space-8);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-3xl);
+    line-height: var(--leading-tight);
+    margin: 0 0 var(--space-2);
+    color: var(--color-text);
+  }
+  .lede { margin: 0; max-width: 52ch; color: var(--color-text-muted); font-size: var(--text-sm); }
+
+  /* Theme switch — three buttons mirroring the brand style guide. */
+  .switch { display: inline-flex; gap: var(--space-1); padding: var(--space-1);
+    background: var(--color-surface-sunken); border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill); }
+  .switch button {
+    appearance: none; cursor: pointer; border: 0; border-radius: var(--radius-pill);
+    padding: var(--space-1) var(--space-3); font: inherit; font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted); background: transparent;
+    transition: background var(--duration-fast) var(--ease-standard),
+                color var(--duration-fast) var(--ease-standard);
+  }
+  .switch button[aria-pressed="true"] {
+    background: var(--color-surface); color: var(--color-action);
+    box-shadow: var(--shadow-1);
+  }
+  .switch button:hover { color: var(--color-action); }
+
+  /* Shared focus ring — satisfies the brand scanner + WCAG 2.4.11. */
+  button:focus-visible, a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  .controls { display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: center;
+    margin-block-end: var(--space-6); }
+  .size-field { display: inline-flex; align-items: center; gap: var(--space-2);
+    color: var(--color-text-muted); font-size: var(--text-sm); }
+  .size-field input[type="range"] { accent-color: var(--color-action); }
+  .count { color: var(--color-text-subtle); font-size: var(--text-sm);
+    font-family: var(--font-mono); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    gap: var(--space-3);
+  }
+  .cell {
+    display: flex; flex-direction: column; align-items: center; gap: var(--space-3);
+    padding: var(--space-5) var(--space-3);
+    margin: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    transition: border-color var(--duration-fast) var(--ease-standard),
+                box-shadow var(--duration-fast) var(--ease-standard);
+  }
+  .cell:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-2); }
+  /* The icon inherits its color from the cell via currentColor. */
+  .cell .glyph { color: var(--color-text); display: inline-flex; }
+  .cell .glyph svg { width: var(--icon-size, 24px); height: var(--icon-size, 24px); display: block; }
+  .cell .name { font-size: var(--text-xs); color: var(--color-text-muted);
+    font-family: var(--font-mono); word-break: break-word; }
+
+  /* Demonstration row: same glyph, different context colors — proving currentColor. */
+  .demo { margin-block: var(--space-10) var(--space-6); }
+  .demo h2 { font-family: var(--font-display); font-size: var(--text-xl);
+    font-weight: var(--weight-semibold); color: var(--color-text); margin: 0 0 var(--space-4); }
+  .swatches { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .swatch { display: inline-flex; align-items: center; gap: var(--space-2);
+    padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
+    border: 1px solid var(--color-border); background: var(--color-surface);
+    font-size: var(--text-sm); }
+  .swatch svg { width: 20px; height: 20px; }
+  .swatch.muted   { color: var(--color-text-muted); }
+  .swatch.action  { color: var(--color-action); }
+  .swatch.success { color: var(--color-success); }
+  .swatch.danger  { color: var(--color-danger); }
+  .swatch.info    { color: var(--color-info); }
+  .swatch.on-action { color: var(--color-on-action); background: var(--color-action);
+    border-color: var(--color-action); }
+
+  footer.foot { margin-block-start: var(--space-12); padding-block-start: var(--space-6);
+    border-top: 1px solid var(--color-border); color: var(--color-text-subtle);
+    font-size: var(--text-xs); }
+  footer.foot code { font-family: var(--font-mono); color: var(--color-text-muted); }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="head">
+    <div>
+      <h1>HISD Icon Set</h1>
+      <p class="lede"><strong>Material Symbols Rounded</strong>, filled (FILL&nbsp;1),
+        weight&nbsp;500, on a 24px grid — vendored from
+        <code>google/material-design-icons</code>. Every glyph paints with
+        <code>currentColor</code>, so it inherits the <code>--color-*</code> token of
+        whatever element it sits in and recolors automatically in dark mode.</p>
+    </div>
+    <div class="switch" role="group" aria-label="Theme">
+      <button id="t-light"  type="button" aria-pressed="false" onclick="setTheme('light')">Light</button>
+      <button id="t-dark"   type="button" aria-pressed="false" onclick="setTheme('dark')">Dark</button>
+      <button id="t-system" type="button" aria-pressed="true"  onclick="setTheme('system')">System</button>
+    </div>
+  </header>
+
+  <div class="controls">
+    <label class="size-field">
+      Size
+      <input id="size" type="range" min="16" max="48" step="4" value="24"
+             aria-label="Icon preview size in pixels" oninput="setSize(this.value)" />
+      <span id="size-out" aria-live="polite">24px</span>
+    </label>
+    <span class="count"><span id="count">0</span> icons</span>
+  </div>
+
+  <main>
+    <section aria-label="Icon grid">
+      <div class="grid" id="grid"><!-- icons injected on load --></div>
+    </section>
+
+    <section class="demo" aria-label="currentColor demonstration">
+      <h2>One glyph, every context color</h2>
+      <p class="lede" style="margin-block-end:var(--space-4)">The same
+        <code>school</code> source, recolored only by the token on its container.</p>
+      <div class="swatches" id="swatches"><!-- injected on load --></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Icons live at <code>.skills/design/hisd-brand-designer/assets/icons/*.svg</code> and are listed in
+      <code>manifest.json</code>. Add more with
+      <code>python3 scripts/pull_material_icons.py add &lt;name&gt;</code>. Usage, sizing, and
+      accessibility notes are in <code>README.md</code>.</p>
+  </footer>
+</div>
+
+<script>
+  // ---- Theme switch (mirrors style-guide.html) ----
+  function setTheme(t){
+    const h = document.documentElement;
+    if (t === 'system') { h.removeAttribute('data-theme'); h.dataset.themeSource = 'system'; }
+    else { h.dataset.theme = t; h.dataset.themeSource = 'manual'; }
+    ['light','dark','system'].forEach(x =>
+      document.getElementById('t-' + x).setAttribute('aria-pressed', String(x === t)));
+  }
+
+  // ---- Icon size preview ----
+  function setSize(px){
+    document.documentElement.style.setProperty('--icon-size', px + 'px');
+    document.getElementById('size-out').textContent = px + 'px';
+  }
+
+  // ---- Icon list (kept in sync with manifest.json / the .svg files here) ----
+  const ICONS = [
+    "account_circle","add","apps","arrow_back","arrow_downward","arrow_forward",
+    "arrow_upward","assignment","attach_file","backpack","badge","calendar_month",
+    "call","cancel","chat","check","check_circle","chevron_left","chevron_right",
+    "close","content_copy","delete","description","do_not_disturb_on","done",
+    "download","edit","error","event","expand_less","expand_more","favorite",
+    "filter_alt","folder","grade","group","help","home","image","info","language",
+    "lightbulb","link","location_on","lock","lock_open","mail","map","menu",
+    "menu_book","more_horiz","more_vert","north_east","notifications","open_in_new",
+    "person","print","redo","refresh","remove","save","school","search","settings",
+    "share","sort","star","translate","undo","upload","visibility","visibility_off",
+    "warning"
+  ];
+
+  // Inline-fetch each SVG so it renders with currentColor. Falls back to an <img>
+  // (currentColor-incapable but visible) if fetch is blocked under file://.
+  async function render(){
+    document.getElementById('count').textContent = ICONS.length;
+    const grid = document.getElementById('grid');
+    grid.innerHTML = ICONS.map(name => `
+      <figure class="cell">
+        <span class="glyph" data-icon="${name}" aria-hidden="true"></span>
+        <figcaption class="name">${name}</figcaption>
+      </figure>`).join('');
+
+    await Promise.all(ICONS.map(async name => {
+      const host = grid.querySelector(`[data-icon="${name}"]`);
+      try {
+        const res = await fetch(`${name}.svg`);
+        host.innerHTML = await res.text();
+      } catch (e) {
+        // file:// without fetch permission — degrade to <img> (loses currentColor)
+        host.innerHTML = `<img src="${name}.svg" width="24" height="24" alt="" />`;
+      }
+    }));
+
+    // currentColor demo row
+    const contexts = [
+      ["muted","text-muted"], ["action","action"], ["success","success"],
+      ["danger","danger"], ["info","info"], ["on-action","on-action"]
+    ];
+    const sw = document.getElementById('swatches');
+    sw.innerHTML = contexts.map(([cls,label]) =>
+      `<span class="swatch ${cls}"><span class="ico" aria-hidden="true"></span>--color-${label}</span>`
+    ).join('');
+    let glyph = '';
+    try { glyph = await (await fetch('school.svg')).text(); }
+    catch (e) { glyph = '<img src="school.svg" width="20" height="20" alt="" />'; }
+    sw.querySelectorAll('.ico').forEach(s => s.innerHTML = glyph);
+  }
+  render();
+</script>
+</body>
+</html>

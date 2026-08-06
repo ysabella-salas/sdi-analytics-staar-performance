@@ -1,0 +1,45 @@
+{
+  "name": "HISD 2025",
+  "dataColors": [
+    "#00A3AF",
+    "#474F99",
+    "#026252",
+    "#4975BD",
+    "#D96364",
+    "#5FA138",
+    "#314448"
+  ],
+  "foreground": "#19282C",
+  "foregroundNeutralSecondary": "#4B5C5F",
+  "background": "#FFFFFF",
+  "backgroundLight": "#EDEFEF",
+  "tableAccent": "#00A3AF",
+  "good": "#026252",
+  "neutral": "#9C4A0B",
+  "bad": "#BC5859",
+  "maximum": "#00A3AF",
+  "minimum": "#F0F9FA",
+  "hyperlink": "#037882",
+  "ribbonFrom": "#00A3AF",
+  "ribbonTo": "#026252",
+  "ribbonHighlight": "#FBDE83",
+  "ribbonFan": [
+    "#00A3AF",
+    "#6DB83D",
+    "#F9D04E",
+    "#474F99"
+  ],
+  "visualStyles": {
+    "*": {
+      "*": {
+        "*": [
+          {
+            "fontFamily": "Segoe UI",
+            "fontSize": 10
+          }
+        ]
+      }
+    }
+  },
+  "_comment": "Power BI cannot embed non-installed fonts; Segoe UI is the on-screen stand-in for Radio Canada. Use brand fonts only in exported/static assets."
+}

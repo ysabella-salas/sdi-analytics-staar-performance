@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>HISD Email — Bulletproof Component Reference</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    /* ============================================================
+       PROGRESSIVE ENHANCEMENT ONLY — this <style> block is a head
+       stylesheet. Gmail strips it; Apple Mail / iOS / Outlook.com
+       honor it. Never rely on it for layout or core color: every
+       block below is also styled INLINE with hex from hisd.tokens.json.
+       ============================================================ */
+
+    /* Client resets */
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    table { border-collapse: collapse; }
+    img { border: 0; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { text-decoration: none; }
+    .ExternalClass { width: 100%; }
+    .ExternalClass, .ExternalClass p, .ExternalClass td { line-height: 150%; }
+
+    /* Mobile fluidity */
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; }
+      .px-24 { padding-left: 16px !important; padding-right: 16px !important; }
+      .stack { display: block !important; width: 100% !important; }
+      .btn-fluid a { display: block !important; }
+    }
+
+    /* Dark-mode handling — PROGRESSIVE ENHANCEMENT.
+       Light values above are the contract; these are a courtesy for
+       clients that honor prefers-color-scheme (Apple Mail, iOS Mail,
+       Outlook.com). Gmail/Outlook desktop ignore this — the inline
+       light palette must already be legible on its own. */
+    @media (prefers-color-scheme: dark) {
+      body, .dm-bg { background-color: #121F22 !important; }            /* theme.dark.bg */
+      .dm-surface { background-color: #19282C !important; }             /* theme.dark.surface */
+      .dm-raised  { background-color: #24383C !important; }             /* theme.dark.surface-raised */
+      .dm-text    { color: #F6F7F7 !important; }                        /* theme.dark.text */
+      .dm-muted   { color: #C2C7C8 !important; }                        /* theme.dark.text-muted */
+      .dm-subtle  { color: #969FA1 !important; }                        /* theme.dark.text-subtle */
+      .dm-border  { border-color: #314448 !important; }                 /* theme.dark.border */
+      .dm-link a  { color: #8CD6DB !important; }                        /* theme.dark.link */
+      /* Action button: dark theme tunes teal brighter w/ dark ink (7.7:1) */
+      .dm-action, .dm-action a { background-color: #4CBFC7 !important; } /* theme.dark.action */
+      .dm-on-action a { color: #121F22 !important; }                    /* theme.dark.on-action */
+      .dm-card-shell { background-color: #19282C !important; border-color: #314448 !important; }
+    }
+  </style>
+</head>
+<!-- Page background = theme.light.bg #F6F7F7. Body text = theme.light.text #19282C (14.17:1 on bg — AA). -->
+<body class="dm-bg" style="margin:0; padding:0; width:100%; background-color:#F6F7F7; color:#19282C; font-family:'Radio Canada', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;">
+
+  <center style="width:100%; background-color:#F6F7F7;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F6F7F7;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <!-- ===================================================================
+             HISD EMAIL — BULLETPROOF COMPONENT REFERENCE
+
+             Copy any block below into a 600px email-container table. Every color
+             is a raw HEX pulled FROM assets/hisd.tokens.json (email clients do not
+             support CSS variables, linked CSS, or web fonts). Contrast pairings are
+             verified AA in assets/contrast-report.md — the ratio is noted in a
+             comment on each block.
+
+             RULES baked into every block:
+               - 600px max table layout, role="presentation" on layout tables
+               - INLINE styles with token hex (no var(), no class-only color)
+               - Brand font stack: Parkinsans (display) / Radio Canada (sans),
+                 ENDING in Arial / sans-serif so non-supporting clients fall back
+               - alt text on every image; width/height on every image
+               - >=14px body type; bulletproof buttons w/ Outlook VML fallback
+               - dark-mode via <style> @media (prefers-color-scheme) ABOVE, applied
+                 through dm-* classes — progressive enhancement, never load-bearing
+             =================================================================== -->
+
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px;">
+
+          <!-- ================================================================
+               00 · PREHEADER (hidden inbox-preview text)
+               Sits first in the body, visually hidden. Fills the inbox snippet
+               so the client doesn't scrape stray markup. Follow it with NBSP
+               whitespace so trailing content doesn't leak into the preview.
+               ================================================================ -->
+          <tr>
+            <td>
+              <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#F6F7F7; opacity:0;">
+                Your one-line inbox preview goes here — keep it under ~90 characters.
+                &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+              </div>
+            </td>
+          </tr>
+
+          <!-- spacer between blocks in this reference sheet only -->
+          <tr><td style="font-size:0; line-height:0;" height="8">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               01 · HEADER — teal band with the HISD wordmark
+               Background = brand.teal #00A3AF (theme.light.brand). The lockup is
+               the white-wordmark + yellow-icon PNG (logo discipline: this lockup
+               is required on dark/teal fields). Image has alt + explicit width.
+               PNG (not SVG) because email clients don't render SVG reliably.
+               ================================================================ -->
+          <tr>
+            <td class="dm-surface" style="background-color:#00A3AF; padding:20px 24px;" align="left">
+              <a href="https://www.houstonisd.org" style="text-decoration:none;">
+                <img src="assets/hisd-logo-white-yellow.png"
+                     width="220" height="98" alt="Houston Independent School District"
+                     style="display:block; width:220px; max-width:220px; height:auto; border:0;">
+              </a>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="8">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               02 · HERO — title + subhead on a teal field
+               Title in Parkinsans (display) -> Radio Canada -> Arial fallback.
+               Text = #FFFFFF on teal #00A3AF. (Decorative hero; the readable AA
+               copy lives on white surfaces below. For body-critical hero text use
+               dark-green #006F5B or keep it short/large.) Subhead #FFFFFF.
+               ================================================================ -->
+          <tr>
+            <td class="dm-surface" style="background-color:#00A3AF; padding:8px 24px 32px;" align="left">
+              <h1 style="margin:0 0 8px; font-family:'Parkinsans','Radio Canada',Arial,sans-serif; font-size:30px; line-height:1.15; font-weight:800; color:#FFFFFF;">
+                A headline in Parkinsans
+              </h1>
+              <p style="margin:0; font-family:'Radio Canada',Arial,sans-serif; font-size:16px; line-height:1.5; color:#FFFFFF;">
+                One supporting sentence. White on teal reads large and bold; keep body copy on the white card below.
+              </p>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="8">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               03 · RIBBON / DIVIDER — the HISD multi-color band
+               Built from solid table cells (no gradient — email-safe). Colors are
+               the brand palette in the canonical order:
+               teal #00A3AF · light-green #6DB83D · yellow #F9D04E · purple #474F99.
+               Use as a header underline or a section divider. Height 6px.
+               ================================================================ -->
+          <tr>
+            <td style="font-size:0; line-height:0; padding:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="40%" height="6" style="background-color:#00A3AF; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="22%" height="6" style="background-color:#6DB83D; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="18%" height="6" style="background-color:#F9D04E; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="20%" height="6" style="background-color:#474F99; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="8">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               04 · CONTENT CARD — body copy on a white surface
+               Surface = theme.light.surface #FFFFFF; 1px border = theme.light.border
+               #DCDFE0. Body text #19282C on #FFFFFF = 15.2:1 (AA). Eyebrow/label
+               muted #4B5C5F on #FFFFFF = 7.01:1 (AA). Link #037882 = 5.23:1 (AA).
+               Body type is 16px (>= the 14px floor).
+               ================================================================ -->
+          <tr>
+            <td>
+              <table role="presentation" class="dm-card-shell" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FFFFFF; border:1px solid #DCDFE0; border-radius:12px;">
+                <tr>
+                  <td class="px-24" style="padding:24px;">
+                    <p class="dm-subtle" style="margin:0 0 6px; font-family:'Radio Canada',Arial,sans-serif; font-size:12px; line-height:1.3; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#4B5C5F;">
+                      Eyebrow label
+                    </p>
+                    <h2 class="dm-text" style="margin:0 0 10px; font-family:'Parkinsans','Radio Canada',Arial,sans-serif; font-size:22px; line-height:1.15; font-weight:700; color:#19282C;">
+                      A section heading
+                    </h2>
+                    <p class="dm-text" style="margin:0 0 14px; font-family:'Radio Canada',Arial,sans-serif; font-size:16px; line-height:1.5; color:#19282C;">
+                      Body copy in Radio Canada with an Arial fallback. Keep paragraphs short and the type at least 14&nbsp;pixels.
+                      Inline a <a class="dm-link" href="https://www.houstonisd.org" style="color:#037882; text-decoration:underline; font-weight:600;">link in action teal</a> for in-text references.
+                    </p>
+                    <p class="dm-muted" style="margin:0; font-family:'Radio Canada',Arial,sans-serif; font-size:14px; line-height:1.5; color:#4B5C5F;">
+                      A muted caption sits at 14&nbsp;pixels in text-muted gray.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="16">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               05 · BULLETPROOF BUTTON (with Outlook VML fallback)
+               Pill action button. Fill = theme.light.action #037882, label = #FFFFFF
+               = 5.23:1 (AA). The <!--[if mso]> VML <v:roundrect> gives Outlook
+               (Word engine) the rounded fill it otherwise drops; all other clients
+               use the bordered <a>. arcsize 50% = pill. Edit the href + label in
+               BOTH the VML and the anchor.
+               ================================================================ -->
+          <tr>
+            <td align="center" class="btn-fluid" style="padding:0;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
+                href="https://www.houstonisd.org" style="height:48px; v-text-anchor:middle; width:240px;" arcsize="50%" stroke="f" fillcolor="#037882">
+                <w:anchorlock/>
+                <center style="color:#FFFFFF; font-family:'Radio Canada',Arial,sans-serif; font-size:16px; font-weight:700;">Primary action</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-- -->
+              <a class="dm-action dm-on-action" href="https://www.houstonisd.org"
+                 style="background-color:#037882; border-radius:999px; color:#FFFFFF; display:inline-block; font-family:'Radio Canada',Arial,sans-serif; font-size:16px; font-weight:700; line-height:48px; text-align:center; text-decoration:none; width:240px; -webkit-text-size-adjust:none;">
+                Primary action
+              </a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="16">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               05b · SECONDARY / OUTLINE BUTTON
+               White fill, action-teal label + 2px border. Label #037882 on #FFFFFF
+               = 5.23:1 (AA). Use for the lower-priority action next to the primary.
+               ================================================================ -->
+          <tr>
+            <td align="center" class="btn-fluid">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
+                href="https://www.houstonisd.org" style="height:48px; v-text-anchor:middle; width:240px;" arcsize="50%" strokecolor="#037882" strokeweight="2px" fillcolor="#FFFFFF">
+                <w:anchorlock/>
+                <center style="color:#037882; font-family:'Radio Canada',Arial,sans-serif; font-size:16px; font-weight:700;">Secondary action</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-- -->
+              <a class="dm-surface dm-link" href="https://www.houstonisd.org"
+                 style="background-color:#FFFFFF; border:2px solid #037882; border-radius:999px; color:#037882; display:inline-block; font-family:'Radio Canada',Arial,sans-serif; font-size:16px; font-weight:700; line-height:44px; text-align:center; text-decoration:none; width:236px; -webkit-text-size-adjust:none;">
+                Secondary action
+              </a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="16">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               06 · CALLOUT STRIP — yellow accent bar
+               Fill = brand.yellow #F9D04E; text = #19282C = 10.25:1 (AA). Use
+               sparingly for a date, deadline, or one-line emphasis (the 10% in the
+               60/30/10 balance). Never put light text on yellow.
+               ================================================================ -->
+          <tr>
+            <td style="background-color:#F9D04E; border-radius:8px; padding:14px 20px;" align="center">
+              <p style="margin:0; font-family:'Radio Canada',Arial,sans-serif; font-size:15px; line-height:1.4; font-weight:700; color:#19282C;">
+                Mark your calendar: a one-line emphasis on the yellow accent.
+              </p>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="16">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               07 · TWO-COLUMN CARDS (responsive stack)
+               Each column carries .stack so it goes full-width under 600px. Surface
+               #FFFFFF, border #DCDFE0, heading #19282C, body #4B5C5F (7.01:1 AA).
+               ================================================================ -->
+          <tr>
+            <td>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="stack" width="288" valign="top" style="padding:0 8px 0 0;">
+                    <table role="presentation" class="dm-card-shell" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FFFFFF; border:1px solid #DCDFE0; border-radius:12px;">
+                      <tr><td style="padding:18px;">
+                        <h3 class="dm-text" style="margin:0 0 6px; font-family:'Parkinsans','Radio Canada',Arial,sans-serif; font-size:17px; line-height:1.2; font-weight:700; color:#19282C;">Column one</h3>
+                        <p class="dm-muted" style="margin:0; font-family:'Radio Canada',Arial,sans-serif; font-size:14px; line-height:1.5; color:#4B5C5F;">A short blurb that stacks on mobile.</p>
+                      </td></tr>
+                    </table>
+                  </td>
+                  <td class="stack" width="288" valign="top" style="padding:0 0 0 8px;">
+                    <table role="presentation" class="dm-card-shell" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FFFFFF; border:1px solid #DCDFE0; border-radius:12px;">
+                      <tr><td style="padding:18px;">
+                        <h3 class="dm-text" style="margin:0 0 6px; font-family:'Parkinsans','Radio Canada',Arial,sans-serif; font-size:17px; line-height:1.2; font-weight:700; color:#19282C;">Column two</h3>
+                        <p class="dm-muted" style="margin:0; font-family:'Radio Canada',Arial,sans-serif; font-size:14px; line-height:1.5; color:#4B5C5F;">A short blurb that stacks on mobile.</p>
+                      </td></tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="16">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               08 · HAIRLINE DIVIDER (single-color)
+               theme.light.border #DCDFE0. Decorative only — not an operable target.
+               ================================================================ -->
+          <tr>
+            <td style="padding:0 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td height="1" style="background-color:#DCDFE0; font-size:0; line-height:0;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="16">&nbsp;</td></tr>
+
+          <!-- ================================================================
+               09 · FOOTER — address + unsubscribe
+               Footer band = theme.light.surface-sunken #EDEFEF. Footer text muted
+               #4B5C5F on #EDEFEF = 6.07:1 (AA). Links #037882 on #EDEFEF = 4.53:1 (AA). Includes
+               the dark-grey/teal logo lockup (correct on the light footer field),
+               a physical mailing address (CAN-SPAM), and an unsubscribe link.
+               ================================================================ -->
+          <tr>
+            <td class="dm-raised" style="background-color:#EDEFEF; border-radius:12px; padding:24px;" align="center">
+              <img src="assets/hisd-logo-dark-grey-teal.png"
+                   width="170" height="76" alt="Houston Independent School District"
+                   style="display:block; width:170px; max-width:170px; height:auto; border:0; margin:0 auto 12px;">
+              <p class="dm-muted" style="margin:0 0 6px; font-family:'Radio Canada',Arial,sans-serif; font-size:13px; line-height:1.5; color:#4B5C5F;">
+                Houston Independent School District<br>
+                4400 West 18th Street, Houston, TX 77092
+              </p>
+              <p class="dm-muted" style="margin:0 0 10px; font-family:'Radio Canada',Arial,sans-serif; font-size:13px; line-height:1.5; color:#4B5C5F;">
+                You are receiving this email because you opted in at houstonisd.org.
+              </p>
+              <p class="dm-link" style="margin:0; font-family:'Radio Canada',Arial,sans-serif; font-size:13px; line-height:1.5; color:#037882;">
+                <a class="dm-link" href="%%unsubscribe_url%%" style="color:#037882; text-decoration:underline;">Unsubscribe</a>
+                &nbsp;&bull;&nbsp;
+                <a class="dm-link" href="%%preferences_url%%" style="color:#037882; text-decoration:underline;">Update preferences</a>
+                &nbsp;&bull;&nbsp;
+                <a class="dm-link" href="%%view_in_browser_url%%" style="color:#037882; text-decoration:underline;">View in browser</a>
+              </p>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:0; line-height:0;" height="24">&nbsp;</td></tr>
+
+        </table>
+        <!-- /email-container -->
+
+      </td>
+    </tr>
+  </table>
+  </center>
+
+</body>
+</html>

@@ -1,0 +1,306 @@
+/* ==========================================================================
+   HISD Button — reusable component styles
+   --------------------------------------------------------------------------
+   Source of truth:
+     - assets/hisd-theme.css          (token names + light/dark values)
+     - Docs/Design-System/Components.md  (Button + Accessibility Contract)
+     - reference/Conventions.md       (token usage rules)
+
+   Rules honored here:
+     - Every color is a semantic var(--color-…) or ramp var(--hisd-…) token.
+       Zero raw hex / rgb / hsl / named colors. The single SVG icon below is
+       drawn with stroke="currentColor" so it inherits the button text color.
+     - Spacing / radius / type / shadow / motion come from tokens only.
+     - Logical properties only (padding-inline, border-inline-start, …).
+     - Visible focus ring on every interactive element; never bare outline:none.
+     - Dark theme inherits from [data-theme="dark"] on an ancestor — no
+       component-specific dark-mode color values.
+     - Motion references --duration-* / --ease-* and is disabled under
+       prefers-reduced-motion: reduce.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Component-level vars resolve to semantic tokens (Conventions tier 3).
+   -------------------------------------------------------------------------- */
+.hisd-button {
+  --hisd-button-bg: transparent;
+  --hisd-button-fg: var(--color-text);
+  --hisd-button-border: transparent;
+
+  /* Layout / box */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+
+  min-inline-size: 5rem;
+  /* ≥24px target: padding-block --space-2 (0.5rem) top+bottom around a
+     1.5rem line-box already clears 24px; min-block-size locks the floor. */
+  min-block-size: var(--space-6); /* 1.5rem = 24px */
+  padding-inline: var(--space-4);
+  padding-block: var(--space-2);
+
+  /* Typography */
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold); /* 600 */
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Surface */
+  background-color: var(--hisd-button-bg);
+  color: var(--hisd-button-fg);
+  border: var(--space-px) solid var(--hisd-button-border);
+  border-radius: var(--radius-md);
+
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+/* --------------------------------------------------------------------------
+   Focus — visible ring on every variant. Never suppressed without a
+   replacement (Accessibility Contract: focus management).
+   -------------------------------------------------------------------------- */
+.hisd-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Variant: Action (filled) — the single dominant action per view.
+   bg --color-action, text --color-on-action, hover --color-action-hover.
+   -------------------------------------------------------------------------- */
+.hisd-button--action {
+  --hisd-button-bg: var(--color-action);
+  --hisd-button-fg: var(--color-on-action);
+  --hisd-button-border: var(--color-action);
+}
+.hisd-button--action:hover:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: var(--color-action-hover);
+  --hisd-button-border: var(--color-action-hover);
+}
+.hisd-button--action:active:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: var(--color-action-active);
+  --hisd-button-border: var(--color-action-active);
+  box-shadow: var(--shadow-1);
+}
+
+/* --------------------------------------------------------------------------
+   Variant: Secondary (outlined) — paired / subordinate actions.
+   transparent bg, 1px border --color-action, text --color-action.
+   As a NON-filled interactive surface it takes the shared state-ladder
+   tints: --color-surface-hover / --color-surface-active.
+   -------------------------------------------------------------------------- */
+.hisd-button--secondary {
+  --hisd-button-bg: transparent;
+  --hisd-button-fg: var(--color-action);
+  --hisd-button-border: var(--color-action);
+}
+.hisd-button--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: var(--color-surface-hover);
+}
+.hisd-button--secondary:active:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: var(--color-surface-active);
+}
+
+/* --------------------------------------------------------------------------
+   Variant: Ghost (text) — toolbars, inline prose, nav rows.
+   no bg, no border, text --color-link, hover adds underline.
+   As a NON-filled interactive surface its press tint comes from the shared
+   state-ladder token --color-surface-active.
+   -------------------------------------------------------------------------- */
+.hisd-button--ghost {
+  --hisd-button-bg: transparent;
+  --hisd-button-fg: var(--color-link);
+  --hisd-button-border: transparent;
+}
+.hisd-button--ghost:hover:not(:disabled):not([aria-disabled="true"]) {
+  text-decoration: underline;
+  text-underline-offset: var(--space-1);
+}
+.hisd-button--ghost:active:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: var(--color-surface-active);
+}
+
+/* --------------------------------------------------------------------------
+   Variant: Danger (filled) — destructive, irreversible actions ONLY.
+   Solid --color-danger fill with its companion --color-on-danger label
+   (the uniform status-cue contract: solid fill ⇒ on-<cue> text). The hover/
+   active shades blend toward --color-on-danger so they track per theme
+   (darken on light, lighten on dark) without leaning on a generic inverse.
+   -------------------------------------------------------------------------- */
+.hisd-button--danger {
+  --hisd-button-bg: var(--color-danger);
+  --hisd-button-fg: var(--color-on-danger);
+  --hisd-button-border: var(--color-danger);
+}
+.hisd-button--danger:hover:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: color-mix(in srgb, var(--color-danger) 88%, var(--color-on-danger));
+  --hisd-button-border: color-mix(in srgb, var(--color-danger) 88%, var(--color-on-danger));
+}
+.hisd-button--danger:active:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-button-bg: color-mix(in srgb, var(--color-danger) 80%, var(--color-on-danger));
+  --hisd-button-border: color-mix(in srgb, var(--color-danger) 80%, var(--color-on-danger));
+  box-shadow: var(--shadow-1);
+}
+
+/* --------------------------------------------------------------------------
+   State: Disabled — opacity .38 + pointer-events none.
+   Covers native :disabled and aria-disabled="true".
+   -------------------------------------------------------------------------- */
+.hisd-button:disabled,
+.hisd-button[aria-disabled="true"] {
+  opacity: 0.38;
+  pointer-events: none;
+  cursor: not-allowed;
+  box-shadow: var(--shadow-0);
+}
+
+/* --------------------------------------------------------------------------
+   State: Loading — label is hidden, spinner shown, aria-busy="true".
+   The label stays in the DOM (preserves width) but is visually hidden;
+   the spinner overlays the centered content.
+   -------------------------------------------------------------------------- */
+.hisd-button[aria-busy="true"] {
+  cursor: progress;
+  pointer-events: none;
+  position: relative;
+}
+.hisd-button[aria-busy="true"] .hisd-button__label {
+  visibility: hidden;
+}
+.hisd-button[aria-busy="true"] .hisd-button__icon {
+  visibility: hidden;
+}
+
+/* Spinner — only rendered/visible in the loading state. Color is currentColor
+   so it always matches the variant's text token. */
+.hisd-button__spinner {
+  display: none;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  margin-block-start: calc(var(--space-4) / -2);
+  margin-inline-start: calc(var(--space-4) / -2);
+  border: var(--space-px) solid currentColor;
+  border-block-start-color: transparent;
+  border-radius: var(--radius-pill);
+  animation: hisd-button-spin var(--duration-slower) linear infinite;
+}
+.hisd-button[aria-busy="true"] .hisd-button__spinner {
+  display: block;
+}
+
+@keyframes hisd-button-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   Icon — inline glyph (currentColor). Used for leading icons and icon-only
+   buttons. Icon-only buttons MUST carry an aria-label (enforced in markup).
+   -------------------------------------------------------------------------- */
+.hisd-button__icon {
+  display: inline-flex;
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  flex: 0 0 auto;
+}
+.hisd-button__icon svg {
+  inline-size: 100%;
+  block-size: 100%;
+  fill: none;
+  stroke: currentColor;
+}
+
+/* Icon-only buttons get a square-ish target ≥24px without a wide min-width. */
+.hisd-button--icon-only {
+  min-inline-size: var(--space-6); /* 1.5rem = 24px */
+  padding-inline: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable the spinner animation and transitions.
+   (Theme file already zeroes the --duration-* tokens, but we belt-and-brace
+   the keyframe animation here.)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-button {
+    transition: none;
+  }
+  .hisd-button__spinner {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast) — make every variant usable when the
+   OS flattens our palette to its own. We lean on the system color keywords
+   (ButtonText, ButtonFace, Highlight, GrayText, …) and let forced-color-adjust
+   stay at its default (auto) so the OS substitution does the heavy lifting.
+   Two things we must guarantee by hand:
+     1. The focus ring stays visible — re-point it at the Highlight system color.
+     2. State is never signalled by background alone — the pressed state and the
+        spinner carry a border/visible mark so they survive the flatten.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Every variant reads as a system button: ButtonText label on a ButtonFace
+     face with a ButtonText edge. This collapses our four fills to one legible
+     baseline rather than letting transparent/brand fills disappear. */
+  .hisd-button {
+    --hisd-button-fg: ButtonText;
+    --hisd-button-bg: ButtonFace;
+    --hisd-button-border: ButtonText;
+  }
+
+  /* Focus ring: pin it to the Highlight system color so it stays visible
+     regardless of the chosen high-contrast scheme. */
+  .hisd-button:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Hover/active must not rely on a background tint (the OS may drop it).
+     Use the Highlight pair so the affordance reads, plus the press state
+     carries a thicker outline as a non-color cue. */
+  .hisd-button:hover:not(:disabled):not([aria-disabled="true"]) {
+    --hisd-button-fg: HighlightText;
+    --hisd-button-bg: Highlight;
+    --hisd-button-border: Highlight;
+  }
+  .hisd-button:active:not(:disabled):not([aria-disabled="true"]) {
+    --hisd-button-fg: HighlightText;
+    --hisd-button-bg: Highlight;
+    --hisd-button-border: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  /* Disabled: GrayText so it reads as unavailable even with backgrounds
+     flattened (opacity alone is ignored in forced-colors). */
+  .hisd-button:disabled,
+  .hisd-button[aria-disabled="true"] {
+    --hisd-button-fg: GrayText;
+    --hisd-button-border: GrayText;
+    opacity: 1;
+  }
+
+  /* Spinner: borders map to system colors, but the "gap" that conveys motion
+     must stay a real gap — keep one edge transparent explicitly. */
+  .hisd-button__spinner {
+    border-color: ButtonText;
+    border-block-start-color: transparent;
+  }
+}

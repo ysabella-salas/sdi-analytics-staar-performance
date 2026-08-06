@@ -1,0 +1,23 @@
+{
+  "_comment": "Power BI custom-visual manifest scaffold. The visual GUID and version are placeholders; regenerate with `pbiviz new` if forking aggressively. Keep displayName / supportUrl aligned with HISD branding.",
+  "visual": {
+    "name": "hisdVisual",
+    "displayName": "HISD Visual",
+    "guid": "hisdVisualPLACEHOLDER",
+    "visualClassName": "HISDVisual",
+    "version": "1.0.0",
+    "description": "HISD-branded Power BI custom visual (KPI / trend / comparison-highlight / map-marker recipes) with accessibility, bilingual, and renderer-fail-open behavior baked in.",
+    "supportUrl": "https://github.com/Wonder-Forge/HISD_Design",
+    "gitHubUrl": "https://github.com/Wonder-Forge/HISD_Design"
+  },
+  "apiVersion": "5.7.0",
+  "author": { "name": "Houston ISD", "email": "" },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": []
+}

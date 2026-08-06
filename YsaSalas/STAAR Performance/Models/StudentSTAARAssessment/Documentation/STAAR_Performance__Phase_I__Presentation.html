@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAAR Performance Phase I | Data Science Team Briefing</title>
+  <link rel="stylesheet" href="../../../../../.github/skills/hisd-brand-designer/assets/hisd-theme.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .deck {
+      max-width: 1240px;
+      margin: 0 auto;
+      height: 100vh;
+      padding: var(--space-3) var(--space-4);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      min-height: 64px;
+      margin-bottom: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      background: var(--ribbon-field-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-2);
+    }
+
+    .brand-line {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      min-width: 0;
+    }
+
+    .brand-logo {
+      display: block;
+      width: 126px;
+      height: auto;
+      max-height: 38px;
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      color: var(--color-text-on-accent);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-snug);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pager {
+      color: var(--color-text-on-accent);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      flex: 0 0 auto;
+    }
+
+    .slides {
+      position: relative;
+      min-height: 0;
+      flex: 1 1 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      inset: 0;
+      padding: clamp(1.25rem, 3vw, 2.75rem);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-3);
+      animation: fadeUp var(--duration-slow) var(--ease-decelerate);
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1,
+    h2 {
+      margin: 0 0 var(--space-4);
+      color: var(--color-action);
+      letter-spacing: 0;
+      line-height: var(--leading-tight);
+      font-family: var(--font-display);
+      font-weight: var(--weight-extrabold);
+    }
+
+    h1 {
+      font-size: clamp(2.25rem, 5.2vw, 4.5rem);
+      max-width: 25ch;
+    }
+
+    .slide--title {
+      display: none;
+      padding-block: var(--space-12);
+      color: var(--color-text);
+      background: linear-gradient(135deg, color-mix(in srgb, var(--color-surface) 96%, var(--hisd-teal-100)) 0%, color-mix(in srgb, var(--color-surface) 90%, var(--hisd-teal-100)) 62%, var(--hisd-teal-100) 100%);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-3);
+    }
+
+    .slide--title.active {
+      display: block;
+    }
+
+    .slide--title h1 {
+      color: var(--color-action);
+      max-width: 32ch;
+      font-size: clamp(2.25rem, 4.25vw, 3.75rem);
+      text-wrap: balance;
+    }
+
+    .slide--title .lead {
+      font-size: var(--text-lg);
+      color: var(--color-text);
+    }
+
+    .slide--title .card {
+      color: var(--color-text);
+      padding: var(--space-4);
+    }
+
+    .slide--title .card h3 {
+      font-size: var(--text-base);
+    }
+
+    .slide--title .card li {
+      margin: var(--space-1) 0;
+    }
+
+    h2 {
+      max-width: 34ch;
+      font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    }
+
+    p {
+      margin: 0 0 var(--space-4);
+      font-size: var(--text-base);
+      line-height: var(--leading-relaxed);
+    }
+
+    .lead {
+      max-width: 68ch;
+      font-size: var(--text-xl);
+      line-height: var(--leading-normal);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: var(--space-5);
+      padding: var(--space-1) var(--space-3);
+      color: var(--color-text-on-selected);
+      background: var(--color-selected);
+      border: 1px solid var(--color-selected-border);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .slide--title .tag {
+      color: var(--color-text-on-selected);
+      background: var(--color-selected);
+      border-color: var(--color-selected-border);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .grid-2--equal {
+      align-items: stretch;
+    }
+
+    .grid-2--equal .card {
+      height: 100%;
+    }
+
+    .card {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-brand);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-1);
+      padding: var(--space-5);
+    }
+
+    .card h3 {
+      margin: 0 0 var(--space-2);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: var(--space-5);
+    }
+
+    li {
+      margin: var(--space-2) 0;
+      line-height: var(--leading-normal);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--space-2);
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      font-size: var(--text-sm);
+    }
+
+    th {
+      background: var(--color-selected);
+      color: var(--color-text-on-selected);
+      font-weight: var(--weight-bold);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .image-frame {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-sunken);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-sm);
+      object-fit: contain;
+    }
+
+    .decision {
+      margin-top: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-success-border);
+      background: var(--color-success-surface);
+    }
+
+    .decision strong {
+      color: var(--color-success-strong);
+    }
+
+    .card--caveat {
+      width: 100%;
+      max-width: none;
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .card--caveat p {
+      margin-bottom: 0;
+      font-size: var(--text-sm);
+    }
+
+    .roc-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2) var(--space-4);
+      margin-top: var(--space-2);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .roc-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .roc-legend i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .roc-legend .did-not-meet { color: #1F77B4; }
+    .roc-legend .approaches { color: #FF7F0E; }
+    .roc-legend .meets { color: #2CA02C; }
+    .roc-legend .masters { color: #D62728; }
+
+    .image-frame--roc {
+      margin-top: var(--space-2) !important;
+      min-height: 360px;
+      padding: var(--space-3);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: var(--space-2);
+    }
+
+    .image-frame--roc img {
+      width: auto;
+      max-width: 100%;
+      height: min(100%, 315px);
+      max-height: 315px;
+      margin: 0 auto;
+      object-fit: contain;
+      justify-self: center;
+      align-self: center;
+    }
+
+    .image-frame--roc .roc-legend {
+      margin-top: 0;
+    }
+
+    .slide--roc {
+      padding-block: var(--space-10);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
+
+    .btn {
+      display: inline-grid;
+      place-items: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      background: var(--color-action);
+      color: var(--color-on-action);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+    }
+
+    .btn:hover {
+      background: var(--color-action-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    .btn--secondary {
+      background: var(--color-surface);
+      border-color: var(--color-border-strong);
+      color: var(--color-text);
+    }
+
+    .btn--secondary:hover {
+      background: var(--color-surface-hover);
+    }
+
+    .ribbon {
+      height: 7px;
+      margin-top: var(--space-4);
+      border-radius: var(--radius-pill);
+      background: var(--ribbon-fan);
+    }
+
+    .hint {
+      margin-top: var(--space-1);
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+
+    @media (max-width: 920px) {
+      body {
+        height: auto;
+        overflow: auto;
+      }
+
+      .deck {
+        height: auto;
+        padding: var(--space-3);
+      }
+
+      .slides {
+        min-height: 0;
+        flex: initial;
+      }
+
+      .slide {
+        position: static;
+        min-height: 70vh;
+        margin-bottom: 10px;
+        overflow: visible;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .controls,
+      .hint,
+      .pager {
+        display: none;
+      }
+
+      .slide:not(.active) {
+        display: none;
+      }
+    }
+
+    @media (max-height: 800px) and (min-width: 921px) {
+      .topbar {
+        min-height: 52px;
+        padding-block: var(--space-2);
+      }
+
+      .brand-logo {
+        width: 104px;
+        max-height: 32px;
+      }
+
+      .slide {
+        padding: var(--space-5) var(--space-8);
+      }
+
+      .slide--roc {
+        padding-block: var(--space-4);
+      }
+
+      .image-frame--roc {
+        min-height: 420px;
+        padding: var(--space-1) var(--space-3);
+      }
+
+      .image-frame--roc img {
+        max-height: 315px;
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <header class="topbar">
+      <div class="brand-line">
+        <img class="brand-logo" src="../../../../../.github/skills/hisd-brand-designer/assets/logos/full-logo/full-white.svg" alt="Houston Independent School District" />
+        <span class="brand-text">STAAR Performance | Strategic Data Intelligence | Grade 3-8 Math MOY</span>
+      </div>
+      <div class="pager" id="pager">Slide 1 of 7</div>
+    </header>
+
+    <section class="slides" id="slides">
+      <article class="slide slide--title active">
+        <span class="tag">Data Science Briefing</span>
+        <h1>Phase I Model Benchmarking: Technical Readout</h1>
+        <p class="lead">
+          Phase I tested <strong>five model types</strong> using the same student data. Two goals guided the work: predict <strong>raw scores</strong> and predict <strong>performance levels</strong>.
+        </p>
+        <div class="card" style="margin-top: 14px;">
+          <h3>Key technical outcomes</h3>
+          <ul>
+            <li><strong>MAP assessment results</strong> provide the strongest predictive signal.</li>
+            <li><strong>XGBoost</strong> performs best overall; <strong>Random Forest</strong> remains a strong comparison model.</li>
+            <li>Main risks: <strong>uneven class sizes</strong>, similar middle performance levels, and possible data leakage.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>1. Understand the Data</h2>
+        <div class="grid-2 grid-2--equal">
+          <div class="card">
+            <h3>Score and level patterns</h3>
+            <ul>
+              <li>Most <strong>raw scores</strong> sit in the middle range; high scores are less common.</li>
+              <li><strong>Performance levels</strong> have uneven counts, especially in the upper bands.</li>
+              <li>Ordered levels support testing an <strong>ordinal approach</strong> in Phase II.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Predictor patterns</h3>
+            <ul>
+              <li><strong>MAP achievement measures</strong> are the strongest inputs.</li>
+              <li><strong>Student program indicators</strong> add useful context.</li>
+              <li><strong>Discipline data</strong> is sparse and needs separate zero-value handling.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top: 12px;">
+          <div class="image-frame">
+            <img src="../Plots/01__STAAR__3_8__Math__MOY__EDA/01__Raw_Score__Frequency.jpg" alt="Raw score distribution for STAAR Grade 3-8 Math MOY" />
+          </div>
+          <div class="image-frame">
+            <img src="../Plots/01__STAAR__3_8__Math__MOY__EDA/02__Performance_Level__Frequency.jpg" alt="Performance level distribution for STAAR Grade 3-8 Math MOY" />
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>2. Set the Evaluation Rules</h2>
+        <p class="lead">
+          Every model starts with the <strong>same predictor set</strong>. Comparisons remain valid only when the <strong>same evaluation method</strong> and metric are used.
+        </p>
+        <div class="grid-2 grid-2--equal" style="margin-top: 6px;">
+          <div class="card">
+            <h3>Regression track</h3>
+            <ul>
+              <li>Target: <strong>Results Raw Score</strong></li>
+              <li>Key metrics: <strong>R2, MAE, and RMSE</strong></li>
+              <li>Review error size across score ranges</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Classification track</h3>
+            <ul>
+              <li>Target: <strong>Results Performance Level</strong></li>
+              <li>Key metrics: <strong>weighted F1</strong> and <strong>ROC AUC</strong></li>
+              <li>Review mistakes between nearby performance levels</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card card--caveat" style="margin-top: 12px; border-left-color: var(--hisd-dark-green);">
+          <h3>Important caveat</h3>
+          <p>
+            <strong>Decision Tree</strong> results use a different error scale, so direct ranking against R2 or F1 is not valid.
+          </p>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>3. Compare Model Results</h2>
+        <p>
+          Results below show the best reported outcome for each model type. <strong>Like-for-like metrics</strong> drive ranking.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Model Family</th>
+              <th>Regression (Best Comparable)</th>
+              <th>Classification (Best Comparable)</th>
+              <th>Technical Read</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Linear</td>
+              <td>R2 = 0.6907, RMSE = 5.2705</td>
+              <td>Outside primary scope for Phase I</td>
+              <td>Useful baseline; underfits nonlinear structure</td>
+            </tr>
+            <tr>
+              <td>Decision Tree</td>
+              <td>Best validation error = 0.2629</td>
+              <td>Entropy val error = 0.3676</td>
+              <td>Interpretable; overfits at deeper depths</td>
+            </tr>
+            <tr>
+              <td>Random Forest</td>
+              <td>R2 = 0.7515, MAE = 3.6188</td>
+              <td>F1 = 0.6387, AUC = 0.8654</td>
+              <td>High stability, small generalization gap</td>
+            </tr>
+            <tr>
+              <td>XGBoost</td>
+              <td><strong>R2 = 0.7567, MAE = 3.5748</strong></td>
+              <td><strong>CV F1 = 0.6418</strong></td>
+              <td><strong>Best overall across both tracks</strong></td>
+            </tr>
+            <tr>
+              <td>SVM</td>
+              <td>R2 = 0.7470, MAE = 3.6194</td>
+              <td>CV F1 = 0.6218</td>
+              <td>Competitive regressor; weaker class separation in middle bands</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="decision">
+          <strong>Selection decision:</strong> Use <strong>XGBoost</strong> as the primary baseline for both tracks; retain <strong>Random Forest</strong> as the comparison model.
+        </div>
+      </article>
+
+      <article class="slide slide--roc">
+        <h2>4. Review Errors Before Deployment</h2>
+        <div class="grid-2 grid-2--equal">
+          <div class="card">
+            <h3>Classification errors</h3>
+            <ul>
+              <li>Most mistakes occur between <strong>Approaches</strong> and <strong>Meets</strong>.</li>
+              <li>Large jumps between the lowest and highest levels are uncommon.</li>
+              <li>Separating the <strong>middle levels</strong> remains the main challenge.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Regression errors</h3>
+            <ul>
+              <li>Error size changes across different <strong>score ranges</strong>.</li>
+              <li>Very high scores remain harder to predict than middle scores.</li>
+              <li>Add <strong>calibration</strong> and score-range checks in Phase II.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="image-frame image-frame--roc" style="margin-top: 12px;">
+          <img src="../Plots/05__STAAR__3_8__Math__MOY__XGBoost/03__Classifier__ROC_Curve.jpg" alt="XGBoost classifier ROC curve by performance class" />
+          <div class="roc-legend" aria-label="ROC curve performance-level legend">
+            <span class="did-not-meet"><i aria-hidden="true"></i>Did Not Meet</span>
+            <span class="approaches"><i aria-hidden="true"></i>Approaches</span>
+            <span class="meets"><i aria-hidden="true"></i>Meets</span>
+            <span class="masters"><i aria-hidden="true"></i>Masters</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>5. Improve the Next Model Version</h2>
+        <div class="card" style="border-left-color: var(--hisd-light-green);">
+          <h3>Priority 1: Feature space expansion and data reliability</h3>
+          <ul>
+            <li>Add <strong>TES teacher-linked features</strong> for each testing window.</li>
+            <li>Measure <strong>match rate, missing values, and lost joins</strong>.</li>
+            <li>Add a zero-value flag and capped value for <strong>discipline fields</strong>.</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top: 12px; border-left-color: var(--hisd-dark-green);">
+          <h3>Priority 2: Objective and validation upgrades</h3>
+          <ul>
+            <li>Penalize <strong>overprediction</strong> more heavily than underprediction.</li>
+            <li>Test <strong>grouped or time-aware validation</strong> to limit leakage.</li>
+            <li>Calibrate model probabilities before setting decision thresholds.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>6. Run the Phase II Work Plan</h2>
+        <p class="lead">
+          Phase II uses <strong>repeatable experiments</strong>, a consistent data split, and run tracking to confirm whether <strong>XGBoost</strong> remains the best model after new features are added.
+        </p>
+        <div class="card" style="margin-top: 10px;">
+          <h3>Next sprint deliverables</h3>
+          <ul>
+            <li>Finalize the <strong>train, validation, and test</strong> process.</li>
+            <li>Retrain <strong>XGBoost</strong> and <strong>Random Forest</strong> with TES and discipline features.</li>
+            <li>Publish one comparison pack: <strong>R2, MAE, RMSE, F1, AUC, calibration, and confusion drift</strong>.</li>
+          </ul>
+        </div>
+        <div class="decision">
+          <strong>Definition of Done:</strong> model choice remains stable under stronger validation, with clear error trade-offs and production-ready evaluation artifacts.
+        </div>
+      </article>
+    </section>
+
+    <nav class="controls" aria-label="Slide controls">
+      <button class="btn btn--secondary" id="themeBtn" type="button" aria-pressed="false" title="Toggle color theme">Theme</button>
+      <div>
+        <button class="btn btn--secondary" id="prevBtn" type="button" title="Previous slide">Previous</button>
+        <button class="btn" id="nextBtn" type="button" title="Next slide">Next</button>
+      </div>
+    </nav>
+    <p class="hint">Use Left/Right Arrow keys to navigate slides on desktop.</p>
+  </main>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const pager = document.getElementById('pager');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const themeBtn = document.getElementById('themeBtn');
+      let index = 0;
+
+      function updateThemeButton() {
+        const darkTheme = document.documentElement.dataset.theme === 'dark';
+        themeBtn.setAttribute('aria-pressed', String(darkTheme));
+        themeBtn.textContent = darkTheme ? 'Light' : 'Dark';
+        themeBtn.setAttribute('title', darkTheme ? 'Use light theme' : 'Use dark theme');
+      }
+
+      function render() {
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        pager.textContent = 'Slide ' + (index + 1) + ' of ' + slides.length;
+      }
+
+      prevBtn.addEventListener('click', function () {
+        index = (index - 1 + slides.length) % slides.length;
+        render();
+      });
+
+      nextBtn.addEventListener('click', function () {
+        index = (index + 1) % slides.length;
+        render();
+      });
+
+      themeBtn.addEventListener('click', function () {
+        document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        updateThemeButton();
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowLeft') {
+          index = (index - 1 + slides.length) % slides.length;
+          render();
+        }
+        if (event.key === 'ArrowRight') {
+          index = (index + 1) % slides.length;
+          render();
+        }
+      });
+
+      render();
+      updateThemeButton();
+    })();
+  </script>
+</body>
+</html>

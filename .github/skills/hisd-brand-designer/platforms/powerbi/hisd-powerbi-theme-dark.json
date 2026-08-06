@@ -1,0 +1,45 @@
+{
+  "name": "HISD 2025 Dark",
+  "dataColors": [
+    "#4CBFC7",
+    "#ACB0D1",
+    "#4C9A8C",
+    "#809ED1",
+    "#E49292",
+    "#99CD77",
+    "#969FA1"
+  ],
+  "foreground": "#F6F7F7",
+  "foregroundNeutralSecondary": "#C2C7C8",
+  "background": "#19282C",
+  "backgroundLight": "#24383C",
+  "tableAccent": "#4CBFC7",
+  "good": "#99CD77",
+  "neutral": "#CA8753",
+  "bad": "#E49292",
+  "maximum": "#4CBFC7",
+  "minimum": "#093439",
+  "hyperlink": "#8CD6DB",
+  "ribbonFrom": "#037882",
+  "ribbonTo": "#05463C",
+  "ribbonHighlight": "#FBDE83",
+  "ribbonFan": [
+    "#00A3AF",
+    "#6DB83D",
+    "#F9D04E",
+    "#474F99"
+  ],
+  "visualStyles": {
+    "*": {
+      "*": {
+        "*": [
+          {
+            "fontFamily": "Segoe UI",
+            "fontSize": 10
+          }
+        ]
+      }
+    }
+  },
+  "_comment": "Dark counterpart of hisd-powerbi-theme.json. Values are the [data-theme=\"dark\"] semantics from assets/hisd-theme.css: dark surface/background, brightened teal-led dataColors and tableAccent, foreground #F6F7F7, good=#99CD77, neutral(amber)=#CA8753, bad=#E49292. Ribbon sentinel (page-background SVGs snap to these): ribbonFrom/ribbonTo are the dark gradient endpoints teal-700 #037882 -> dark-green-800 #05463C, ribbonHighlight yellow-400 #FBDE83; ribbonFan is the FIXED canonical 4-stop band (same in every theme). Power BI cannot embed non-installed fonts; Segoe UI is the on-screen stand-in for Radio Canada. Use brand fonts only in exported/static assets."
+}

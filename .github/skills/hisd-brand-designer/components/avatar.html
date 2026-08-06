@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Avatar — component demo</title>
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="avatar.css">
+  <style>
+    /* Demo-page chrome only — not part of the component. Tokens only. */
+    body {
+      margin: 0;
+      padding: var(--space-8);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: var(--leading-normal);
+    }
+    h1 { font-family: var(--font-display); font-size: var(--text-3xl); margin-block: 0 var(--space-2); }
+    h2 { font-family: var(--font-display); font-size: var(--text-xl); margin-block: var(--space-6) var(--space-3); }
+    h3 { font-size: var(--text-sm); color: var(--color-text-muted); margin-block: var(--space-4) var(--space-2); font-weight: var(--weight-semibold); }
+    .demo-intro { color: var(--color-text-muted); max-inline-size: 60ch; }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .demo-panel {
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+    }
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-5);
+    }
+    .demo-caption { font-size: var(--text-xs); color: var(--color-text-subtle); margin-block-start: var(--space-1); }
+    pre {
+      background-color: var(--color-surface-sunken);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+    }
+  </style>
+</head>
+<body>
+  <h1>HISD Avatar</h1>
+  <p class="demo-intro">
+    User avatar: an <code>&lt;img&gt;</code> with required <code>alt</code>, or an initials
+    fallback on a brand-tonal background with <code>--color-on-action</code> text. Sizes sm / md / lg,
+    circular (<code>--radius-pill</code>), with an optional presence status dot that carries its own
+    accessible name. The same markup is shown in light and dark themes below.
+  </p>
+
+  <div class="demo-grid">
+    <!-- ============ LIGHT THEME ============ -->
+    <section class="demo-panel" data-theme="light" aria-label="Avatar states, light theme">
+      <h2>Light theme</h2>
+
+      <h3>Image variant — sizes sm / md / lg</h3>
+      <div class="demo-row">
+        <span class="hisd-avatar hisd-avatar--sm">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%2300A3AF'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Ana Reyes" width="80" height="80">
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%2300A3AF'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Ana Reyes" width="80" height="80">
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--lg">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%2300A3AF'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Ana Reyes" width="80" height="80">
+          </span>
+        </span>
+      </div>
+
+      <h3>Initials fallback — sizes sm / md / lg</h3>
+      <div class="demo-row">
+        <span class="hisd-avatar hisd-avatar--sm">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes">AR</span>
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes">AR</span>
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--lg">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes">AR</span>
+          </span>
+        </span>
+      </div>
+
+      <h3>With presence status dot</h3>
+      <div class="demo-row">
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Marcus Lee">ML</span>
+          </span>
+          <span class="hisd-avatar__status hisd-avatar__status--success" role="img" aria-label="Online"></span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%23474F99'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Marcus Lee" width="80" height="80">
+          </span>
+          <span class="hisd-avatar__status hisd-avatar__status--muted" role="img" aria-label="Offline"></span>
+        </span>
+      </div>
+
+      <h3>Interactive (keyboard-focusable button)</h3>
+      <div class="demo-row">
+        <button type="button" class="hisd-avatar hisd-avatar--md hisd-avatar--interactive" aria-label="Open Ana Reyes profile menu — Online" aria-haspopup="menu">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-hidden="true">AR</span>
+          </span>
+          <span class="hisd-avatar__status hisd-avatar__status--success" aria-hidden="true"></span>
+        </button>
+        <p class="demo-caption">Tab to focus, Enter or Space to activate.</p>
+      </div>
+    </section>
+
+    <!-- ============ DARK THEME ============ -->
+    <section class="demo-panel" data-theme="dark" aria-label="Avatar states, dark theme">
+      <h2>Dark theme</h2>
+
+      <h3>Image variant — sizes sm / md / lg</h3>
+      <div class="demo-row">
+        <span class="hisd-avatar hisd-avatar--sm">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%2300A3AF'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Ana Reyes" width="80" height="80">
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%2300A3AF'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Ana Reyes" width="80" height="80">
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--lg">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%2300A3AF'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Ana Reyes" width="80" height="80">
+          </span>
+        </span>
+      </div>
+
+      <h3>Initials fallback — sizes sm / md / lg</h3>
+      <div class="demo-row">
+        <span class="hisd-avatar hisd-avatar--sm">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes">AR</span>
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes">AR</span>
+          </span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--lg">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes">AR</span>
+          </span>
+        </span>
+      </div>
+
+      <h3>With presence status dot</h3>
+      <div class="demo-row">
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-label="Marcus Lee">ML</span>
+          </span>
+          <span class="hisd-avatar__status hisd-avatar__status--success" role="img" aria-label="Online"></span>
+        </span>
+        <span class="hisd-avatar hisd-avatar--md">
+          <span class="hisd-avatar__media">
+            <img class="hisd-avatar__img" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'%3E%3Crect%20width='80'%20height='80'%20fill='%23474F99'/%3E%3Ccircle%20cx='40'%20cy='32'%20r='14'%20fill='%23FFFFFF'/%3E%3Cpath%20d='M16%2074a24%2024%200%200148%200z'%20fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Photo of Marcus Lee" width="80" height="80">
+          </span>
+          <span class="hisd-avatar__status hisd-avatar__status--muted" role="img" aria-label="Offline"></span>
+        </span>
+      </div>
+
+      <h3>Interactive (keyboard-focusable button)</h3>
+      <div class="demo-row">
+        <button type="button" class="hisd-avatar hisd-avatar--md hisd-avatar--interactive" aria-label="Open Ana Reyes profile menu — Online" aria-haspopup="menu">
+          <span class="hisd-avatar__media">
+            <span class="hisd-avatar__initials" role="img" aria-hidden="true">AR</span>
+          </span>
+          <span class="hisd-avatar__status hisd-avatar__status--success" aria-hidden="true"></span>
+        </button>
+        <p class="demo-caption">Tab to focus, Enter or Space to activate.</p>
+      </div>
+    </section>
+  </div>
+
+  <h2>Copy-paste snippet</h2>
+  <pre><code>&lt;!-- Image avatar (required alt) --&gt;
+&lt;span class="hisd-avatar hisd-avatar--md"&gt;
+  &lt;span class="hisd-avatar__media"&gt;
+    &lt;img class="hisd-avatar__img" src="/users/ana.jpg" alt="Photo of Ana Reyes"&gt;
+  &lt;/span&gt;
+&lt;/span&gt;
+
+&lt;!-- Initials fallback (no photo) --&gt;
+&lt;span class="hisd-avatar hisd-avatar--md"&gt;
+  &lt;span class="hisd-avatar__media"&gt;
+    &lt;span class="hisd-avatar__initials" role="img" aria-label="Ana Reyes"&gt;AR&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/span&gt;
+
+&lt;!-- With presence status dot (success / muted).
+     Static dot: role="img" + aria-label names it without a live region. --&gt;
+&lt;span class="hisd-avatar hisd-avatar--md"&gt;
+  &lt;span class="hisd-avatar__media"&gt;
+    &lt;span class="hisd-avatar__initials" role="img" aria-label="Marcus Lee"&gt;ML&lt;/span&gt;
+  &lt;/span&gt;
+  &lt;span class="hisd-avatar__status hisd-avatar__status--success" role="img" aria-label="Online"&gt;&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;!-- Interactive (button wrapper): icon-only, so it needs aria-label.
+     Fold presence into the button's accessible name; keep the dot aria-hidden.
+     Native &lt;button&gt; gives Enter/Space activation for free. --&gt;
+&lt;button type="button"
+        class="hisd-avatar hisd-avatar--md hisd-avatar--interactive"
+        aria-label="Open Ana Reyes profile menu — Online" aria-haspopup="menu"&gt;
+  &lt;span class="hisd-avatar__media"&gt;
+    &lt;span class="hisd-avatar__initials" role="img" aria-hidden="true"&gt;AR&lt;/span&gt;
+  &lt;/span&gt;
+  &lt;span class="hisd-avatar__status hisd-avatar__status--success" aria-hidden="true"&gt;&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+
+  <!-- Keyboard interaction note: the interactive avatar uses a native
+       <button>, which already provides Enter/Space activation and focus per
+       the WAI-ARIA APG button pattern. No custom JS is required. -->
+</body>
+</html>

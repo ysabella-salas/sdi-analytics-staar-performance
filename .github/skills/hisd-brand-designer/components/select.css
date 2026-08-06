@@ -1,0 +1,274 @@
+/* ==========================================================================
+   HISD Select — reusable component styles
+   --------------------------------------------------------------------------
+   A native <select> wrapped in a token-driven shell. Native keyboard and
+   listbox behaviour are preserved; only the visual shell and chevron are
+   restyled. Requires hisd-theme.css (semantic + reference tokens) to be
+   loaded first. Dark theme is inherited from [data-theme="dark"] on an
+   ancestor — this file ships no component-specific dark-mode colours.
+
+   Token contract (Components.md → "Input And Select"):
+     rest    1px solid --color-border
+     focus   2px solid --color-action  (focus ring --color-focus, offset 2px)
+     error   1px solid --color-danger  + label/message in --color-danger
+     surface --color-surface, text --color-text, placeholder --color-text-subtle
+     helper  --color-text-muted, chevron --color-text-muted
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Field group: label (above) + control + helper/error message (below).
+   -------------------------------------------------------------------------- */
+.hisd-select-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  /* Component-tier vars resolve to semantic tokens (Conventions.md tier 3). */
+  --hisd-select-border: var(--color-border);
+  --hisd-select-border-width: var(--space-px);
+  --hisd-select-label-color: var(--color-text);
+}
+
+/* Error state recolours the group via component vars (single source of truth). */
+.hisd-select-field[data-invalid="true"] {
+  --hisd-select-border: var(--color-danger);
+  --hisd-select-label-color: var(--color-danger);
+}
+
+/* --------------------------------------------------------------------------
+   Label — sits above the control, never used as a placeholder substitute.
+   -------------------------------------------------------------------------- */
+.hisd-select-label {
+  color: var(--hisd-select-label-color);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+}
+
+.hisd-select-label__required {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-1);
+}
+
+/* --------------------------------------------------------------------------
+   Control wrapper — owns the custom chevron so it can be tinted independently
+   of the select's text colour (a native <select> cannot host ::after).
+   -------------------------------------------------------------------------- */
+.hisd-select {
+  position: relative;
+  display: block;
+  /* Tint inherited by the chevron's currentColor-filled SVG. */
+  color: var(--color-text-muted);
+}
+
+/* Chevron: monochrome SVG data-URI whose fill is currentColor (the one
+   allowed colour exception). Its visible colour is the wrapper's
+   --color-text-muted. Purely decorative, so pointer-events are off. */
+.hisd-select::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--space-3);
+  inline-size: 1rem;
+  block-size: 1rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-select-chevron) center / contain no-repeat;
+  mask: var(--hisd-select-chevron) center / contain no-repeat;
+}
+
+.hisd-select {
+  --hisd-select-chevron: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='currentColor'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%206l4%204%204-4'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   The native control.
+   -------------------------------------------------------------------------- */
+.hisd-select__control {
+  appearance: none;
+  -webkit-appearance: none;
+  /* Padding + border must subtract from the 100% width, not add to it,
+     or the control overflows .hisd-select-field. Mirrors textarea.css:46. */
+  box-sizing: border-box;
+  inline-size: 100%;
+  /* ≥24px target: min height + vertical padding clear the 24px floor. */
+  min-block-size: var(--space-10);
+  /* Trailing inline padding leaves room for the chevron. */
+  padding-block: var(--space-2);
+  padding-inline-start: var(--space-3);
+  padding-inline-end: var(--space-8);
+  margin: 0;
+  font-family: inherit;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: var(--hisd-select-border-width) solid var(--hisd-select-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-0);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+/* The placeholder option, when shown as the empty value, reads as subtle text. */
+.hisd-select__control:invalid,
+.hisd-select__control[data-placeholder="true"] {
+  color: var(--color-text-subtle);
+}
+
+/* Hover (enabled only): firm the border to signal interactivity. */
+.hisd-select__control:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+/* Focus: 2px action border + visible focus ring (never bare outline:none). */
+.hisd-select__control:focus-visible {
+  border-width: var(--space-px);
+  border-color: var(--color-action);
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Fallback for engines without :focus-visible on form fields (kept consistent
+   with textarea.css:98 — recolours the border even where the ring can't show). */
+.hisd-select__control:focus {
+  border-color: var(--color-action);
+}
+
+/* Error: danger border comes from --hisd-select-border; ring stays consistent. */
+.hisd-select-field[data-invalid="true"] .hisd-select__control:focus-visible {
+  border-color: var(--color-danger);
+}
+
+/* Disabled: 0.38 opacity + no pointer interaction, per the state contract. */
+.hisd-select__control:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Dim the chevron to match the disabled control. Scoped to ::after (a wrapper
+   render layer the <select>'s own opacity can't reach) — NOT the whole
+   .hisd-select wrapper, which is the parent of the <select> and would compound
+   0.38 × 0.38 = 0.144 onto the control's text/border. Keeps the contract's
+   single 0.38 application on the control intact. */
+.hisd-select-field:has(.hisd-select__control:disabled) .hisd-select::after {
+  opacity: 0.38;
+}
+
+/* Native option list — colour the surface so OS defaults don't leak through. */
+.hisd-select__control option {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+}
+
+/* --------------------------------------------------------------------------
+   Helper and error messages — linked to the control via aria-describedby.
+   -------------------------------------------------------------------------- */
+.hisd-select-helper {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.hisd-select-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+}
+
+/* Inline danger glyph: monochrome SVG mask, tinted by the message's colour. */
+.hisd-select-error__icon {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-select-alert) center / contain no-repeat;
+  mask: var(--hisd-select-alert) center / contain no-repeat;
+}
+
+.hisd-select-error {
+  --hisd-select-alert: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='currentColor'%3E%3Cpath%20d='M8%201.5a6.5%206.5%200%20100%2013%206.5%206.5%200%20000-13zM7.25%204.5h1.5v5h-1.5v-5zm0%206.5h1.5v1.5h-1.5V11z'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   Motion: honour reduced-motion by removing the state transition entirely.
+   (Theme tokens already collapse --duration-* to 0ms, but this is explicit.)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-select__control {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode).
+   The OS flattens backgrounds and overrides our token colours, so state can
+   no longer be carried by background tint or opacity alone. We let system
+   colours take over (forced-color-adjust stays at its default of `auto`) and
+   re-assert the affordances that would otherwise disappear:
+     • a visible focus ring (Highlight)
+     • a real border on the control so the field edge survives flattening
+     • disabled rendered with GrayText (opacity is ignored in this mode)
+     • the chevron mask repainted with CanvasText (currentColor → system text)
+     • the error border carried by a colour, not just a token swap
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Control keeps a system-painted edge so the field is locatable. */
+  .hisd-select__control {
+    border-color: ButtonText;
+  }
+
+  /* Hover firms the edge with a system colour (the token border-strong is
+     flattened away, so re-state it here rather than relying on the tint). */
+  .hisd-select__control:hover:not(:disabled) {
+    border-color: Highlight;
+  }
+
+  /* Focus: keep the ring visible with a system colour, plus a matching
+     border so focus reads even where the outline is clipped. */
+  .hisd-select__control:focus-visible {
+    border-color: Highlight;
+    outline-color: Highlight;
+  }
+  .hisd-select__control:focus {
+    border-color: Highlight;
+  }
+
+  /* Error: backgrounds are gone, so the invalid state must be a real border.
+     Mark is the system "highlighted text" surface colour — used here as a
+     distinct error edge that survives flattening. */
+  .hisd-select-field[data-invalid="true"] .hisd-select__control {
+    border-color: Mark;
+  }
+  .hisd-select-field[data-invalid="true"] .hisd-select__control:focus-visible {
+    border-color: Highlight;
+  }
+
+  /* Disabled: opacity is ignored in forced-colors, so disabled must be
+     conveyed with GrayText on the text and the border. */
+  .hisd-select__control:disabled {
+    color: GrayText;
+    border-color: GrayText;
+  }
+
+  /* Repaint the masked chevron/alert glyphs with system colours (the
+     currentColor fill would otherwise render against a flattened surface).
+     The chevron follows the control's text; dim it for disabled. */
+  .hisd-select::after {
+    background-color: CanvasText;
+  }
+  .hisd-select-field:has(.hisd-select__control:disabled) .hisd-select::after {
+    background-color: GrayText;
+  }
+  .hisd-select-error__icon {
+    background-color: CanvasText;
+  }
+}

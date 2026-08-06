@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0",
+  "name": "hisd-brand-designer",
+  "family": "design",
+  "version": "1.2.0",
+  "description": "Design, brand, and theme any HISD media with the HISD design system: tokens (CSS custom properties, DTCG JSON, Sass, Power BI theme), 24 components including Skeleton loading states and an icon-based Theme Toggle (CSS + React + Web Components), platform kits, Material icons, and the brand assets — in light and dark, accessibly.",
+  "type": "tool-bearing",
+  "entrypoint": "SKILL.md",
+  "installable": true,
+  "updateMode": "exportable",
+  "supersedes": [],
+  "activationType": ["model-invoked", "explicit-triggered"],
+  "riskPosture": "repo-mutating",
+  "runtimes": ["python3", "node"],
+  "scope": "repo",
+  "scripts": {
+    "build-tokens": {
+      "path": "scripts/build_tokens.py",
+      "runtime": "python3",
+      "description": "Generate every token artifact from the brand source; exits non-zero if any semantic pairing regresses below WCAG 2.2 AA.",
+      "sideEffects": "write"
+    },
+    "build-components": {
+      "path": "scripts/build_components.py",
+      "runtime": "python3",
+      "description": "Bundle the per-component CSS into components.css and regenerate the gallery.",
+      "sideEffects": "write"
+    },
+    "lint-components": {
+      "path": "scripts/lint_components.py",
+      "runtime": "python3",
+      "description": "Gate: every component paints color only through tokens and keeps a visible focus ring.",
+      "sideEffects": "read"
+    },
+    "validate-tokens": {
+      "path": "scripts/validate_tokens.py",
+      "runtime": "python3",
+      "description": "DTCG conformance check for the generated token file.",
+      "sideEffects": "read"
+    },
+    "brand-scan": {
+      "path": "scripts/brand_scan.py",
+      "runtime": "python3",
+      "description": "The 'teal test': scan any path for off-brand color, CDN fonts, non-brand typefaces, or missing focus rings.",
+      "sideEffects": "read"
+    },
+    "scaffold": {
+      "path": "scripts/scaffold.py",
+      "runtime": "python3",
+      "description": "Scaffold an on-brand starter for a chosen medium (web-page, email, report, deck, powerbi).",
+      "sideEffects": "write"
+    },
+    "make-asset-manifest": {
+      "path": "scripts/make_asset_manifest.py",
+      "runtime": "python3",
+      "description": "Refresh brand-assets.json from the skill's vendored logos and fonts.",
+      "sideEffects": "write"
+    },
+    "pull-material-icons": {
+      "path": "scripts/pull_material_icons.py",
+      "runtime": "python3",
+      "description": "Vendor filled Material Symbols icons (Rounded, FILL=1, weight 500) from github.com/google/material-design-icons.",
+      "sideEffects": "write"
+    },
+    "build-palette-matrix": {
+      "path": "scripts/build_palette_matrix.py",
+      "runtime": "python3",
+      "description": "Generate the expanded 4%/10% tint/tone/shade palette reference (hex/RGB/CMYK, Pantone on anchors, names on the main colors).",
+      "sideEffects": "write"
+    },
+    "svg-minify": {
+      "path": "scripts/svg_minify.py",
+      "runtime": "python3",
+      "description": "Conservative, dependency-free SVG optimizer (strips non-rendered metadata; --precision -1 never rounds geometry).",
+      "sideEffects": "write"
+    },
+    "generate-app-icons": {
+      "path": "scripts/generate_app_icons.py",
+      "runtime": "python3",
+      "description": "Render a favicon + app-icon set from the brand skyline mark.",
+      "sideEffects": "write"
+    },
+    "catalog-assets": {
+      "path": "scripts/catalog_assets.py",
+      "runtime": "python3",
+      "description": "Guarded one-time brand-asset extraction / re-vendor the skill assets from the repo catalog.",
+      "sideEffects": "write"
+    },
+    "project-adapters": {
+      "path": "scripts/project_adapters.py",
+      "runtime": "python3",
+      "description": "Project the canonical skill into thin native-lane pointer adapters (.claude/skills, .agents/skills); --check verifies drift.",
+      "sideEffects": "write"
+    }
+  },
+  "validation": [
+    "scripts/build_tokens.py",
+    "scripts/lint_components.py",
+    "scripts/validate_tokens.py",
+    "scripts/brand_scan.py",
+    "scripts/audit_focus_contrast.py",
+    "scripts/derive_theme.py",
+    "scripts/design_review.py",
+    "scripts/project_adapters.py"
+  ],
+  "versioning": [
+    "versioning/version.manifest.json",
+    "versioning/CHANGELOG.md"
+  ],
+  "adapters": [
+    {
+      "lane": "claude-code",
+      "path": ".claude/skills/hisd-brand-designer/SKILL.md",
+      "surface": "CLAUDE.md",
+      "kind": "thin-pointer",
+      "generatedBy": "scripts/project_adapters.py"
+    },
+    {
+      "lane": "codex",
+      "path": ".agents/skills/hisd-brand-designer/SKILL.md",
+      "config": "agents/openai.yaml",
+      "surface": "AGENTS.md",
+      "kind": "thin-pointer",
+      "generatedBy": "scripts/project_adapters.py"
+    },
+    {
+      "lane": "copilot",
+      "path": ".github/agents/hisd-brand-designer.agent.md",
+      "surface": ".github/copilot-instructions.md",
+      "kind": "thin-pointer",
+      "gate": "authorized",
+      "generatedBy": "scripts/project_adapters.py"
+    },
+    {
+      "lane": "gemini",
+      "path": ".gemini/extensions/hisd-brand-designer/GEMINI.md",
+      "config": ".gemini/extensions/hisd-brand-designer/gemini-extension.json",
+      "surface": "GEMINI.md",
+      "kind": "thin-pointer",
+      "gate": "authorized",
+      "generatedBy": "scripts/project_adapters.py"
+    }
+  ],
+  "hooks": [],
+  "evalFiles": [
+    "scripts/tests"
+  ],
+  "conformanceProfiles": [],
+  "modelReferences": [
+    "Docs/Design-System/Design-System.md",
+    "Docs/Design-System/Color.md",
+    "Docs/Design-System/Components.md"
+  ],
+  "_notes": "Tool-bearing skill. The canonical body + scripts + assets live once under .skills/design/hisd-brand-designer/; the NATIVE lanes (Claude Code, Codex) consume GENERATED THIN POINTER adapters under .claude/skills/ and .agents/skills/ that reference the canonical SKILL.md and never copy it (run scripts/project_adapters.py). The assistant zip lanes (Claude.ai/OpenAI dev-API) are NOT targeted: at 155MB / 1310 files the skill far exceeds their 50MB / 500-file budget, and that limit binds only a full-copy zip, not a thin adapter."
+}

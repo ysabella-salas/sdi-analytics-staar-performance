@@ -1,0 +1,276 @@
+/* ============================================================================
+   HISD Tooltip — reusable component styles
+   ----------------------------------------------------------------------------
+   A transient label that surfaces on hover/focus for controls whose function
+   is not self-evident. Wired to its trigger via aria-describedby; NEVER the
+   sole label (icon-only triggers carry aria-label).
+
+   Contract: bg --color-surface-inverse · text --color-text-on-accent ·
+   radius --radius-sm · --shadow-2 · --text-sm · 300ms enter / 0ms exit.
+
+   All visual values resolve to design tokens. Zero raw colors. Logical
+   properties only. Dark theme inherits from [data-theme="dark"] on an
+   ancestor — no component-specific dark hex.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   Wrapper — positioning context for the trigger + its tooltip.
+   Inline-flex so it hugs the trigger and sits in text flow.
+   --------------------------------------------------------------------------- */
+.hisd-tooltip {
+  position: relative;
+  display: inline-flex;
+  /* Component-tier vars resolve to semantic tokens (per Conventions). */
+  --hisd-tooltip-bg: var(--color-surface-inverse);
+  --hisd-tooltip-fg: var(--color-text-on-accent);
+  --hisd-tooltip-gap: var(--space-2);
+  --hisd-tooltip-arrow: var(--space-2);
+}
+
+/* ---------------------------------------------------------------------------
+   Trigger — the focusable/hoverable control the tooltip describes.
+   Meets the WCAG 2.2 (SC 2.5.8) 24×24 minimum target via min-size + padding.
+   --------------------------------------------------------------------------- */
+.hisd-tooltip__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-inline-size: var(--space-6);   /* 24px min target */
+  min-block-size: var(--space-6);    /* 24px min target */
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: help;
+}
+
+.hisd-tooltip__trigger:hover {
+  /* Non-filled interactive surface — uses the state-ladder hover token. */
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+/* Press: deeper state-ladder tint for the non-filled surface. */
+.hisd-tooltip__trigger:active {
+  background-color: var(--color-surface-active);
+  border-color: var(--color-border-strong);
+}
+
+/* Icon-only trigger: square, label lives in aria-label. */
+.hisd-tooltip__trigger--icon {
+  padding-inline: var(--space-1);
+  min-inline-size: var(--space-8);   /* 32px — comfortable icon target */
+  min-block-size: var(--space-8);
+}
+
+.hisd-tooltip__icon {
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  fill: currentColor;
+  flex: none;
+}
+
+/* Required visible focus ring — never suppressed without a replacement. */
+.hisd-tooltip__trigger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Bubble — role="tooltip". Hidden by default; shown when the trigger is
+   hovered or keyboard-focused (driven by [data-visible] + CSS fallbacks).
+   --------------------------------------------------------------------------- */
+.hisd-tooltip__bubble {
+  position: absolute;
+  z-index: 50;
+  inline-size: max-content;
+  max-inline-size: 16rem;            /* wraps long / translated strings */
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-regular);
+  color: var(--hisd-tooltip-fg);
+  background-color: var(--hisd-tooltip-bg);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-2);
+
+  /* Hidden state */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;              /* no interactive content inside */
+
+  /* Exit is immediate (0ms); only opacity transitions. */
+  transition: opacity var(--duration-instant) var(--ease-standard) 0ms,
+              visibility 0ms linear var(--duration-instant);
+}
+
+/* The connector arrow — a rotated square in the same surface as the bubble. */
+.hisd-tooltip__bubble::before {
+  content: "";
+  position: absolute;
+  inline-size: var(--hisd-tooltip-arrow);
+  block-size: var(--hisd-tooltip-arrow);
+  background-color: var(--hisd-tooltip-bg);
+  transform: rotate(45deg);
+}
+
+/* ---------------------------------------------------------------------------
+   VISIBLE state — applied by script ([data-visible]) and as a CSS fallback
+   on hover / focus-within. Enter delay 300ms; exit 0ms (handled above).
+   --------------------------------------------------------------------------- */
+.hisd-tooltip__bubble[data-visible="true"],
+.hisd-tooltip:hover .hisd-tooltip__bubble,
+.hisd-tooltip:focus-within .hisd-tooltip__bubble {
+  opacity: 1;
+  visibility: visible;
+  /* 300ms enter delay per contract; visibility flips in immediately. */
+  transition: opacity var(--duration-fast) var(--ease-decelerate) var(--duration-slow),
+              visibility 0ms linear 0ms;
+}
+
+/* Script-forced hide (Escape) MUST win over the hover/focus-within fallback.
+   The visible fallbacks above are (0,3,0); a bare [data-visible="false"] is only
+   (0,2,0) and loses, so the bubble would never hide on Escape while the trigger
+   keeps focus. Scoping the hide to the same :hover / :focus-within states AND
+   keeping the attribute selector raises these rules to (0,4,0), so explicit
+   script state (set by JS per APG, without moving focus) overrides pseudo-class
+   state. The plain selector still covers the non-hover/blur path. */
+.hisd-tooltip__bubble[data-visible="false"],
+.hisd-tooltip:hover .hisd-tooltip__bubble[data-visible="false"],
+.hisd-tooltip:focus-within .hisd-tooltip__bubble[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+  /* Match the immediate-exit timing of the default hidden state. */
+  transition: opacity var(--duration-instant) var(--ease-standard) 0ms,
+              visibility 0ms linear var(--duration-instant);
+}
+
+/* ---------------------------------------------------------------------------
+   POSITIONED variants — placement of bubble + arrow relative to the trigger.
+   Default (no modifier) == top.
+   --------------------------------------------------------------------------- */
+
+/* top (default) */
+.hisd-tooltip__bubble,
+.hisd-tooltip__bubble--top {
+  inset-block-end: calc(100% + var(--hisd-tooltip-gap));
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+}
+.hisd-tooltip__bubble--top::before,
+.hisd-tooltip__bubble:not([class*="hisd-tooltip__bubble--"])::before {
+  inset-block-end: calc(var(--hisd-tooltip-arrow) / -2);
+  inset-inline-start: 50%;
+  margin-inline-start: calc(var(--hisd-tooltip-arrow) / -2);
+}
+
+/* bottom */
+.hisd-tooltip__bubble--bottom {
+  inset-block-end: auto;
+  inset-block-start: calc(100% + var(--hisd-tooltip-gap));
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+}
+.hisd-tooltip__bubble--bottom::before {
+  inset-block-start: calc(var(--hisd-tooltip-arrow) / -2);
+  inset-inline-start: 50%;
+  margin-inline-start: calc(var(--hisd-tooltip-arrow) / -2);
+}
+
+/* start (inline-start of the trigger) */
+.hisd-tooltip__bubble--start {
+  inset-block-end: auto;
+  inset-block-start: 50%;
+  inset-inline-start: auto;
+  inset-inline-end: calc(100% + var(--hisd-tooltip-gap));
+  transform: translateY(-50%);
+}
+.hisd-tooltip__bubble--start::before {
+  inset-block-start: 50%;
+  margin-block-start: calc(var(--hisd-tooltip-arrow) / -2);
+  inset-inline-end: calc(var(--hisd-tooltip-arrow) / -2);
+}
+
+/* end (inline-end of the trigger) */
+.hisd-tooltip__bubble--end {
+  inset-block-end: auto;
+  inset-block-start: 50%;
+  inset-inline-start: calc(100% + var(--hisd-tooltip-gap));
+  transform: translateY(-50%);
+}
+.hisd-tooltip__bubble--end::before {
+  inset-block-start: 50%;
+  margin-block-start: calc(var(--hisd-tooltip-arrow) / -2);
+  inset-inline-start: calc(var(--hisd-tooltip-arrow) / -2);
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — disable the enter fade; show/hide instantly.
+   (Theme tokens already zero the durations, but we also drop transitions so
+   layout never relies on timing.)
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-tooltip__bubble {
+    transition: none;
+  }
+  .hisd-tooltip__bubble[data-visible="true"],
+  .hisd-tooltip:hover .hisd-tooltip__bubble,
+  .hisd-tooltip:focus-within .hisd-tooltip__bubble,
+  .hisd-tooltip__bubble[data-visible="false"],
+  .hisd-tooltip:hover .hisd-tooltip__bubble[data-visible="false"],
+  .hisd-tooltip:focus-within .hisd-tooltip__bubble[data-visible="false"] {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode).
+   The OS flattens our brand backgrounds to system colors, so anything that
+   relied on background ALONE (the trigger states, the inverse bubble, the
+   arrow) needs a border/outline to stay distinguishable. We let the system
+   palette take over (forced-color-adjust stays auto) and only add structure.
+   --------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Trigger reads as a button face with a visible edge. */
+  .hisd-tooltip__trigger {
+    border-color: ButtonText;
+    color: ButtonText;
+  }
+
+  /* Hover/press can't rely on the flattened background — carry a border so
+     the interactive state is still perceivable. */
+  .hisd-tooltip__trigger:hover,
+  .hisd-tooltip__trigger:active {
+    border-color: Highlight;
+  }
+
+  /* Keep the focus ring visible with a system color. */
+  .hisd-tooltip__trigger:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* The bubble's identity is its inverse background, which gets flattened —
+     give it a border + system surface/text so it stays a legible card. */
+  .hisd-tooltip__bubble {
+    background-color: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  /* The arrow is a rotated square that vanishes when its background flattens;
+     border it so it stays attached to the bubble. */
+  .hisd-tooltip__bubble::before {
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+  }
+}

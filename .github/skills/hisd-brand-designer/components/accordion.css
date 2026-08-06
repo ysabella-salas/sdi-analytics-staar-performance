@@ -1,0 +1,296 @@
+/* ==========================================================================
+   HISD Accordion (Disclosure pattern)
+   A vertically stacked set of headers, each of which reveals an associated
+   panel of content. Built entirely from semantic + reference tokens in
+   hisd-theme.css — zero raw color values.
+
+   Contract (Docs/Design-System/Components.md → "Accessibility Contract" +
+   the disclosure pattern brief):
+     Structure   Each header is a native <button aria-expanded aria-controls>;
+                 each panel is a region (role="region") labelled by its header
+                 via aria-labelledby. Collapsed panels carry the `hidden`
+                 attribute and are removed from the layout + a11y tree.
+     Header      text  --color-text
+                 hover background  --color-surface-raised
+                 border (dividers) --color-border
+     Chevron     a monochrome currentColor SVG that rotates on expand,
+                 transitioned over --duration-fast.
+     Behavior    Optional single-open ("exclusive") set — handled in script;
+                 the CSS is identical for both modes.
+
+   States covered: collapsed, expanded, hover, focus-visible, disabled.
+
+   Light is the default; dark inherits from an ancestor [data-theme="dark"]
+   purely through the semantic tokens — no component-specific dark hex.
+
+   Logical properties throughout (padding-inline, border-block-end,
+   border-inline-start, inset-inline-…) so the component is RTL-ready and
+   tolerates >=40% text expansion (Spanish).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Component-scoped tokens — each resolves to a semantic token only. These let
+   a consumer retheme one accordion without overriding every rule, while the
+   hard contract (border --color-border, hover --color-surface-raised,
+   header text --color-text) stays intact.
+   -------------------------------------------------------------------------- */
+.hisd-accordion {
+  --hisd-accordion-bg: var(--color-surface);
+  --hisd-accordion-header-text: var(--color-text);
+  /* Header is a NON-filled interactive surface, so its hover/press tints come
+     from the semantic state-ladder tokens — not the elevation token
+     --color-surface-raised (which is not a state). The expanded/open header
+     reuses the active tint so it reads as active and connects to its panel. */
+  --hisd-accordion-header-hover-bg: var(--color-surface-hover);
+  --hisd-accordion-header-active-bg: var(--color-surface-active);
+  --hisd-accordion-panel-text: var(--color-text);
+  --hisd-accordion-border: var(--color-border);
+  --hisd-accordion-radius: var(--radius-lg);
+  /* Min interactive target (WCAG 2.2 SC 2.5.8). 44px preferred = --space-11
+     is not in the scale, so --space-10 (40px) + block padding clears it. */
+  --hisd-accordion-min-size: var(--space-6); /* 24px floor */
+
+  display: block;
+  font-family: var(--font-sans);
+  color: var(--hisd-accordion-panel-text);
+
+  /* The set reads as one grouped surface: a single rounded outline with
+     hairline dividers between items (added per-item below). We deliberately do
+     NOT use overflow: hidden here — that would clip the contract's +2px focus
+     ring on the edge triggers. Instead the first/last children round their own
+     outer corners (below), so a focus outline is never cut off. */
+  background-color: var(--hisd-accordion-bg);
+  border: 1px solid var(--hisd-accordion-border);
+  border-radius: var(--hisd-accordion-radius);
+}
+
+/* Round only the outer corners of the group onto the edge children, so the
+   grouped shape is preserved without clipping any focus ring. */
+.hisd-accordion__item:first-child .hisd-accordion__trigger {
+  border-start-start-radius: var(--hisd-accordion-radius);
+  border-start-end-radius: var(--hisd-accordion-radius);
+}
+.hisd-accordion__item:last-child .hisd-accordion__trigger:last-child,
+.hisd-accordion__item:last-child .hisd-accordion__panel:last-child {
+  border-end-start-radius: var(--hisd-accordion-radius);
+  border-end-end-radius: var(--hisd-accordion-radius);
+}
+
+/* --------------------------------------------------------------------------
+   A single item = header (button) + its panel. Items are separated by a
+   hairline divider on their leading (block-start) edge; the first item has
+   none so it meets the rounded group top cleanly.
+   -------------------------------------------------------------------------- */
+.hisd-accordion__item {
+  border-block-start: 1px solid var(--hisd-accordion-border);
+}
+
+.hisd-accordion__item:first-child {
+  border-block-start: 0;
+}
+
+/* --------------------------------------------------------------------------
+   The header wraps the trigger so the heading semantics (h2/h3…) are
+   preserved while the button remains the interactive element. The heading
+   carries no visual box — the button fills it edge to edge.
+   -------------------------------------------------------------------------- */
+.hisd-accordion__heading {
+  margin: 0;
+  /* The heading inherits its level's default font-size from the host page;
+     normalize so the trigger controls the visual size. */
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   The trigger — a native <button> so Enter/Space, focus, and disabled come
+   for free. Full-width, text-leading, chevron-trailing.
+   -------------------------------------------------------------------------- */
+.hisd-accordion__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  inline-size: 100%;
+  box-sizing: border-box;
+
+  /* >=24px target via padding; block padding also clears the min-size floor. */
+  min-block-size: var(--hisd-accordion-min-size);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  margin: 0;
+
+  /* Text leads, chevron trails. */
+  text-align: start;
+
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--hisd-accordion-header-text);
+
+  background-color: transparent;
+  border: 0;
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+/* The label takes the remaining inline space so the chevron pins to the end. */
+.hisd-accordion__label {
+  flex: 1 1 auto;
+  min-inline-size: 0; /* allow long labels to wrap rather than overflow */
+}
+
+/* Hover — only on enabled triggers. Non-filled-surface hover tint from the
+   semantic state ladder (--color-surface-hover). */
+.hisd-accordion__trigger:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--hisd-accordion-header-hover-bg);
+}
+
+/* Press — deeper state-ladder tint while the header is actively pressed. */
+.hisd-accordion__trigger:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--hisd-accordion-header-active-bg);
+}
+
+/* Visible focus ring for every trigger. Never suppressed without a
+   replacement; +2px offset per the Accessibility Contract. The group avoids
+   overflow: hidden so this ring is never clipped on edge triggers. */
+.hisd-accordion__trigger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Expanded — keep a tinted surface so the open header reads as active and
+   visually connects to its panel. Uses the active state-ladder tint. */
+.hisd-accordion__trigger[aria-expanded="true"] {
+  background-color: var(--hisd-accordion-header-active-bg);
+}
+
+/* Disabled — non-interactive, de-emphasized. Supports a real <button>:disabled
+   and an [aria-disabled="true"] element. Per the Components.md contract
+   (line 37), the disabled delta is opacity: 0.38 + pointer-events: none.
+   --color-text-subtle is kept as a supplementary de-emphasis cue;
+   cursor: not-allowed is retained for the case an [aria-disabled] element
+   still receives pointer hit-testing. */
+.hisd-accordion__trigger:disabled,
+.hisd-accordion__trigger[aria-disabled="true"] {
+  color: var(--color-text-subtle);
+  opacity: 0.38;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   The chevron — a monochrome SVG drawn via mask, filled with currentColor so
+   it tracks the header text color in every theme and state. This (a
+   currentColor monochrome icon) is the sole permitted non-token color usage.
+   Rotates 180deg when its header is expanded, over --duration-fast.
+   -------------------------------------------------------------------------- */
+.hisd-accordion__chevron {
+  flex: 0 0 auto;
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-accordion-chevron) center / contain no-repeat;
+  mask: var(--hisd-accordion-chevron) center / contain no-repeat;
+
+  /* Down-pointing chevron, drawn once here. The SVG is consumed as a mask, so
+     only its shape matters — the visible color is background-color: currentColor
+     above. Its own stroke is set to currentColor too, so it stays monochrome and
+     theme-correct in any rendering context (the sole allowed non-token color). */
+  --hisd-accordion-chevron: url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">\
+<path d="M5 7.5 10 12.5 15 7.5" fill="none" stroke="currentColor" \
+stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+
+  transition: transform var(--duration-fast) var(--ease-standard);
+  transform: rotate(0deg);
+}
+
+/* Rotate the chevron to point up when its header is expanded. */
+.hisd-accordion__trigger[aria-expanded="true"] .hisd-accordion__chevron {
+  transform: rotate(180deg);
+}
+
+/* --------------------------------------------------------------------------
+   The panel — a labelled region. Collapsed panels carry the `hidden`
+   attribute (removed from layout + a11y tree). Expanded panels show body text.
+   -------------------------------------------------------------------------- */
+.hisd-accordion__panel {
+  padding-block: var(--space-4);
+  padding-inline: var(--space-4);
+  color: var(--hisd-accordion-panel-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* The native `hidden` attribute hides collapsed panels; assert it strongly so
+   a utility `display` rule elsewhere can't accidentally reveal them. */
+.hisd-accordion__panel[hidden] {
+  display: none;
+}
+
+/* Panels are scroll/landmark targets; if a consumer makes one focusable
+   (tabindex="-1" for focus-on-open), give it the same visible ring. */
+.hisd-accordion__panel:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode). The OS flattens
+   our token-driven backgrounds to system colors, so state can no longer be
+   carried by background tint alone. We let system colors take over by default
+   (forced-color-adjust stays auto) and add borders/outlines so every state
+   stays distinguishable, keep the focus ring visible with a system color, and
+   render disabled with GrayText. Scoped to the component's own classes.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Group + dividers map to system border color so structure survives. */
+  .hisd-accordion {
+    border-color: CanvasText;
+  }
+  .hisd-accordion__item {
+    border-block-start-color: CanvasText;
+  }
+
+  /* Header text follows the system button/canvas text color. */
+  .hisd-accordion__trigger {
+    color: ButtonText;
+  }
+
+  /* Focus ring must remain visible — use the system Highlight color. */
+  .hisd-accordion__trigger:focus-visible,
+  .hisd-accordion__panel:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Expanded/open is a stateful distinction that can't rely on background:
+     carry it with a system-colored outline so it's still readable. */
+  .hisd-accordion__trigger[aria-expanded="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  /* Disabled must read as disabled: GrayText for text and icon. The chevron
+     is painted with currentColor, so setting color also tints the mask. */
+  .hisd-accordion__trigger:disabled,
+  .hisd-accordion__trigger[aria-disabled="true"] {
+    color: GrayText;
+    /* opacity is ignored for contrast here; GrayText carries the cue. */
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — kill the chevron rotation transition and the header
+   background transition. The duration tokens are already zeroed at :root by
+   the theme; this is the belt-and-suspenders override.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-accordion__trigger,
+  .hisd-accordion__chevron {
+    transition: none;
+  }
+}

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Badge — component demo</title>
+
+  <!-- Theme tokens FIRST, then the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="badge.css">
+
+  <style>
+    /* Demo-page scaffolding only — not part of the component. Uses tokens. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .demo-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: stretch;
+      padding: var(--space-6);
+    }
+    .demo-panel {
+      flex: 1 1 24rem;
+      box-sizing: border-box;
+      padding: var(--space-6);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .demo-panel h2 {
+      margin-block: 0 var(--space-4);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+    .demo-row {
+      margin-block-end: var(--space-5);
+    }
+    .demo-row > h3 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle);
+    }
+    /* Inline cluster for showing several badges in a line. */
+    .demo-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+    }
+    /* A label+badge pairing where the count is ALSO carried by the text, so the
+       badge there is presentational (aria-hidden). */
+    .demo-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+    .page-head {
+      padding: var(--space-6) var(--space-6) 0;
+    }
+    .page-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-text);
+    }
+    .page-head p {
+      margin-block: var(--space-2) 0;
+      max-inline-size: 64ch;
+      color: var(--color-text-muted);
+    }
+    .snippet {
+      margin: var(--space-6);
+      padding: var(--space-5);
+      background-color: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .snippet h2 {
+      margin-block: 0 var(--space-3);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+    }
+    .snippet pre {
+      margin: 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+    /* Visually hidden but available to assistive tech (for live announcements). */
+    .demo-visually-hidden {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>HISD Badge</h1>
+    <p>
+      An inline count or status marker attached to another element. Each panel
+      below shows every state. The right panel is forced to
+      <code>data-theme="dark"</code>; the component inherits dark purely through
+      semantic tokens — no component-specific dark CSS. The badge is
+      presentational (<code>aria-hidden</code>) when its value is also in
+      context, and the sole carrier of the count
+      (<code>aria-label="[n] notifications"</code>) when it is not.
+    </p>
+  </header>
+
+  <!-- Polite live region announces dynamic count changes to assistive tech. -->
+  <div id="badge-live" class="demo-visually-hidden" role="status" aria-live="polite"></div>
+
+  <div class="demo-wrap">
+
+    <!-- ============================ LIGHT ============================ -->
+    <section class="demo-panel" data-theme="light" aria-label="Badge states in light theme">
+      <h2>Light theme</h2>
+
+      <!-- COUNT badge, ATTACHED to an interactive icon button. The icon has no
+           visible text, so the badge is the SOLE carrier of the count and gets
+           aria-label="[n] notifications". The host button carries its own
+           descriptive aria-label for the action it performs. -->
+      <div class="demo-row">
+        <h3>Count — sole carrier (attached to icon button)</h3>
+        <div class="demo-cluster">
+          <button type="button" class="hisd-badge-host" aria-label="Notifications" data-badge-host>
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge" aria-label="3 notifications" data-badge-count>3</span>
+          </button>
+          <button type="button" class="hisd-badge-host" aria-label="Messages">
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge hisd-badge--multi" aria-label="24 notifications">24</span>
+          </button>
+          <button type="button" class="hisd-badge-host" aria-label="Alerts, unread">
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge hisd-badge--dot" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- COUNT badge, presentational: the count is ALSO in the visible text,
+           so the badge repeats it and is aria-hidden to avoid double reading. -->
+      <div class="demo-row">
+        <h3>Count — presentational (value also in text)</h3>
+        <span class="demo-inline">
+          Unread messages
+          <span class="hisd-badge" aria-hidden="true">5</span>
+        </span>
+      </div>
+
+      <!-- STATUS badges: standalone labels. Each reads its own text, so it is
+           presentational chrome around that text — aria-hidden is not used
+           because the text itself is the accessible name of the badge. -->
+      <div class="demo-row">
+        <h3>Status</h3>
+        <div class="demo-cluster">
+          <span class="hisd-badge hisd-badge--success">Enrolled</span>
+          <span class="hisd-badge hisd-badge--warning">Pending</span>
+          <span class="hisd-badge hisd-badge--info">In review</span>
+          <span class="hisd-badge hisd-badge--danger">Overdue</span>
+        </div>
+      </div>
+
+      <!-- Dynamic: increment the live count and announce it politely. -->
+      <div class="demo-row">
+        <h3>Dynamic count (announced via aria-live)</h3>
+        <div class="demo-cluster">
+          <button type="button" class="hisd-badge-host" aria-label="Notifications" data-badge-host>
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge" aria-label="3 notifications" data-badge-count>3</span>
+          </button>
+          <button type="button" class="hisd-badge hisd-badge--info" data-badge-add
+            style="border:0">+1 notification</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ DARK ============================ -->
+    <section class="demo-panel" data-theme="dark" aria-label="Badge states in dark theme">
+      <h2>Dark theme</h2>
+
+      <div class="demo-row">
+        <h3>Count — sole carrier (attached to icon button)</h3>
+        <div class="demo-cluster">
+          <button type="button" class="hisd-badge-host" aria-label="Notifications">
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge" aria-label="3 notifications">3</span>
+          </button>
+          <button type="button" class="hisd-badge-host" aria-label="Messages">
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge hisd-badge--multi" aria-label="24 notifications">24</span>
+          </button>
+          <button type="button" class="hisd-badge-host" aria-label="Alerts, unread">
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge hisd-badge--dot" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Count — presentational (value also in text)</h3>
+        <span class="demo-inline">
+          Unread messages
+          <span class="hisd-badge" aria-hidden="true">5</span>
+        </span>
+      </div>
+
+      <div class="demo-row">
+        <h3>Status</h3>
+        <div class="demo-cluster">
+          <span class="hisd-badge hisd-badge--success">Enrolled</span>
+          <span class="hisd-badge hisd-badge--warning">Pending</span>
+          <span class="hisd-badge hisd-badge--info">In review</span>
+          <span class="hisd-badge hisd-badge--danger">Overdue</span>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <h3>Dynamic count (announced via aria-live)</h3>
+        <div class="demo-cluster">
+          <button type="button" class="hisd-badge-host" aria-label="Notifications" data-badge-host>
+            <span class="hisd-badge-host__icon" aria-hidden="true"></span>
+            <span class="hisd-badge" aria-label="3 notifications" data-badge-count>3</span>
+          </button>
+          <button type="button" class="hisd-badge hisd-badge--info" data-badge-add
+            style="border:0">+1 notification</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================ SNIPPET ============================ -->
+  <section class="snippet" aria-label="Copy-paste markup">
+    <h2>Copy-paste snippet</h2>
+    <pre><code>&lt;!-- Count badge, SOLE carrier: badge holds the only copy of the count,
+     so it is labelled. The host button names its own action. --&gt;
+&lt;button type="button" class="hisd-badge-host" aria-label="Notifications"&gt;
+  &lt;span class="hisd-badge-host__icon" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="hisd-badge" aria-label="3 notifications"&gt;3&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;!-- Count badge, PRESENTATIONAL: the value is already in the visible text,
+     so the badge repeats it and is hidden from assistive tech. --&gt;
+&lt;span&gt;Unread messages &lt;span class="hisd-badge" aria-hidden="true"&gt;5&lt;/span&gt;&lt;/span&gt;
+
+&lt;!-- Status badges: the visible text IS the accessible name. --&gt;
+&lt;span class="hisd-badge hisd-badge--success"&gt;Enrolled&lt;/span&gt;
+&lt;span class="hisd-badge hisd-badge--warning"&gt;Pending&lt;/span&gt;
+&lt;span class="hisd-badge hisd-badge--info"&gt;In review&lt;/span&gt;
+&lt;span class="hisd-badge hisd-badge--danger"&gt;Overdue&lt;/span&gt;
+
+&lt;!-- Unread dot (count unknown): always presentational. --&gt;
+&lt;span class="hisd-badge hisd-badge--dot" aria-hidden="true"&gt;&lt;/span&gt;</code></pre>
+  </section>
+
+  <script>
+    // ----------------------------------------------------------------------
+    // Badge is presentational; the only interactivity here is the host button
+    // (native <button>: Enter/Space come free) and a demo "+1" control that
+    // mutates a SOLE-CARRIER count. When the count changes we must keep the
+    // aria-label in sync AND announce the change through the polite live
+    // region, since a silent text swap is not conveyed to screen readers.
+    // ----------------------------------------------------------------------
+    var live = document.getElementById('badge-live');
+
+    function setCount(badge, n) {
+      badge.textContent = String(n);
+      badge.setAttribute('aria-label', n + ' notifications');
+      // 2+ digits: relax to the multi-digit pill so wide content is not clipped.
+      badge.classList.toggle('hisd-badge--multi', String(n).length > 1);
+    }
+
+    document.querySelectorAll('[data-badge-add]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        // Find the sole-carrier count badge nearest this control's row.
+        var row = btn.closest('.demo-cluster') || document;
+        var badge = row.querySelector('[data-badge-count]');
+        if (!badge) return;
+        var next = (parseInt(badge.textContent, 10) || 0) + 1;
+        setCount(badge, next);
+        if (live) { live.textContent = next + ' notifications'; }
+      });
+    });
+  </script>
+</body>
+</html>

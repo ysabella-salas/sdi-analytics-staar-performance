@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Select — component demo</title>
+  <!-- Theme tokens MUST load before the component styles. -->
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="select.css">
+  <style>
+    /* Page-level demo scaffolding only — not part of the component.
+       Still token-driven so the demo itself stays on-brand. */
+    body {
+      margin: 0;
+      padding: var(--space-8);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: var(--leading-normal);
+    }
+    .demo-title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      margin-block: 0 var(--space-2);
+    }
+    .demo-lede {
+      color: var(--color-text-muted);
+      max-inline-size: 60ch;
+      margin-block: 0 var(--space-8);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .demo-panel {
+      background-color: var(--color-surface);
+      border: var(--space-px) solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-1);
+    }
+    .demo-panel__title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      margin-block: 0 var(--space-1);
+    }
+    .demo-panel__note {
+      color: var(--color-text-subtle);
+      font-size: var(--text-sm);
+      margin-block: 0 var(--space-6);
+    }
+    .demo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+    .demo-state-label {
+      font-size: var(--text-2xs);
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+      margin-block-end: var(--space-1);
+    }
+    .demo-snippet-heading {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-semibold);
+      margin-block: var(--space-12) var(--space-3);
+    }
+    pre {
+      background-color: var(--color-surface-sunken);
+      border: var(--space-px) solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+      overflow-x: auto;
+      margin: 0;
+    }
+    code {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+  </style>
+</head>
+<body>
+  <h1 class="demo-title">HISD Select</h1>
+  <p class="demo-lede">
+    A native <code>&lt;select&gt;</code> wrapped in the shared HISD form shell:
+    surface background, <code>--color-border</code> at rest, a 2&nbsp;px
+    <code>--color-action</code> focus border with a <code>--color-focus</code>
+    ring, and a custom chevron tinted in <code>--color-text-muted</code>.
+    Native keyboard behaviour is preserved (Arrow keys navigate, Enter confirms,
+    Escape closes). Below, every state is shown in both light and dark themes.
+  </p>
+
+  <div class="demo-grid">
+
+    <!-- ===================== LIGHT THEME ===================== -->
+    <section class="demo-panel" data-theme="light" aria-label="Select states, light theme">
+      <h2 class="demo-panel__title">Light theme</h2>
+      <p class="demo-panel__note">data-theme="light"</p>
+
+      <div class="demo-stack">
+
+        <!-- Default -->
+        <div class="hisd-select-field">
+          <p class="demo-state-label">Default</p>
+          <label class="hisd-select-label" for="grade-light">Grade level</label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="grade-light"
+                    aria-describedby="grade-light-help">
+              <option value="k">Kindergarten</option>
+              <option value="1" selected>1st grade</option>
+              <option value="2">2nd grade</option>
+              <option value="3">3rd grade</option>
+            </select>
+          </span>
+          <p class="hisd-select-helper" id="grade-light-help">Choose the student's current grade.</p>
+        </div>
+
+        <!-- Placeholder / focus target -->
+        <div class="hisd-select-field">
+          <p class="demo-state-label">With placeholder (focus me)</p>
+          <label class="hisd-select-label" for="campus-light">Campus</label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="campus-light"
+                    data-placeholder="true"
+                    aria-describedby="campus-light-help">
+              <option value="" disabled selected hidden>Select a campus…</option>
+              <option value="bellaire">Bellaire High School</option>
+              <option value="lamar">Lamar High School</option>
+              <option value="heights">Heights High School</option>
+            </select>
+          </span>
+          <p class="hisd-select-helper" id="campus-light-help">Tab here and press Enter or Space to open.</p>
+        </div>
+
+        <!-- Error -->
+        <div class="hisd-select-field" data-invalid="true">
+          <p class="demo-state-label">Error</p>
+          <label class="hisd-select-label" for="lang-light">
+            Home language<span class="hisd-select-label__required" aria-hidden="true">*</span>
+          </label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="lang-light"
+                    aria-invalid="true"
+                    aria-describedby="lang-light-error">
+              <option value="" disabled selected hidden>Select a language…</option>
+              <option value="en">English</option>
+              <option value="es">Spanish / Español</option>
+              <option value="vi">Vietnamese / Tiếng Việt</option>
+            </select>
+          </span>
+          <p class="hisd-select-error" id="lang-light-error" role="alert">
+            <span class="hisd-select-error__icon" aria-hidden="true"></span>
+            This field is required.
+          </p>
+        </div>
+
+        <!-- Disabled -->
+        <div class="hisd-select-field">
+          <p class="demo-state-label">Disabled</p>
+          <label class="hisd-select-label" for="year-light">Enrollment year</label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="year-light" disabled
+                    aria-describedby="year-light-help">
+              <option value="2026" selected>2026–2027</option>
+            </select>
+          </span>
+          <p class="hisd-select-helper" id="year-light-help">Locked for the current cycle.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== DARK THEME ===================== -->
+    <section class="demo-panel" data-theme="dark" aria-label="Select states, dark theme">
+      <h2 class="demo-panel__title">Dark theme</h2>
+      <p class="demo-panel__note">data-theme="dark"</p>
+
+      <div class="demo-stack">
+
+        <!-- Default -->
+        <div class="hisd-select-field">
+          <p class="demo-state-label">Default</p>
+          <label class="hisd-select-label" for="grade-dark">Grade level</label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="grade-dark"
+                    aria-describedby="grade-dark-help">
+              <option value="k">Kindergarten</option>
+              <option value="1" selected>1st grade</option>
+              <option value="2">2nd grade</option>
+              <option value="3">3rd grade</option>
+            </select>
+          </span>
+          <p class="hisd-select-helper" id="grade-dark-help">Choose the student's current grade.</p>
+        </div>
+
+        <!-- Placeholder / focus target -->
+        <div class="hisd-select-field">
+          <p class="demo-state-label">With placeholder (focus me)</p>
+          <label class="hisd-select-label" for="campus-dark">Campus</label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="campus-dark"
+                    data-placeholder="true"
+                    aria-describedby="campus-dark-help">
+              <option value="" disabled selected hidden>Select a campus…</option>
+              <option value="bellaire">Bellaire High School</option>
+              <option value="lamar">Lamar High School</option>
+              <option value="heights">Heights High School</option>
+            </select>
+          </span>
+          <p class="hisd-select-helper" id="campus-dark-help">Tab here and press Enter or Space to open.</p>
+        </div>
+
+        <!-- Error -->
+        <div class="hisd-select-field" data-invalid="true">
+          <p class="demo-state-label">Error</p>
+          <label class="hisd-select-label" for="lang-dark">
+            Home language<span class="hisd-select-label__required" aria-hidden="true">*</span>
+          </label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="lang-dark"
+                    aria-invalid="true"
+                    aria-describedby="lang-dark-error">
+              <option value="" disabled selected hidden>Select a language…</option>
+              <option value="en">English</option>
+              <option value="es">Spanish / Español</option>
+              <option value="vi">Vietnamese / Tiếng Việt</option>
+            </select>
+          </span>
+          <p class="hisd-select-error" id="lang-dark-error" role="alert">
+            <span class="hisd-select-error__icon" aria-hidden="true"></span>
+            This field is required.
+          </p>
+        </div>
+
+        <!-- Disabled -->
+        <div class="hisd-select-field">
+          <p class="demo-state-label">Disabled</p>
+          <label class="hisd-select-label" for="year-dark">Enrollment year</label>
+          <span class="hisd-select">
+            <select class="hisd-select__control" id="year-dark" disabled
+                    aria-describedby="year-dark-help">
+              <option value="2026" selected>2026–2027</option>
+            </select>
+          </span>
+          <p class="hisd-select-helper" id="year-dark-help">Locked for the current cycle.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <h2 class="demo-snippet-heading">Copy-paste snippet</h2>
+  <pre><code>&lt;!-- HISD Select. Requires hisd-theme.css + select.css. --&gt;
+&lt;div class="hisd-select-field"&gt;
+  &lt;label class="hisd-select-label" for="campus"&gt;Campus&lt;/label&gt;
+  &lt;span class="hisd-select"&gt;
+    &lt;select class="hisd-select__control" id="campus"
+            aria-describedby="campus-help"&gt;
+      &lt;option value="" disabled selected hidden&gt;Select a campus…&lt;/option&gt;
+      &lt;option value="bellaire"&gt;Bellaire High School&lt;/option&gt;
+      &lt;option value="lamar"&gt;Lamar High School&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/span&gt;
+  &lt;p class="hisd-select-helper" id="campus-help"&gt;Choose your campus.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Error state: add data-invalid + aria-invalid, swap helper for error. --&gt;
+&lt;div class="hisd-select-field" data-invalid="true"&gt;
+  &lt;label class="hisd-select-label" for="lang"&gt;Home language&lt;/label&gt;
+  &lt;span class="hisd-select"&gt;
+    &lt;select class="hisd-select__control" id="lang"
+            aria-invalid="true" aria-describedby="lang-error"&gt;
+      &lt;option value="" disabled selected hidden&gt;Select a language…&lt;/option&gt;
+      &lt;option value="es"&gt;Spanish / Español&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/span&gt;
+  &lt;p class="hisd-select-error" id="lang-error" role="alert"&gt;
+    &lt;span class="hisd-select-error__icon" aria-hidden="true"&gt;&lt;/span&gt;
+    This field is required.
+  &lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+  <script>
+    // Native <select> already implements the full WAI-ARIA listbox keyboard
+    // contract (Arrow Up/Down to move, Enter/Space to open and confirm,
+    // Escape to close, Home/End, type-ahead). This script adds only the two
+    // app-level behaviours the markup can't express on its own:
+    //
+    //   1. Keep the subtle "placeholder" styling in sync: once a real value is
+    //      chosen, drop the placeholder tint.
+    //   2. Clear the error state on a valid change so the control recovers
+    //      without a full reload (mirrors real form behaviour for the demo).
+    document.querySelectorAll('.hisd-select__control').forEach(function (select) {
+      select.addEventListener('change', function () {
+        // 1. Placeholder tint: on only while the empty option is selected.
+        var isPlaceholder = select.value === '';
+        select.toggleAttribute('data-placeholder', isPlaceholder);
+
+        // 2. Recover from the error state once a real value is picked.
+        var field = select.closest('.hisd-select-field');
+        if (field && field.dataset.invalid === 'true' && !isPlaceholder) {
+          field.removeAttribute('data-invalid');
+          select.setAttribute('aria-invalid', 'false');
+        }
+      });
+
+      // Escape closes the open list natively; we also blur so the demo's
+      // focus state is visibly released (no-op when the list is open — the
+      // browser consumes the first Escape to close the popup).
+      select.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          select.blur();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

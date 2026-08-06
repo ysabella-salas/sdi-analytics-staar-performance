@@ -1,0 +1,18 @@
+# Dependencies — regenerable via `npm install`
+node_modules/
+
+# Build outputs — regenerable via `npm run build`.
+# We DO commit a representative sample under build/css/ and build/figma/ so the
+# kit is inspectable without building (see README). The rule below ignores the
+# rest; the !lines re-include the committed samples.
+build/*
+!build/css/
+!build/figma/
+build/css/*
+!build/css/hisd.variables.css
+build/figma/*
+!build/figma/hisd.tokens-studio.json
+
+# npm
+package-lock.json
+npm-debug.log*

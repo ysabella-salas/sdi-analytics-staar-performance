@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hisd.example/schemas/hisd.tokens.schema.json",
+  "title": "HISD Design Tokens (DTCG)",
+  "description": "Best-effort structural contract for hisd.tokens.json. Encodes the Design Tokens Community Group (DTCG) $value/$type leaf shape, the $type vocabulary the file actually uses, and the structural groups present: 8 reference color ramps (50-950), a brand palette, semantic light/dark themes, a dataviz categorical scale, type/space/radius scales, light/dark elevation, and motion. Authoritative validation lives in scripts/validate_tokens.py; this schema is a companion contract for tooling and editors.",
+
+  "type": "object",
+  "required": ["color", "brand", "theme", "font", "space", "radius", "elevation", "motion"],
+
+  "definitions": {
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+    },
+    "aliasRef": {
+      "type": "string",
+      "description": "DTCG alias reference to another token, e.g. {theme.light.ribbon-from}.",
+      "pattern": "^\\{[A-Za-z0-9_][A-Za-z0-9_.\\-]*\\}$"
+    },
+    "colorToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "$ref": "#/definitions/hexColor" },
+        "$type": { "const": "color" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "colorOrAliasToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": {
+          "oneOf": [
+            { "$ref": "#/definitions/hexColor" },
+            { "$ref": "#/definitions/aliasRef" }
+          ]
+        },
+        "$type": { "const": "color" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "gradientToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": "string", "pattern": "gradient\\(" },
+        "$type": { "const": "gradient" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "dimensionToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": "string" },
+        "$type": { "const": "dimension" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "fontFamilyToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": ["string", "array"] },
+        "$type": { "const": "fontFamily" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "fontWeightToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": ["string", "number"] },
+        "$type": { "const": "fontWeight" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "numberToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": ["string", "number"] },
+        "$type": { "const": "number" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "durationToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": "string" },
+        "$type": { "const": "duration" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "shadowToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": "string" },
+        "$type": { "const": "shadow" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "cubicBezierToken": {
+      "type": "object",
+      "required": ["$value", "$type"],
+      "properties": {
+        "$value": { "type": "string" },
+        "$type": { "const": "cubicBezier" },
+        "$description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "colorRamp": {
+      "type": "object",
+      "required": ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"],
+      "patternProperties": {
+        "^(50|[1-9]00|950)$": { "$ref": "#/definitions/colorToken" }
+      },
+      "additionalProperties": false
+    },
+    "themePalette": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/colorToken" }
+    },
+    "shadowScale": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/shadowToken" }
+    }
+  },
+
+  "properties": {
+    "$description": { "type": "string" },
+
+    "color": {
+      "type": "object",
+      "description": "Reference color ramps. Each is a 50-950 scale of color tokens.",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/colorRamp" }
+    },
+
+    "brand": {
+      "type": "object",
+      "description": "Flat brand palette of named color tokens.",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/colorToken" }
+    },
+
+    "theme": {
+      "type": "object",
+      "description": "Semantic color themes.",
+      "required": ["light", "dark"],
+      "properties": {
+        "light": { "$ref": "#/definitions/themePalette" },
+        "dark": { "$ref": "#/definitions/themePalette" }
+      },
+      "additionalProperties": false
+    },
+
+    "ribbon": {
+      "type": "object",
+      "description": "The signature 'bayou' graphic device: a themeable gradient (from/to/highlight, aliased to the active theme) plus the fixed 4-stop fan divider. gradient/gradient-flat/fan are CSS gradient strings; fan-stops is the machine-readable stop list.",
+      "properties": {
+        "from": { "$ref": "#/definitions/colorOrAliasToken" },
+        "to": { "$ref": "#/definitions/colorOrAliasToken" },
+        "highlight": { "$ref": "#/definitions/colorOrAliasToken" },
+        "gradient": { "$ref": "#/definitions/gradientToken" },
+        "gradient-flat": { "$ref": "#/definitions/gradientToken" },
+        "fan": { "$ref": "#/definitions/gradientToken" },
+        "fan-stops": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/colorToken" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "dataviz": {
+      "type": "object",
+      "description": "Data-visualization palettes.",
+      "properties": {
+        "categorical": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/colorToken" }
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "font": {
+      "type": "object",
+      "description": "Typography scales.",
+      "required": ["family", "size", "weight"],
+      "properties": {
+        "family": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/fontFamilyToken" }
+        },
+        "size": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/dimensionToken" }
+        },
+        "weight": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/fontWeightToken" }
+        },
+        "leading": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/numberToken" }
+        },
+        "tracking": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/dimensionToken" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "space": {
+      "type": "object",
+      "description": "Spacing scale of dimension tokens.",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/dimensionToken" }
+    },
+
+    "radius": {
+      "type": "object",
+      "description": "Border-radius scale of dimension tokens.",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/dimensionToken" }
+    },
+
+    "elevation": {
+      "type": "object",
+      "description": "Light/dark shadow elevation scales.",
+      "required": ["light", "dark"],
+      "properties": {
+        "light": { "$ref": "#/definitions/shadowScale" },
+        "dark": { "$ref": "#/definitions/shadowScale" }
+      },
+      "additionalProperties": false
+    },
+
+    "motion": {
+      "type": "object",
+      "description": "Motion durations and easing curves.",
+      "required": ["duration", "easing"],
+      "properties": {
+        "duration": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/durationToken" }
+        },
+        "easing": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/cubicBezierToken" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "additionalProperties": false
+}

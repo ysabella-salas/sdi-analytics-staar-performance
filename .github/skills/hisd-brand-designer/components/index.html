@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en" data-theme-source="system">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HISD Component Library</title>
+<link rel="stylesheet" href="../assets/hisd-theme.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);line-height:var(--leading-normal)}
+  header{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-5) var(--space-6);
+         background:var(--color-brand);color:var(--color-on-action)}
+  header img{height:2rem;width:auto} .logo-dark{display:none}
+  [data-theme="dark"] .logo-light{display:none} [data-theme="dark"] .logo-dark{display:inline}
+  header h1{font-family:var(--font-display);font-size:var(--text-xl);margin:0}
+  .toggle{margin-inline-start:auto;font:inherit;font-weight:600;border:none;border-radius:var(--radius-pill);
+          padding:var(--space-2) var(--space-4);background:var(--color-surface);color:var(--color-text);cursor:pointer}
+  .toggle:focus-visible{outline:2px solid var(--color-on-action);outline-offset:2px}
+  main{max-width:1080px;margin:0 auto;padding:var(--space-8) var(--space-6)}
+  .lede{font-family:var(--font-serif);font-size:var(--text-lg);color:var(--color-text-muted);max-width:60ch}
+  .g-section{margin-block-start:var(--space-10)}
+  .g-section h2{font-family:var(--font-display);color:var(--color-brand);font-size:var(--text-2xl);
+                border-block-end:2px solid var(--color-border);padding-block-end:var(--space-2)}
+  .g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-4);margin-block-start:var(--space-5)}
+  .g-card{display:flex;flex-direction:column;gap:var(--space-2);text-decoration:none;color:inherit}
+  .g-card:hover{box-shadow:var(--shadow-3)}
+  .g-card:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
+  .g-name{font-family:var(--font-display);font-weight:700;color:var(--color-action);font-size:var(--text-lg)}
+  .g-desc{color:var(--color-text-muted);font-size:var(--text-sm)}
+  footer{max-width:1080px;margin:0 auto;padding:var(--space-8) var(--space-6);color:var(--color-text-subtle);font-size:var(--text-sm)}
+</style></head>
+<body>
+<header>
+  <img class="logo-light" src="../assets/logos/full-logo/full-dark-grey-teal.svg" alt="Houston ISD">
+  <img class="logo-dark" src="../assets/logos/full-logo/full-white.svg" alt="Houston ISD">
+  <h1>Component Library</h1>
+  <button class="toggle" onclick="var h=document.documentElement;h.dataset.theme=(h.dataset.theme==='dark'?'light':'dark')">Toggle theme</button>
+</header>
+<main>
+  <p class="lede">26 accessible, themeable components built on the HISD "Connected Futures" design system.
+  Every component paints color only through semantic tokens, ships a visible focus ring, and works in light and dark.
+  Open any demo to see all states in both themes with a copy-paste snippet.</p>
+    <section class="g-section">
+      <h2>Forms & inputs</h2>
+      <div class="g-grid">
+      <a class="hisd-card g-card" href="button.html">
+        <span class="g-name">button</span>
+        <span class="g-desc">Four intent variants — action, secondary, ghost, danger — with loading state.</span>
+      </a>
+      <a class="hisd-card g-card" href="input-text.html">
+        <span class="g-name">input-text</span>
+        <span class="g-desc">Text field with label-above, helper text, and an error state wired via aria-describedby.</span>
+      </a>
+      <a class="hisd-card g-card" href="textarea.html">
+        <span class="g-name">textarea</span>
+        <span class="g-desc">Multi-line input sharing the field shell; vertical resize only.</span>
+      </a>
+      <a class="hisd-card g-card" href="select.html">
+        <span class="g-name">select</span>
+        <span class="g-desc">Native select with a tokenized custom chevron and the shared focus/error shell.</span>
+      </a>
+      <a class="hisd-card g-card" href="selection-controls.html">
+        <span class="g-name">selection-controls</span>
+        <span class="g-desc">Custom-styled checkbox and radio (grouped in a fieldset).</span>
+      </a>
+      <a class="hisd-card g-card" href="switch.html">
+        <span class="g-name">switch</span>
+        <span class="g-desc">role=switch toggle with a perceivable OFF-state boundary.</span>
+      </a>
+      <a class="hisd-card g-card" href="theme-toggle.html">
+        <span class="g-name">theme-toggle</span>
+        <span class="g-desc">Icon-only light/dark control with aria-pressed state.</span>
+      </a>
+      </div>
+    </section>
+    <section class="g-section">
+      <h2>Navigation</h2>
+      <div class="g-grid">
+      <a class="hisd-card g-card" href="navbar.html">
+        <span class="g-name">navbar</span>
+        <span class="g-desc">Top navigation with a skip-link, current-page accent, and a mobile drawer.</span>
+      </a>
+      <a class="hisd-card g-card" href="sidebar.html">
+        <span class="g-name">sidebar</span>
+        <span class="g-desc">Sidebar navigation with grouped sections and an inline-start active rail.</span>
+      </a>
+      <a class="hisd-card g-card" href="tabs.html">
+        <span class="g-name">tabs</span>
+        <span class="g-desc">APG tabs — roving focus, arrow-key activation, overflow scroll.</span>
+      </a>
+      <a class="hisd-card g-card" href="breadcrumb.html">
+        <span class="g-name">breadcrumb</span>
+        <span class="g-desc">Breadcrumb trail with aria-current on the leaf and presentational separators.</span>
+      </a>
+      <a class="hisd-card g-card" href="pagination.html">
+        <span class="g-name">pagination</span>
+        <span class="g-desc">Page navigation with prev/next bounds, ellipsis, and aria-current.</span>
+      </a>
+      </div>
+    </section>
+    <section class="g-section">
+      <h2>Feedback & status</h2>
+      <div class="g-grid">
+      <a class="hisd-card g-card" href="alert.html">
+        <span class="g-name">alert</span>
+        <span class="g-desc">Inline banner in four semantic variants — meaning carried by icon + text, not color.</span>
+      </a>
+      <a class="hisd-card g-card" href="toast.html">
+        <span class="g-name">toast</span>
+        <span class="g-desc">Live-region toasts that stack, auto-dismiss, and use the status token set.</span>
+      </a>
+      <a class="hisd-card g-card" href="tooltip.html">
+        <span class="g-name">tooltip</span>
+        <span class="g-desc">Hover/focus label wired via aria-describedby; never the sole label.</span>
+      </a>
+      <a class="hisd-card g-card" href="progress.html">
+        <span class="g-name">progress</span>
+        <span class="g-desc">Determinate bar (role=progressbar) and a reduced-motion-safe indeterminate variant.</span>
+      </a>
+      <a class="hisd-card g-card" href="skeleton.html">
+        <span class="g-name">skeleton</span>
+        <span class="g-desc">Loading placeholders with a paused-under-reduce sheen, the opacity crossfade, and a CLS-proof media frame.</span>
+      </a>
+      <a class="hisd-card g-card" href="badge.html">
+        <span class="g-name">badge</span>
+        <span class="g-desc">Count and status markers; labelled when they carry information alone.</span>
+      </a>
+      </div>
+    </section>
+    <section class="g-section">
+      <h2>Content & containers</h2>
+      <div class="g-grid">
+      <a class="hisd-card g-card" href="card.html">
+        <span class="g-name">card</span>
+        <span class="g-desc">Surface container; raised with shadow in light, strengthened border in dark.</span>
+      </a>
+      <a class="hisd-card g-card" href="chip.html">
+        <span class="g-name">chip</span>
+        <span class="g-desc">Filter/selection tag; selected state carries ink on the yellow fill.</span>
+      </a>
+      <a class="hisd-card g-card" href="table.html">
+        <span class="g-name">table</span>
+        <span class="g-desc">Data table with zebra rows, sortable headers (aria-sort), and a scroll region.</span>
+      </a>
+      <a class="hisd-card g-card" href="accordion.html">
+        <span class="g-name">accordion</span>
+        <span class="g-desc">Disclosure pattern with aria-expanded headers and labelled panels.</span>
+      </a>
+      <a class="hisd-card g-card" href="avatar.html">
+        <span class="g-name">avatar</span>
+        <span class="g-desc">Image or initials fallback, sizes, and an optional accessible status dot.</span>
+      </a>
+      <a class="hisd-card g-card" href="modal.html">
+        <span class="g-name">modal</span>
+        <span class="g-desc">Blocking dialog with focus trap; destructive variant uses role=alertdialog.</span>
+      </a>
+      <a class="hisd-card g-card" href="map.html">
+        <span class="g-name">map</span>
+        <span class="g-desc">Accessible map shell — DOM list is source of truth; renderer (MapLibre/ArcGIS) plugs into the canvas.</span>
+      </a>
+      <a class="hisd-card g-card" href="ribbon.html">
+        <span class="g-name">ribbon</span>
+        <span class="g-desc">Animated bayou ribbon graphic device — a gradient band with a compositor-only drift, guarded under reduced-motion and forced-colors.</span>
+      </a>
+      </div>
+    </section>
+</main>
+<footer>Generated by <code>scripts/build_components.py</code> · styles in <code>components/components.css</code> ·
+verified by <code>scripts/lint_components.py</code> and the contrast gate in <code>scripts/build_tokens.py</code>.</footer>
+</body></html>

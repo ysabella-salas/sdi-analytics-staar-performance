@@ -1,0 +1,310 @@
+/* ==========================================================================
+   HISD Chip / Pill
+   A compact interactive tag for filters, selections, and categorization.
+   Built entirely from semantic + reference tokens in hisd-theme.css.
+
+   Contract (Docs/Design-System/Components.md → "Chip / Pill"):
+     Default      bg --color-surface-raised, 1px border --color-border,
+                  text --color-text, radius --radius-pill.
+     Selected     bg --color-selected (soft teal) with --color-text-on-selected,
+                  border --color-selected-border.
+     Dismissible  close icon-button with its own >=24px target,
+                  aria-label="Remove [label]".
+     Chips NEVER use --color-action as a background.
+
+   States: default, hover, focus-visible, selected, disabled, dismissible.
+   Light is the default; dark inherits from an ancestor [data-theme="dark"]
+   via the semantic tokens — no component-specific dark hex.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Component-scoped tokens — resolve to semantic tokens only.
+   These let consumers retheme a single chip without overriding every rule.
+   -------------------------------------------------------------------------- */
+.hisd-chip {
+  --hisd-chip-bg: var(--color-surface-raised);
+  --hisd-chip-text: var(--color-text);
+  --hisd-chip-border: var(--color-border);
+  --hisd-chip-radius: var(--radius-pill);
+  /* Min interactive target (WCAG 2.2 SC 2.5.8). 24px = --space-6. */
+  --hisd-chip-min-size: var(--space-6);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  min-block-size: var(--hisd-chip-min-size);
+  /* Vertical padding keeps the >=24px target; inline padding shapes the pill. */
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+
+  color: var(--hisd-chip-text);
+  background-color: var(--hisd-chip-bg);
+  border: 1px solid var(--hisd-chip-border);
+  border-radius: var(--hisd-chip-radius);
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+/* Label text inside a chip that also hosts a close button. */
+.hisd-chip__label {
+  display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive feedback
+   -------------------------------------------------------------------------- */
+.hisd-chip:hover:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-chip-bg: var(--color-surface-hover);
+  --hisd-chip-border: var(--color-border-strong);
+}
+
+/* Pressed state for the non-filled chip surface. A chip is never a filled
+   action (it never paints --color-action), so its press tint comes from the
+   non-filled state-ladder token, not --color-action-active. */
+.hisd-chip:active:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-chip-bg: var(--color-surface-active);
+  --hisd-chip-border: var(--color-border-strong);
+}
+
+/* Visible focus ring for every interactive chip. Never suppress without a
+   replacement. Pairs the focus token with the standard 2px offset. */
+.hisd-chip:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Selected — soft-teal selection fill carrying its dedicated on-selected text.
+   The fill (--color-selected) is light teal in light and dark teal in dark.
+   The paired --color-text-on-selected is a per-theme token tuned to read AA on
+   that fill in BOTH themes, so there is no need for a [data-theme="dark"] ink
+   override — one binding covers both. The accent edge uses
+   --color-selected-border. Uses --color-selected, NOT --color-action; the
+   brand "Sunrise" yellow is no longer used for selection.
+   -------------------------------------------------------------------------- */
+.hisd-chip[aria-pressed="true"],
+.hisd-chip[aria-selected="true"],
+.hisd-chip.hisd-chip--selected {
+  --hisd-chip-bg: var(--color-selected);
+  --hisd-chip-text: var(--color-text-on-selected);
+  --hisd-chip-border: var(--color-selected-border);
+}
+
+/* Keep the selected fill distinct on hover rather than collapsing to the
+   default surface tint. The fill and on-selected text already carry per-theme
+   values, so hover just re-asserts them and keeps the accent edge. */
+.hisd-chip[aria-pressed="true"]:hover:not(:disabled):not([aria-disabled="true"]),
+.hisd-chip[aria-selected="true"]:hover:not(:disabled):not([aria-disabled="true"]),
+.hisd-chip.hisd-chip--selected:hover:not(:disabled):not([aria-disabled="true"]) {
+  --hisd-chip-bg: var(--color-selected);
+  --hisd-chip-border: var(--color-selected-border);
+}
+
+/* --------------------------------------------------------------------------
+   Disabled — applies to <button>:disabled and [aria-disabled="true"].
+   -------------------------------------------------------------------------- */
+.hisd-chip:disabled,
+.hisd-chip[aria-disabled="true"] {
+  --hisd-chip-bg: var(--color-surface-sunken);
+  --hisd-chip-text: var(--color-text-subtle);
+  --hisd-chip-border: var(--color-border);
+  cursor: not-allowed;
+  box-shadow: var(--shadow-0);
+}
+
+/* --------------------------------------------------------------------------
+   Dismissible variant
+   The container chip is a static element holding a label plus a close button.
+   The close button is the only interactive control and owns its own focus
+   ring and >=24px target.
+   -------------------------------------------------------------------------- */
+.hisd-chip--dismissible {
+  /* Tighten the trailing inline padding so the close button hugs the edge
+     while its own padding restores the visual breathing room. */
+  padding-inline-end: var(--space-1);
+}
+
+.hisd-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  /* Own >=24px target, independent of the chip body. */
+  min-inline-size: var(--hisd-chip-min-size);
+  min-block-size: var(--hisd-chip-min-size);
+  margin: 0;
+  padding: var(--space-1);
+
+  color: var(--color-text-muted);
+  background-color: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+/* Resting icon color on a selected (soft-teal) chip. The transparent close
+   button sits directly on the selection fill, so the X glyph follows
+   --color-text-on-selected — the same per-theme token as the label — which
+   reads above the non-text 3:1 floor (WCAG 1.4.11) in BOTH themes with a
+   single binding. Mirrors the selected label logic above. */
+.hisd-chip--selected .hisd-chip__remove {
+  color: var(--color-text-on-selected);
+}
+
+/* Monochrome "x" glyph drawn as an SVG data-URI; fill follows currentColor so
+   it inherits the button's text color in every theme and state. This is the
+   sole permitted non-token color usage (a currentColor monochrome icon). */
+.hisd-chip__remove-icon {
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  /* mask keeps the glyph filled with currentColor, theme-agnostic. */
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-chip-x-icon) center / contain no-repeat;
+  mask: var(--hisd-chip-x-icon) center / contain no-repeat;
+}
+
+.hisd-chip {
+  --hisd-chip-x-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M4.22 4.22a.75.75 0 0 1 1.06 0L8 6.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L9.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L8 9.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L6.94 8 4.22 5.28a.75.75 0 0 1 0-1.06Z"/></svg>');
+}
+
+.hisd-chip__remove:hover:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+
+/* Pressed dismiss button — non-filled icon button, so it deepens to the
+   non-filled press tint. */
+.hisd-chip__remove:active:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+  background-color: var(--color-surface-active);
+}
+
+/* On a selected (soft-teal) chip, the sunken hover tint would clash; keep the
+   icon on its on-selected token and lay a subtle surface wash behind it so the
+   hover affordance reads without breaking contrast on the teal fill. */
+.hisd-chip--selected .hisd-chip__remove:hover:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text-on-selected);
+  background-color: var(--color-surface-raised);
+}
+
+/* Pressed close button on a selected chip: keep the on-selected ink and reuse
+   the same surface wash as hover so the generic surface-active press tint does
+   not clash with the teal selection fill. */
+.hisd-chip--selected .hisd-chip__remove:active:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text-on-selected);
+  background-color: var(--color-surface-raised);
+}
+
+.hisd-chip__remove:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.hisd-chip__remove:disabled,
+.hisd-chip__remove[aria-disabled="true"] {
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Group container — chips wrap and keep consistent spacing.
+   -------------------------------------------------------------------------- */
+.hisd-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable transitions entirely (no layout-affecting props
+   animate here, so removal is safe). Duration tokens are already zeroed at
+   :root by the theme, this is the belt-and-suspenders for transitions.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-chip,
+  .hisd-chip__remove {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode)
+   The OS flattens our token backgrounds to its own palette, so we must not
+   lean on background color alone. We let system colors take over by default
+   (forced-color-adjust stays auto) and add borders/outlines so every state —
+   especially selected — stays distinguishable, the focus ring stays visible,
+   and disabled reads as disabled. System color keywords only; no hex.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Keep the pill outline drawn with a system color rather than a flattened
+     token border. */
+  .hisd-chip {
+    border-color: ButtonText;
+  }
+
+  /* Selected/pressed must carry a non-background cue. The OS flattens the teal
+     fill, so add a thick Highlight outline (plus a Highlight border) so a
+     selected chip is distinguishable without depending on its background. */
+  .hisd-chip[aria-pressed="true"],
+  .hisd-chip[aria-selected="true"],
+  .hisd-chip.hisd-chip--selected {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  /* Preserve a visible focus ring with a system color. Place it outside the
+     selected outline so both remain readable when a selected chip is focused. */
+  .hisd-chip:focus-visible,
+  .hisd-chip__remove:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  /* Disabled reads as disabled: GrayText for text and the pill border. */
+  .hisd-chip:disabled,
+  .hisd-chip[aria-disabled="true"] {
+    color: GrayText;
+    border-color: GrayText;
+  }
+
+  /* The close button's hover/active background flattens away, so give it a
+     visible outline on hover to keep the affordance, and dim it when disabled. */
+  .hisd-chip__remove:hover:not(:disabled):not([aria-disabled="true"]),
+  .hisd-chip__remove:active:not(:disabled):not([aria-disabled="true"]) {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+
+  .hisd-chip__remove:disabled,
+  .hisd-chip__remove[aria-disabled="true"] {
+    color: GrayText;
+  }
+}

@@ -1,0 +1,250 @@
+/* ==========================================================================
+   HISD Ribbon — the "bayou current" graphic device (CSS tier)
+   --------------------------------------------------------------------------
+   GROUND TRUTH (verified against the brand templates + PDF p.57): the Ribbon
+   is NOT a gradient band. It is a SOLID brand-color FIELD overlaid with a few
+   SOFT, WHITE, round-capped, low-opacity SWEEPING / LOOPING strokes that drift
+   across it like Houston's bayou currents. Tone-on-tone: white at low opacity
+   over a colored field reads as lighter arcs. It is used FULL-BLEED as a
+   background behind content; the motion is a calm "current" — the white
+   strokes slowly DRIFT / FLOW, never a band sliding.
+
+   Source of truth:
+     - assets/ribbon/ribbon-field.svg    (canonical field+strokes markup — this
+       component INLINES that markup; the two stroke sub-layers carry the
+       .hisd-ribbon__layer--a / --b classes so CSS can drift each independently
+       for parallax).
+     - assets/hisd-theme.css             (token names + light/dark values:
+       --ribbon-field-bg, --ribbon-stroke, --ribbon-stroke-opacity for the
+       canonical device; --ribbon-from / -to / -highlight / -gradient / -fan
+       retained as constrained-media accents).
+     - components/skeleton.css           (the looping-animation guard pattern:
+       a @keyframes loop paused under reduced-motion AND forced-colors).
+     - reference/Conventions.md          (token usage rules).
+
+   What this file provides:
+     1. .hisd-ribbon                 The host: a full-bleed box whose background
+        IS the solid brand field (var(--ribbon-field-bg)). It frames the inline
+        <svg> stroke layers and is a positioning context for content placed on
+        top. role="presentation" on the host; role="img" aria-hidden on the SVG.
+     2. .hisd-ribbon__layer--a / --b The two stroke sub-layer <g>s. CSS drifts
+        each group (not the paths) so parallax is one compositor transform per
+        layer.
+     3. .hisd-ribbon--animate        Opt-in motion: the two stroke sub-layers
+        slowly DRIFT (driftA / driftB) — a tiny translate + sub-degree rotate,
+        on long, offset, alternating loops — so the currents shift like water.
+        Compositor-only (transform). No layout / paint props.
+     4. .hisd-ribbon--fan            The thin divider variant: a slim band
+        painted with the multi-stop var(--ribbon-fan) brand sweep. A constrained
+        -media accent, kept UNCHANGED from the prior model.
+     5. Sizing                       The host fills its container; authors set a
+        height (block-size / aspect-ratio / min-block-size) on the host or its
+        wrapper. preserveAspectRatio="slice" on the SVG keeps the strokes
+        full-bleed at any box ratio.
+
+   Rules honored here:
+     - Every COLOR is a token: var(--ribbon-*) for the device, system colors
+       under forced-colors. Zero raw hex / rgb / hsl outside documented var()
+       fallbacks. The inlined SVG's field rect and stroke group reference
+       --ribbon-field-bg / --ribbon-stroke / --ribbon-stroke-opacity with
+       canonical-hex FALLBACKS, so the device rethemes via data-theme and still
+       renders standalone in no-CSS contexts.
+     - Spacing / radius come from tokens. The drift DURATIONS are long ambient
+       seconds (26s / 39s) — an environmental "current", not a UI transition —
+       so they are intentionally literal, outside the UI speed ladder.
+     - The drift is MOVEMENT: it animates @keyframes loops, so it is paused
+       under prefers-reduced-motion AND forced-colors via explicit
+       `animation: none` blocks. Zeroing a duration does NOT stop a running
+       @keyframes loop — the explicit kill block is mandatory.
+     - The stroke paths are authored to over-extend past the viewBox edges, so
+       the small drift never reveals an edge gap (an arc never clips below
+       ~20% of its sweep).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. The host. A full-bleed box whose BACKGROUND is the solid brand field.
+   It fills its container's inline-size; give it (or a wrapper) a height. The
+   field background is the canonical default teal-500; any brand color may
+   override it per section by setting --ribbon-field-bg on the host or an
+   ancestor. Content layered on top sits in this positioning context.
+   -------------------------------------------------------------------------- */
+.hisd-ribbon {
+  display: block;
+  position: relative;
+  inline-size: 100%;
+  block-size: var(--hisd-ribbon-h, auto);
+  /* The solid brand-color FIELD — the device's base. */
+  background-color: var(--ribbon-field-bg);
+  /* Clip the over-extended, drifting strokes to the field box. */
+  overflow: hidden;
+  /* The device is decorative; line-height collapse avoids inline-gap below SVG. */
+  line-height: 0;
+}
+
+/* The inline SVG paints ONLY the stroke layers (its own field rect sits behind
+   them, matching the host background, so the device renders standalone too). It
+   is positioned to fill the host full-bleed regardless of the host's own ratio;
+   preserveAspectRatio="slice" in markup keeps the currents covering the box. */
+.hisd-ribbon > svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* Content placed on top of the field (wordmark, heading, …). Authors wrap their
+   content in .hisd-ribbon__content; it sits above the stroke SVG and restores a
+   normal line-height. This is a layout convenience, not a color surface. */
+.hisd-ribbon__content {
+  position: relative;
+  z-index: 1;
+  line-height: var(--leading-normal, 1.5);
+}
+
+/* --------------------------------------------------------------------------
+   2. The stroke sub-layers. The inlined SVG groups the white "current" strokes
+   into two layers (A in front, B behind). CSS transforms each GROUP so the
+   parallax drift is one compositor transform per layer. transform-box/-origin
+   are set so the translate/rotate is measured against the SVG's own user space
+   (the 1920×1080 viewBox), centering the motion.
+   -------------------------------------------------------------------------- */
+.hisd-ribbon__layer {
+  transform-box: view-box;
+  transform-origin: center;
+  will-change: auto;
+}
+
+/* --------------------------------------------------------------------------
+   3. Animated currents (rung 1). The two stroke sub-layers slowly DRIFT on
+   long, offset, alternating loops — a tiny translate (~±1.5%) plus a sub-degree
+   rotate (≤0.6deg) — so the white currents shift across the field like water.
+   Both are compositor-only (transform). The two layers use different durations
+   (26s / 39s) and opposite drift directions so they never move in lockstep,
+   giving real parallax depth. infinite alternate so the currents ease back and
+   forth rather than snapping.
+
+   The stroke paths over-extend past the viewBox, so a ~±1.5% drift can never
+   expose a gap at the host edge.
+   -------------------------------------------------------------------------- */
+.hisd-ribbon--animate .hisd-ribbon__layer--a {
+  will-change: transform;
+  animation: hisd-ribbon-driftA 26s var(--ease-standard) infinite alternate;
+}
+
+.hisd-ribbon--animate .hisd-ribbon__layer--b {
+  will-change: transform;
+  animation: hisd-ribbon-driftB 39s var(--ease-standard) infinite alternate;
+}
+
+/* Layer A drifts down-right with a faint clockwise tilt. */
+@keyframes hisd-ribbon-driftA {
+  from { transform: translate(-1.5%, -1%) rotate(-0.6deg); }
+  to   { transform: translate(1.5%, 1%) rotate(0.6deg); }
+}
+
+/* Layer B drifts the OTHER way (and a touch less) so the two currents cross,
+   reading as parallax depth rather than a single sheet sliding. */
+@keyframes hisd-ribbon-driftB {
+  from { transform: translate(1.2%, 0.8%) rotate(0.4deg); }
+  to   { transform: translate(-1.2%, -0.8%) rotate(-0.4deg); }
+}
+
+/* --------------------------------------------------------------------------
+   4. Fan divider variant (constrained-media accent — UNCHANGED). A thin
+   horizontal band painted with the fixed multi-stop var(--ribbon-fan) brand
+   sweep — used as a section rule, not a hero field. It ignores the field
+   layout and is sized as a slim band via --hisd-ribbon-fan-h (default 0.5rem).
+   The stroke SVG is hidden; the fan is a tokenized background needing no path.
+   -------------------------------------------------------------------------- */
+.hisd-ribbon--fan {
+  background-color: transparent;
+  block-size: var(--hisd-ribbon-fan-h, var(--space-2, 0.5rem));
+  border-radius: var(--radius-pill);
+  background-image: var(--ribbon-fan);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* In the fan variant the inline stroke SVG (if present) is decorative residue —
+   hide it so only the tokenized fan band paints. Authors may also simply omit
+   the <svg> for the fan and ship a bare host. */
+.hisd-ribbon--fan > svg {
+  display: none;
+}
+
+/* Animated fan: a slow horizontal shift of the gradient sweep. background-position
+   is paint-cheap and bounded; the band is wider than the box so the shift never
+   exposes an edge. Same loop, same guards. */
+.hisd-ribbon--fan.hisd-ribbon--animate {
+  background-size: 140% 100%;
+  background-position: 0% 0%;
+  animation: hisd-ribbon-fan-flow calc(var(--duration-slower) * 3)
+             var(--ease-emphasized) infinite alternate;
+}
+
+@keyframes hisd-ribbon-fan-flow {
+  from { background-position: 0% 0%; }
+  to   { background-position: 100% 0%; }
+}
+
+/* --------------------------------------------------------------------------
+   Focus — the ribbon is decorative and never focusable. No focus styles are
+   defined: an author who wraps it in (or places) an interactive element styles
+   THAT element. (Documented so the omission is intentional, not an oversight.)
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Reduced motion — the current drift and the fan flow are MOVEMENT, so pause
+   every loop. The device parks on its resting frame: a static themed field with
+   its currents at rest, still fully legible as the brand device. A running
+   @keyframes loop is NOT stopped by a 0ms duration — the explicit
+   `animation: none` below is what actually halts it. (Same contract as
+   skeleton.css's sheen.)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-ribbon--animate .hisd-ribbon__layer--a,
+  .hisd-ribbon--animate .hisd-ribbon__layer--b,
+  .hisd-ribbon--fan.hisd-ribbon--animate {
+    animation: none !important;
+  }
+  /* Park each current layer on its centered resting frame, undoing any drift. */
+  .hisd-ribbon--animate .hisd-ribbon__layer--a,
+  .hisd-ribbon--animate .hisd-ribbon__layer--b {
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast). The solid field flattens to the
+   system canvas and the low-opacity white strokes effectively vanish, which
+   would erase the device. Two guarantees:
+     1. Stop every animation loop (movement on an invisible shape is noise).
+     2. Give the host a visible system-color extent so the field still reads as
+        a deliberate region rather than disappearing. The fan becomes a flat
+        CanvasText band; the field host gets a CanvasText border.
+   forced-color-adjust stays at its default so the OS substitution applies.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .hisd-ribbon--animate .hisd-ribbon__layer--a,
+  .hisd-ribbon--animate .hisd-ribbon__layer--b,
+  .hisd-ribbon--fan.hisd-ribbon--animate {
+    animation: none !important;
+  }
+  .hisd-ribbon--animate .hisd-ribbon__layer--a,
+  .hisd-ribbon--animate .hisd-ribbon__layer--b {
+    transform: none;
+  }
+
+  /* The fan's gradient is dropped by the OS; paint a solid system band so the
+     divider keeps its presence. */
+  .hisd-ribbon--fan {
+    background-image: none;
+    background-color: CanvasText;
+  }
+
+  /* The field's color flattens; outline the host so its extent stays visible. */
+  .hisd-ribbon:not(.hisd-ribbon--fan) {
+    border: var(--space-px) solid CanvasText;
+  }
+}

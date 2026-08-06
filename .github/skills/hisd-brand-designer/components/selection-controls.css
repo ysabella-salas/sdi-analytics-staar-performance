@@ -1,0 +1,329 @@
+/* ==========================================================================
+   HISD Selection Controls — checkbox + radio
+   --------------------------------------------------------------------------
+   Reusable, token-only styles for custom-styled native checkbox and radio
+   inputs. Light is default; dark inherits from an ancestor [data-theme="dark"]
+   (or the OS preference resolved by hisd-theme.css). No component-specific
+   dark-mode colors are declared — every value resolves to a semantic
+   var(--color-…) token or a var(--hisd-…) ramp token, both of which already
+   adapt per theme.
+
+   States covered: unchecked, checked, hover, focus-visible, disabled, error.
+   Logical properties throughout for RTL/LTR readiness.
+   ========================================================================== */
+
+/* Component-scoped vars resolve to semantic tokens (Conventions: component
+   tier may add --comp-* vars that point at semantic tokens). The control box
+   is sized to the body font so it scales with text; the clickable label uses
+   padding to guarantee a >=24px target. */
+.hisd-selection-controls {
+  --hisd-selection-controls-box-size: var(--space-5);            /* 1.25rem control */
+  --hisd-selection-controls-border-width: var(--space-px);
+  --hisd-selection-controls-gap: var(--space-3);
+  --hisd-selection-controls-target: var(--space-6);              /* >=24px hit area */
+
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* --- Field group (a labelled set of controls) ------------------------------ */
+.hisd-selection-controls__group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0; /* allow fieldset to shrink in flex/grid contexts */
+}
+
+.hisd-selection-controls__legend {
+  padding: 0;
+  margin-block-end: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  line-height: var(--leading-snug);
+}
+
+.hisd-selection-controls__hint {
+  display: block;
+  margin-block: calc(-1 * var(--space-2)) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-snug);
+}
+
+.hisd-selection-controls__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* --- Option row: clickable <label> wrapping a native input + text ---------- */
+.hisd-selection-controls__option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hisd-selection-controls-gap);
+  /* Padding inflates the hit target to >=24px without inflating the control. */
+  padding-block: var(--space-2);
+  padding-inline: var(--space-2);
+  min-block-size: var(--hisd-selection-controls-target);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-selection-controls__option:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.hisd-selection-controls__option:active {
+  background-color: var(--color-surface-active);
+}
+
+/* --- The native input, visually replaced but kept in the a11y/focus tree --- */
+.hisd-selection-controls__input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  inline-size: var(--hisd-selection-controls-box-size);
+  block-size: var(--hisd-selection-controls-box-size);
+  /* Optical alignment with the first line of label text. */
+  margin: 0;
+  margin-block-start: var(--space-0.5);
+  display: grid;
+  place-content: center;
+  background-color: var(--color-surface);
+  border: var(--hisd-selection-controls-border-width) solid var(--color-border);
+  color: var(--color-on-action); /* drives the SVG mark via currentColor */
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-selection-controls__input--checkbox {
+  border-radius: var(--radius-sm);
+}
+
+.hisd-selection-controls__input--radio {
+  border-radius: var(--radius-pill);
+}
+
+/* The mark: rendered as an ::before whose background is a currentColor SVG.
+   currentColor is inherited from the input's `color`, which is set to
+   --color-on-action above. No raw color in the data-URI (allowed exception). */
+.hisd-selection-controls__input::before {
+  content: "";
+  inline-size: 100%;
+  block-size: 100%;
+  transform: scale(0);
+  transition: transform var(--duration-fast) var(--ease-standard);
+  background-color: currentColor;
+}
+
+.hisd-selection-controls__input--checkbox::before {
+  /* Checkmark glyph, monochrome, filled with currentColor. */
+  -webkit-mask: var(--hisd-selection-controls-check) center / 70% no-repeat;
+  mask: var(--hisd-selection-controls-check) center / 70% no-repeat;
+}
+
+.hisd-selection-controls__input--radio::before {
+  border-radius: var(--radius-pill);
+  /* Inner dot is a centered circle scaled down from the box. */
+  -webkit-mask: var(--hisd-selection-controls-dot) center / 60% no-repeat;
+  mask: var(--hisd-selection-controls-dot) center / 60% no-repeat;
+}
+
+/* SVG mask data-URIs. A mask uses the alpha/shape of the source, not its hue,
+   so the visible color is always currentColor on the masked element. We draw
+   each mark with fill="currentColor" — the only color reference allowed by the
+   component contract — keeping this file free of any raw color literal. */
+.hisd-selection-controls {
+  --hisd-selection-controls-check: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9.55 17.6 4.35 12.4l1.4-1.4 3.8 3.8 8.5-8.5 1.4 1.4z"/></svg>');
+  --hisd-selection-controls-dot: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="currentColor"/></svg>');
+}
+
+/* --- Hover on the control itself (when the row isn't hovered, e.g. keyboard) */
+.hisd-selection-controls__input:hover {
+  border-color: var(--color-border-strong);
+}
+
+/* --- Checked ------------------------------------------------------------- */
+.hisd-selection-controls__input:checked {
+  background-color: var(--color-action);
+  border-color: var(--color-action);
+}
+
+.hisd-selection-controls__input:checked:hover {
+  background-color: var(--color-action-hover);
+  border-color: var(--color-action-hover);
+}
+
+.hisd-selection-controls__input:checked::before {
+  transform: scale(1);
+}
+
+/* --- Focus: visible ring, never suppressed -------------------------------- */
+.hisd-selection-controls__input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --- Label text ----------------------------------------------------------- */
+.hisd-selection-controls__text {
+  display: block;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  /* Align with the optically-nudged control. */
+  padding-block-start: var(--space-0.5);
+}
+
+.hisd-selection-controls__description {
+  display: block;
+  margin-block-start: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-snug);
+}
+
+/* --- Disabled ------------------------------------------------------------- */
+.hisd-selection-controls__input:disabled {
+  background-color: var(--color-surface-sunken);
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+
+.hisd-selection-controls__input:disabled:checked {
+  background-color: var(--color-border-strong);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-subtle); /* mutes the currentColor mark */
+}
+
+.hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled) {
+  cursor: not-allowed;
+}
+
+.hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled):hover,
+.hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled):active {
+  background-color: transparent;
+}
+
+.hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled)
+  .hisd-selection-controls__text,
+.hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled)
+  .hisd-selection-controls__description {
+  color: var(--color-text-subtle);
+}
+
+/* --- Error ---------------------------------------------------------------
+   Driven by aria-invalid on the input (preferred) or an --error modifier on
+   the group. Error uses --color-danger, which adapts per theme. */
+.hisd-selection-controls__input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.hisd-selection-controls__input[aria-invalid="true"]:focus-visible {
+  /* Keep the focus ring visible; tint it to the danger role on error. */
+  outline-color: var(--color-danger);
+}
+
+.hisd-selection-controls__group--error .hisd-selection-controls__legend {
+  color: var(--color-danger);
+}
+
+.hisd-selection-controls__group--error
+  .hisd-selection-controls__input:not(:checked) {
+  border-color: var(--color-danger);
+}
+
+.hisd-selection-controls__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-danger);
+  line-height: var(--leading-snug);
+}
+
+/* Leading warning glyph for the error message, monochrome currentColor. */
+.hisd-selection-controls__error::before {
+  content: "";
+  flex: 0 0 auto;
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-selection-controls-warning) center / contain no-repeat;
+  mask: var(--hisd-selection-controls-warning) center / contain no-repeat;
+}
+
+.hisd-selection-controls {
+  --hisd-selection-controls-warning: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2 1 21h22zm0 5 7.5 13h-15zM11 10v5h2v-5zm0 6v2h2v-2z"/></svg>');
+}
+
+/* --- Forced colors (Windows High Contrast) -------------------------------
+   Let the OS flatten colors (forced-color-adjust stays at its default of auto).
+   We only re-assert what the OS can erase: keep the control box and its mark
+   distinguishable by SHAPE/BORDER (not background alone), keep focus visible,
+   and make disabled read as disabled via GrayText. System-color keywords only
+   — no raw hex — so this also passes the token linter. */
+@media (forced-colors: active) {
+  /* The control box keeps a visible border in both checked and unchecked
+     states; backgrounds are flattened by the OS, so the border carries state. */
+  .hisd-selection-controls__input {
+    border-color: ButtonText;
+  }
+
+  /* Checked: the OS flattens our --color-action fill, so don't rely on it.
+     Outline + Highlight border distinguish checked from unchecked, and the
+     mask mark is repainted in a system color via currentColor. */
+  .hisd-selection-controls__input:checked {
+    border-color: Highlight;
+    outline: 1px solid Highlight;
+    color: Highlight; /* drives the SVG mask mark */
+  }
+
+  /* Focus ring must survive: use the system Highlight color, keep the offset. */
+  .hisd-selection-controls__input:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Disabled must read as disabled: GrayText on box, mark, and label text. */
+  .hisd-selection-controls__input:disabled,
+  .hisd-selection-controls__input:disabled:checked {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  .hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled)
+    .hisd-selection-controls__text,
+  .hisd-selection-controls__option:has(.hisd-selection-controls__input:disabled)
+    .hisd-selection-controls__description {
+    color: GrayText;
+  }
+
+  /* Error: the danger tint is flattened away, so carry the error on the box
+     border (and focus ring) with a system color that still reads as "marked". */
+  .hisd-selection-controls__input[aria-invalid="true"],
+  .hisd-selection-controls__group--error
+    .hisd-selection-controls__input:not(:checked) {
+    border-color: Mark;
+  }
+
+  .hisd-selection-controls__input[aria-invalid="true"]:focus-visible {
+    outline-color: Mark;
+  }
+}
+
+/* --- Reduced motion: disable the transitions the component declares -------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-selection-controls__option,
+  .hisd-selection-controls__input,
+  .hisd-selection-controls__input::before {
+    transition: none;
+  }
+}

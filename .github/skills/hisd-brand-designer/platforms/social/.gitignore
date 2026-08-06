@@ -1,0 +1,15 @@
+# Bulk generated demo cards. The kit is rasterized on demand by make_card.py;
+# we do not track throwaway renders. The three committed example renders under
+# examples/ are force-allowed below so the kit stays inspectable in the repo.
+
+# Default generator output (make_card.py with no --out)
+hisd-og.png
+hisd-square.png
+hisd-story.png
+
+# Any PNG dropped at the top level of this kit (ad-hoc renders)
+/*.png
+
+# ...but keep the curated examples.
+!examples/
+!examples/*.png

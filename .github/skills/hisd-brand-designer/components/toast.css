@@ -1,0 +1,371 @@
+/* ==========================================================================
+   HISD Toast
+   Brief, non-blocking feedback at the edge of the viewport.
+   Built entirely from semantic + reference tokens in hisd-theme.css.
+
+   Contract (Docs/Design-System/Components.md -> "Toast"):
+     Region       aria-live="polite" (assertive for danger), pinned bottom-end.
+     Variants     success (--color-success), warning (--color-warning),
+                  danger (--color-danger), info (--color-info).
+     Anatomy      leading icon in the matching status color + message in
+                  --color-text + optional dismiss button.
+     Lifecycle    auto-dismiss 5s for success/info; warning + danger persist.
+     Stacking     up to 3 visible; the oldest fades out when a 4th enters.
+
+   Meaning is carried by ICON SHAPE + TEXT + COLOR together (a status-colored
+   rail and a distinct glyph per variant), never by color alone.
+
+   Light is the default; dark inherits from an ancestor [data-theme="dark"]
+   via the semantic tokens — no component-specific dark hex.
+
+   States: success, warning, danger, info; entering, leaving; stacked.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Region — the live-region container, fixed to the bottom-end corner.
+   Holds the stack of toasts. pointer-events are released so the region never
+   blocks the page; individual toasts re-enable them.
+   -------------------------------------------------------------------------- */
+.hisd-toast-region {
+  position: fixed;
+  inset-block-end: var(--space-4);
+  inset-inline-end: var(--space-4);
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  /* Newest toast sits at the bottom, nearest the corner. */
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--space-3);
+
+  inline-size: min(100% - var(--space-8), 26rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Toast — one notification.
+   Component-scoped tokens resolve to semantic tokens only, so a single toast
+   can be re-themed without overriding every rule. --hisd-toast-status is set
+   per variant and drives the icon color and the leading rail.
+   -------------------------------------------------------------------------- */
+.hisd-toast {
+  /* Defaults to info; each variant overrides --hisd-toast-status and the glyph.
+     Declared here (ahead of the .hisd-toast--* rules) so the variant rules,
+     of equal specificity, win by source order. The glyph URIs themselves are
+     defined further down; custom properties resolve at use-time regardless of
+     declaration order, so the forward reference is safe. */
+  --hisd-toast-status: var(--color-info);
+  --hisd-toast-glyph: var(--hisd-toast-glyph-info);
+  --hisd-toast-bg: var(--color-surface-raised);
+  --hisd-toast-text: var(--color-text);
+  --hisd-toast-border: var(--color-border);
+  --hisd-toast-radius: var(--radius-md);
+  /* Min interactive target (WCAG 2.2 SC 2.5.8). 24px = --space-6. */
+  --hisd-toast-min-target: var(--space-6);
+
+  box-sizing: border-box;
+  inline-size: 100%;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  column-gap: var(--space-3);
+
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+
+  color: var(--hisd-toast-text);
+  background-color: var(--hisd-toast-bg);
+  border: 1px solid var(--hisd-toast-border);
+  /* Status rail on the leading edge — a second, non-color-dependent signal
+     (position) reinforcing the variant alongside the glyph and text. */
+  border-inline-start: var(--space-1) solid var(--hisd-toast-status);
+  border-radius: var(--hisd-toast-radius);
+  box-shadow: var(--shadow-3);
+
+  font-family: var(--font-sans);
+
+  /* Re-enable interaction released by the region. */
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Leading icon — masked monochrome glyph filled with the status color.
+   The glyph SHAPE differs per variant, so the meaning survives even with
+   color vision differences or a monochrome display.
+   -------------------------------------------------------------------------- */
+.hisd-toast__icon {
+  flex: none;
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+  /* Optically align the glyph with the first line of text. */
+  margin-block-start: var(--space-px);
+
+  color: var(--hisd-toast-status);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-toast-glyph) center / contain no-repeat;
+  mask: var(--hisd-toast-glyph) center / contain no-repeat;
+}
+
+/* --------------------------------------------------------------------------
+   Message — body copy in --color-text (always meets contrast on the surface).
+   An optional title sits above supporting text.
+   -------------------------------------------------------------------------- */
+.hisd-toast__body {
+  min-inline-size: 0; /* allow text to wrap rather than overflow the grid */
+  /* Center the single-line case against the icon and close button. */
+  align-self: center;
+}
+
+.hisd-toast__title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--hisd-toast-text);
+}
+
+.hisd-toast__message {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--hisd-toast-text);
+}
+
+/* When a title precedes the message, give the message muted weight + spacing. */
+.hisd-toast__title + .hisd-toast__message {
+  margin-block-start: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Dismiss button — icon-only control with its own >=24px target and ring.
+   The "x" glyph follows currentColor; it is the sole permitted non-token
+   color usage (a monochrome currentColor icon).
+   -------------------------------------------------------------------------- */
+.hisd-toast__dismiss {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  min-inline-size: var(--hisd-toast-min-target);
+  min-block-size: var(--hisd-toast-min-target);
+  margin: 0;
+  /* Negative-free: pull the button toward the edge via tightened padding
+     while its own padding keeps the >=24px target. */
+  padding: var(--space-1);
+
+  color: var(--color-text-muted);
+  background-color: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-toast__dismiss-icon {
+  inline-size: var(--space-4);
+  block-size: var(--space-4);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-toast-x-glyph) center / contain no-repeat;
+  mask: var(--hisd-toast-x-glyph) center / contain no-repeat;
+}
+
+.hisd-toast__dismiss:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+
+/* Pressed state for the icon-only dismiss control (a non-filled interactive
+   surface), drawn from the state-ladder token. */
+.hisd-toast__dismiss:active {
+  color: var(--color-text);
+  background-color: var(--color-surface-active);
+}
+
+/* Visible focus ring for the dismiss control. Never suppressed without a
+   replacement; pairs the focus token with the standard 2px offset. */
+.hisd-toast__dismiss:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Variants — each sets the status color; the icon container also receives the
+   variant glyph. Only the status color + glyph change; bg/text stay neutral so
+   the message always reads against a token-driven surface.
+   -------------------------------------------------------------------------- */
+.hisd-toast--success {
+  --hisd-toast-status: var(--color-success);
+  --hisd-toast-glyph: var(--hisd-toast-glyph-success);
+}
+
+.hisd-toast--warning {
+  /* Warning is AMBER (the brand "Sunrise" yellow is forbidden as a UI color).
+     The rail + masked icon are a graphical status signal on the raised surface,
+     so they must meet SC 1.4.11 (≥3:1). --color-warning-strong is the amber
+     tuned for standalone text/icons on a plain surface and clears that bar in
+     both themes (see assets/contrast-report.md); the plain --color-warning
+     fill is reserved for use with --color-on-warning. The status color stays
+     visible independent of the redundant glyph + text. */
+  --hisd-toast-status: var(--color-warning-strong);
+  --hisd-toast-glyph: var(--hisd-toast-glyph-warning);
+}
+
+.hisd-toast--danger {
+  --hisd-toast-status: var(--color-danger);
+  --hisd-toast-glyph: var(--hisd-toast-glyph-danger);
+}
+
+.hisd-toast--info {
+  --hisd-toast-status: var(--color-info);
+  --hisd-toast-glyph: var(--hisd-toast-glyph-info);
+}
+
+/* --------------------------------------------------------------------------
+   Glyph definitions — monochrome SVG data-URIs (fill currentColor). Each
+   variant has a visually distinct shape so meaning is never color-only:
+     success  check inside a circle
+     warning  exclamation inside a triangle
+     danger   exclamation inside an octagon
+     info     "i" inside a circle
+   The trailing "x" is the dismiss glyph.
+   -------------------------------------------------------------------------- */
+.hisd-toast {
+  --hisd-toast-glyph-success: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm3.94 6.32a.75.75 0 0 0-1.13-.99l-3.7 4.23-1.92-1.92a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.1-.04l4.21-4.84Z" clip-rule="evenodd"/></svg>');
+  --hisd-toast-glyph-warning: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.49 2.67a1.75 1.75 0 0 1 3.02 0l6.5 11.25A1.75 1.75 0 0 1 16.5 16.6h-13a1.75 1.75 0 0 1-1.51-2.68l6.5-11.25ZM10 6.5a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 10 6.5Zm0 6.25a.94.94 0 1 0 0 1.88.94.94 0 0 0 0-1.88Z" clip-rule="evenodd"/></svg>');
+  --hisd-toast-glyph-danger: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.7 1.6a.75.75 0 0 0-.53.22L1.82 6.17a.75.75 0 0 0-.22.53v6.6c0 .2.08.39.22.53l4.35 4.35c.14.14.33.22.53.22h6.6c.2 0 .39-.08.53-.22l4.35-4.35a.75.75 0 0 0 .22-.53V6.7a.75.75 0 0 0-.22-.53L13.83 1.82a.75.75 0 0 0-.53-.22H6.7ZM10 6a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 10 6Zm0 6.5a.94.94 0 1 0 0 1.88.94.94 0 0 0 0-1.88Z" clip-rule="evenodd"/></svg>');
+  --hisd-toast-glyph-info: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17ZM10 5.4a.95.95 0 1 0 0 1.9.95.95 0 0 0 0-1.9Zm.75 3.6a.75.75 0 0 0-1.5 0v4.75a.75.75 0 0 0 1.5 0V9Z" clip-rule="evenodd"/></svg>');
+  --hisd-toast-x-glyph: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M4.22 4.22a.75.75 0 0 1 1.06 0L8 6.94l2.72-2.72a.75.75 0 1 1 1.06 1.06L9.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L8 9.06l-2.72 2.72a.75.75 0 0 1-1.06-1.06L6.94 8 4.22 5.28a.75.75 0 0 1 0-1.06Z"/></svg>');
+}
+
+/* --------------------------------------------------------------------------
+   Lifecycle animation — enter from the inline-end edge, leave by fading and
+   collapsing. Durations + easings come from tokens. The region's column-gap
+   plus the collapse keeps the stack from jumping as a toast leaves.
+
+   --hisd-toast-enter-x is the inline-end offset: positive in LTR, flipped to
+   negative under [dir="rtl"] so the slide always tracks the inline-end edge
+   (CSS transforms have no logical axis, so direction is resolved here).
+   -------------------------------------------------------------------------- */
+.hisd-toast {
+  --hisd-toast-enter-x: var(--space-5);
+}
+
+[dir="rtl"] .hisd-toast {
+  --hisd-toast-enter-x: calc(-1 * var(--space-5));
+}
+
+@keyframes hisd-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--hisd-toast-enter-x));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hisd-toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    /* Collapse ceiling: a token large enough to exceed any toast's natural
+       height so the height interpolation never clips the content. */
+    max-block-size: var(--space-32);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(var(--hisd-toast-enter-x));
+    max-block-size: 0;
+    margin-block: 0;
+    padding-block: 0;
+    border-block-width: 0;
+  }
+}
+
+.hisd-toast {
+  animation: hisd-toast-in var(--duration-base) var(--ease-decelerate) both;
+}
+
+/* The oldest toast fading out when a 4th enters, or any manual dismissal that
+   animates before removal. */
+.hisd-toast[data-state="leaving"] {
+  animation: hisd-toast-out var(--duration-slow) var(--ease-accelerate) both;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode).
+   The OS flattens backgrounds and drops box-shadow, so the toast's separation
+   from the page and the status signals can no longer rely on background color
+   or shadow alone. We pin system-color borders so the card, its status rail,
+   the masked glyph, and the focus ring all stay visible and distinguishable.
+   forced-color-adjust stays at its default (auto) — system colors take over.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* Box-shadow is ignored in forced colors; a full system-color border keeps
+     the card visible against the (flattened) page. */
+  .hisd-toast {
+    border: 1px solid CanvasText;
+    /* The leading status rail is a state/variant signal — keep it as a visible
+       (thicker) border so the variant is distinguishable when backgrounds are
+       flattened, rather than relying on the status background color alone. */
+    border-inline-start: var(--space-1) solid CanvasText;
+  }
+
+  /* The variant glyph is a masked span filled via currentColor; force it to a
+     system color so the shape (the non-color-only meaning carrier) survives. */
+  .hisd-toast__icon {
+    color: CanvasText;
+  }
+
+  /* Dismiss control: keep it readable as a button and ensure the icon shows. */
+  .hisd-toast__dismiss {
+    color: ButtonText;
+  }
+  .hisd-toast__dismiss:hover,
+  .hisd-toast__dismiss:active {
+    color: Highlight;
+  }
+  /* Don't rely on a background tint for hover/press — add an outline so the
+     interactive state is perceivable when the OS flattens the background. */
+  .hisd-toast__dismiss:hover {
+    outline: 1px solid Highlight;
+  }
+  /* Preserve a visible focus ring with a system color. */
+  .hisd-toast__dismiss:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable entrance/exit animation and the dismiss transition.
+   Duration tokens are already zeroed at :root by the theme; this removes the
+   keyframe animations outright so nothing slides or collapses.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-toast,
+  .hisd-toast[data-state="leaving"] {
+    animation: none;
+  }
+  .hisd-toast__dismiss {
+    transition: none;
+  }
+}

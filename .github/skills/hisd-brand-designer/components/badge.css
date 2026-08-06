@@ -1,0 +1,276 @@
+/* ==========================================================================
+   HISD Badge
+   An inline count or status marker attached to another element — a
+   notification count on a nav icon, a status label on a card.
+   Built entirely from semantic + reference tokens in hisd-theme.css.
+
+   Contract (Docs/Design-System/Components.md → "Badge"):
+     Shape        --radius-pill.
+     Count badge  bg --color-danger, text --color-on-danger,
+                  font-size --text-xs, font-weight 700 (--weight-bold).
+     Status badge bg --color-success / --color-warning / --color-info,
+                  text --color-on-<cue> (the per-cue, per-theme ink token).
+     ARIA         presentational (aria-hidden) when the value is also in
+                  context; aria-label="[n] notifications" when the badge is
+                  the SOLE carrier of the information.
+
+   States covered: count, status(success/warning/info/danger),
+   standalone (sole carrier, labelled) vs attached (presentational),
+   plus an attached overlay position on an interactive host.
+
+   Light is the default; dark inherits from an ancestor [data-theme="dark"]
+   purely through the semantic tokens — no component-specific dark-mode hex.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Component-scoped tokens — every one resolves to a semantic or ramp token.
+   Consumers can retheme a single badge without overriding every rule.
+   -------------------------------------------------------------------------- */
+.hisd-badge {
+  /* Defaults describe the COUNT badge; status modifiers re-point bg/text.
+     Default fill is the danger cue, so its ink is the matching on-danger. */
+  --hisd-badge-bg: var(--color-danger);
+  --hisd-badge-text: var(--color-on-danger);
+  --hisd-badge-radius: var(--radius-pill);
+  /* Pill stays >= its text height even with a single glyph. 1.25rem = --space-5. */
+  --hisd-badge-min-size: var(--space-5);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: var(--hisd-badge-min-size);
+  min-block-size: var(--hisd-badge-min-size);
+  /* Inline padding shapes the pill; block padding holds the round minimum. */
+  padding-block: var(--space-0);
+  padding-inline: var(--space-2);
+
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-none);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  color: var(--hisd-badge-text);
+  background-color: var(--hisd-badge-bg);
+  border-radius: var(--hisd-badge-radius);
+}
+
+/* --------------------------------------------------------------------------
+   Status modifiers — solid semantic fills.
+   Each cue pairs its solid --color-<cue> fill with the matching
+   --color-on-<cue> ink. That per-cue on-token flips white->dark with the
+   theme automatically, so each pairing stays AA in BOTH themes with no
+   component-specific dark CSS and no fixed-ink override.
+   -------------------------------------------------------------------------- */
+.hisd-badge--success {
+  --hisd-badge-bg: var(--color-success);
+  --hisd-badge-text: var(--color-on-success);
+}
+
+.hisd-badge--info {
+  --hisd-badge-bg: var(--color-info);
+  --hisd-badge-text: var(--color-on-info);
+}
+
+.hisd-badge--danger {
+  --hisd-badge-bg: var(--color-danger);
+  --hisd-badge-text: var(--color-on-danger);
+}
+
+/* Warning is AMBER (no longer the brand Sunrise yellow). Its solid fill pairs
+   with --color-on-warning, the per-theme ink that flips with the surface — so
+   it reads AA in both themes without pinning a fixed-dark ramp token. */
+.hisd-badge--warning {
+  --hisd-badge-bg: var(--color-warning);
+  --hisd-badge-text: var(--color-on-warning);
+}
+
+/* --------------------------------------------------------------------------
+   Size variant — a count badge holding 2+ digits keeps its pill shape.
+   The default already pills via --radius-pill; this only relaxes the
+   minimum so wide content is not clipped. No new magic numbers.
+   -------------------------------------------------------------------------- */
+.hisd-badge--multi {
+  padding-inline: var(--space-2);
+}
+
+/* A bare dot (no glyph) for "has unread, count unknown" affordances. It is
+   always presentational; the meaning travels via the host's own label. */
+.hisd-badge--dot {
+  min-inline-size: var(--space-3);
+  min-block-size: var(--space-3);
+  padding: var(--space-0);
+}
+
+/* --------------------------------------------------------------------------
+   Attachment: badge overlaid on the top-inline-end corner of a host.
+   The HOST is positioned; the badge is absolutely placed with logical insets
+   so it mirrors correctly under RTL. The badge itself is non-interactive — it
+   never steals the host's click target or focus.
+   -------------------------------------------------------------------------- */
+.hisd-badge-host {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  /* Interactive hosts (icon buttons) meet the 24px target via this minimum. */
+  min-inline-size: var(--space-10);
+  min-block-size: var(--space-10);
+  padding: var(--space-2);
+
+  color: var(--color-text);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Non-filled interactive surface (icon button): hover/press use the semantic
+   state-ladder tints, not a surface-sunken stand-in. */
+.hisd-badge-host:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.hisd-badge-host:active {
+  background-color: var(--color-surface-active);
+  border-color: var(--color-border-strong);
+}
+
+/* Visible focus ring on the interactive host. Never suppressed without a
+   replacement (Accessibility Contract → Focus management). */
+.hisd-badge-host:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive bare badge (a <button class="hisd-badge ...">). When a badge is
+   itself the control — not a presentational overlay — it must satisfy the
+   Accessibility Contract on its own: a visible focus ring (Focus management,
+   WCAG 2.4.7) and a >=24px target (WCAG 2.2 SC 2.5.8). The presentational
+   overlay badge (pointer-events:none, aria-hidden) is exempt and keeps its
+   20px round minimum; only an actual interactive element opts into these.
+   -------------------------------------------------------------------------- */
+button.hisd-badge,
+a.hisd-badge,
+.hisd-badge[role="button"],
+.hisd-badge[tabindex] {
+  /* Lift the round minimum to the 24px target floor and add block padding so
+     the computed height clears SC 2.5.8 regardless of glyph height. */
+  --hisd-badge-min-size: var(--space-6);
+  padding-block: var(--space-2);
+  cursor: pointer;
+}
+
+button.hisd-badge:focus-visible,
+a.hisd-badge:focus-visible,
+.hisd-badge[role="button"]:focus-visible,
+.hisd-badge[tabindex]:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* The badge overlay sits just outside the icon, top-inline-end corner. The X
+   nudge is expressed through a sign var so it stays LOGICAL: positive pushes
+   the badge past the inline-end edge in LTR, and the sign flips under RTL so it
+   still drifts outward (away from the icon) rather than inward. */
+.hisd-badge-host {
+  --hisd-badge-overlay-x-sign: 1;
+}
+
+[dir="rtl"] .hisd-badge-host {
+  --hisd-badge-overlay-x-sign: -1;
+}
+
+.hisd-badge-host .hisd-badge {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  transform: translate(calc(40% * var(--hisd-badge-overlay-x-sign)), -40%);
+  pointer-events: none;
+}
+
+/* The dot overlay hugs the corner a touch tighter. */
+.hisd-badge-host .hisd-badge--dot {
+  transform: translate(calc(25% * var(--hisd-badge-overlay-x-sign)), -25%);
+}
+
+/* The host icon glyph — monochrome, drawn as a currentColor SVG data-URI.
+   This is the SOLE permitted non-token color usage (a currentColor mask). */
+.hisd-badge-host__icon {
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-badge-bell-icon) center / contain no-repeat;
+  mask: var(--hisd-badge-bell-icon) center / contain no-repeat;
+}
+
+.hisd-badge-host {
+  --hisd-badge-bell-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a6 6 0 0 0-6 6v3.1c0 .53-.21 1.04-.59 1.41L4 14h16l-1.41-1.49A2 2 0 0 1 18 11.1V8a6 6 0 0 0-6-6Zm0 20a3 3 0 0 0 2.83-2H9.17A3 3 0 0 0 12 22Z"/></svg>');
+}
+
+/* --------------------------------------------------------------------------
+   Forced colors (Windows High Contrast / forced-colors mode). The OS flattens
+   our token backgrounds to system colors, so anything that conveyed meaning via
+   fill ALONE must also carry a border/outline. We let forced-color-adjust stay
+   auto everywhere and lean on the CSS system-color keywords; no brand hex is
+   pinned. Focus rings are preserved with Highlight.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  /* The badge fill flattens to a system color; a border keeps it readable as a
+     distinct chip against its host/background in both count and status forms. */
+  .hisd-badge {
+    border: 1px solid CanvasText;
+  }
+
+  /* The bare dot has no text — its meaning lived entirely in the fill. Keep it
+     perceivable with a Highlight outline now that the fill is flattened. */
+  .hisd-badge--dot {
+    outline: 1px solid Highlight;
+    outline-offset: 0;
+  }
+
+  /* Host hover/press no longer read by background alone; add a border so the
+     interactive state stays distinguishable when the OS flattens the fill. */
+  .hisd-badge-host:hover,
+  .hisd-badge-host:active {
+    border-color: Highlight;
+  }
+
+  /* Keep the focus ring visible with a system color (never removed). */
+  .hisd-badge-host:focus-visible,
+  button.hisd-badge:focus-visible,
+  a.hisd-badge:focus-visible,
+  .hisd-badge[role="button"]:focus-visible,
+  .hisd-badge[tabindex]:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Disabled hosts read as disabled via GrayText for text and border. */
+  .hisd-badge-host:disabled,
+  button.hisd-badge:disabled {
+    color: GrayText;
+    border-color: GrayText;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — there are no entrance animations here, but if a consumer
+   adds one it must reference --duration-*/--ease-* and be disabled below.
+   The theme already zeroes the duration tokens under reduce; this is the
+   belt-and-suspenders for any transition declared on these classes.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-badge,
+  .hisd-badge-host {
+    transition: none;
+    animation: none;
+  }
+}

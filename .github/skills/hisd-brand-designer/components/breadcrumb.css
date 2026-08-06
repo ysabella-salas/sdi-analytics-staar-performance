@@ -1,0 +1,210 @@
+/* HISD Breadcrumb — reusable component styles.
+   Depends on hisd-theme.css for every token. Zero raw colors.
+   Light is default; dark inherits from an ancestor [data-theme="dark"].
+   Logical properties only; no physical left/right. */
+
+/* ---- Root: <nav aria-label="Breadcrumb"> ---- */
+.hisd-breadcrumb {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+}
+
+/* ---- Trail: the ordered list of links ---- */
+.hisd-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-block: 0;
+  margin-inline: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* ---- One crumb (li) ---- */
+.hisd-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 0; /* allows the truncating crumb to shrink */
+}
+
+/* ---- Link crumbs ---- */
+.hisd-breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 1.5rem; /* >= 24px target height */
+  padding-inline: var(--space-1);
+  padding-block: var(--space-1);
+  border-radius: var(--radius-sm);
+  color: var(--color-link);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-breadcrumb__link:hover {
+  background-color: var(--color-surface-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.hisd-breadcrumb__link:active {
+  background-color: var(--color-surface-active);
+}
+
+.hisd-breadcrumb__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Current page: plain text, no link ---- */
+.hisd-breadcrumb__current {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 1.5rem; /* keep vertical rhythm aligned with links */
+  padding-inline: var(--space-1);
+  padding-block: var(--space-1);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+}
+
+/* ---- Separator: presentational, aria-hidden ---- */
+.hisd-breadcrumb__separator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: 0 0 auto;
+  color: var(--color-text-subtle);
+  /* Chevron drawn as a monochrome SVG data-URI; fill is currentColor. */
+  background-color: currentColor;
+  -webkit-mask: var(--hisd-breadcrumb-chevron) center / contain no-repeat;
+  mask: var(--hisd-breadcrumb-chevron) center / contain no-repeat;
+}
+
+.hisd-breadcrumb {
+  --hisd-breadcrumb-chevron: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M6.2 3.3a1 1 0 0 0 0 1.4L9.5 8l-3.3 3.3a1 1 0 1 0 1.4 1.4l4-4a1 1 0 0 0 0-1.4l-4-4a1 1 0 0 0-1.4 0Z"/></svg>');
+}
+
+/* ---- Truncation: middle crumbs collapse on overflow ----
+   The trail is allowed to grow; a designated overflow item shows an
+   ellipsis disclosure that swaps to the full path on activation.
+   The "collapsed" modifier hides the middle items, leaving root + tail. */
+.hisd-breadcrumb__item--collapsible[hidden] {
+  display: none;
+}
+
+/* Overflow disclosure button (the "…" that reveals hidden crumbs). */
+.hisd-breadcrumb__overflow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.5rem; /* >= 24px target */
+  min-block-size: 1.5rem;
+  padding-inline: var(--space-1);
+  padding-block: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-link);
+  font: inherit;
+  line-height: var(--leading-none);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.hisd-breadcrumb__overflow:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.hisd-breadcrumb__overflow:active {
+  background-color: var(--color-surface-active);
+}
+
+.hisd-breadcrumb__overflow:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* When the trail still overflows horizontally, the longest crumb label
+   truncates with an ellipsis rather than breaking layout. The middle item
+   is the candidate; root and current stay fully legible. */
+.hisd-breadcrumb__link--truncate,
+.hisd-breadcrumb__current--truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-inline-size: 12ch;
+}
+
+/* ---- Dark theme: structural-only tweak (no color values) ----
+   Underline-on-hover already reads well; the hover surface comes from the
+   theme. No component-specific dark hex is needed. */
+[data-theme="dark"] .hisd-breadcrumb__separator {
+  /* identical rendering; kept as an explicit scope hook per the contract */
+  background-color: currentColor;
+}
+
+/* ---- Forced colors (Windows High Contrast) ----
+   Let system colors take over (forced-color-adjust stays auto). We only
+   reinforce what background tint alone can't convey: keep focus rings,
+   give hover/current/disclosure a border so they read with flattened
+   backgrounds, and map the separator to a system color. */
+@media (forced-colors: active) {
+  /* Keep focus visible with a system color (rings are otherwise dropped). */
+  .hisd-breadcrumb__link:focus-visible,
+  .hisd-breadcrumb__overflow:focus-visible {
+    outline-color: Highlight;
+  }
+
+  /* Link/button text uses the system link/button color. */
+  .hisd-breadcrumb__link {
+    color: LinkText;
+  }
+  .hisd-breadcrumb__overflow {
+    color: ButtonText;
+  }
+
+  /* Hover/active flatten to one background — add a border so the
+     interactive surface is still distinguishable on press/hover. */
+  .hisd-breadcrumb__link:hover,
+  .hisd-breadcrumb__link:active,
+  .hisd-breadcrumb__overflow:hover,
+  .hisd-breadcrumb__overflow:active {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+
+  /* Current page is the "you are here" state: don't rely on weight/color
+     alone — carry a border so it stays distinguishable. */
+  .hisd-breadcrumb__current {
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  /* The chevron is a masked background; masks/backgrounds are dropped in
+     forced-colors. Repaint it with a system color so it stays visible. */
+  .hisd-breadcrumb__separator {
+    background-color: CanvasText;
+  }
+
+  /* Disabled disclosure (if ever set) must read as disabled. */
+  .hisd-breadcrumb__overflow:disabled {
+    color: GrayText;
+  }
+}
+
+/* ---- Motion: honor reduced-motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hisd-breadcrumb__link,
+  .hisd-breadcrumb__overflow {
+    transition: none;
+  }
+}

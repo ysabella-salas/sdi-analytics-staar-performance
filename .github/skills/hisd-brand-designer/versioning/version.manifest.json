@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "skillName": "hisd-brand-designer",
+  "family": "design",
+  "version": "1.3.0",
+  "versioningScheme": "semver",
+  "installable": true,
+  "updateMode": "exportable",
+  "compatibility": {
+    "minSkillSubstrateVersion": "1.0.0"
+  },
+  "supersedes": [],
+  "migrations": []
+}

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en" data-theme-source="manual">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HISD Progress — Component Demo</title>
+  <link rel="stylesheet" href="../assets/hisd-theme.css">
+  <link rel="stylesheet" href="progress.css">
+  <style>
+    /* Demo-page chrome only — not part of the component. */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      line-height: var(--leading-normal);
+    }
+    .demo-page {
+      max-inline-size: 64rem;
+      margin-inline: auto;
+      padding-inline: var(--space-6);
+      padding-block: var(--space-8);
+    }
+    .demo-page > h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      margin-block: 0 var(--space-2);
+    }
+    .demo-intro {
+      color: var(--color-text-muted);
+      max-inline-size: 52rem;
+      margin-block: 0 var(--space-8);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: var(--space-6);
+    }
+    .demo-panel {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding-inline: var(--space-6);
+      padding-block: var(--space-5);
+      color: var(--color-text);
+    }
+    .demo-panel > h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      margin-block: 0 var(--space-5);
+    }
+    .demo-block {
+      padding-block: var(--space-4);
+      border-block-end: 1px solid var(--color-border);
+    }
+    .demo-block:last-of-type { border-block-end: 0; padding-block-end: 0; }
+    .demo-block:first-of-type { padding-block-start: 0; }
+    .demo-block__caption {
+      display: block;
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-block-start: var(--space-2);
+    }
+    .demo-spinner-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+    }
+    .visually-hidden {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+    .snippet {
+      margin-block-start: var(--space-8);
+    }
+    .snippet > h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      margin-block: 0 var(--space-3);
+    }
+    .snippet pre {
+      background-color: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+      color: var(--color-text);
+    }
+    code { font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <h1>Progress</h1>
+    <p class="demo-intro">
+      Status indicators built on <code>role="progressbar"</code>. The
+      <strong>determinate</strong> bar carries
+      <code>aria-valuenow</code>/<code>aria-valuemin</code>/<code>aria-valuemax</code>
+      with a <code>--color-action</code> fill on a <code>--color-surface-sunken</code>
+      track at <code>--radius-pill</code>; at 100% it shifts to
+      <code>--color-success</code>. The <strong>indeterminate</strong> bar drops
+      <code>aria-valuenow</code>, sets <code>aria-busy="true"</code>, and sweeps a
+      token-colored stripe. The <strong>spinner</strong> is the circular variant for
+      compact loading states. Per the WAI-ARIA APG, progressbars are non-interactive
+      status widgets with no keyboard model; dynamic value changes are announced
+      through an <code>aria-live="polite"</code> region. All motion honors
+      <code>prefers-reduced-motion</code>. Both themes below render the full state set.
+    </p>
+
+    <div class="demo-grid">
+      <!-- LIGHT THEME -->
+      <section class="demo-panel" data-theme="light" aria-label="Progress states in light theme">
+        <h2>Light theme</h2>
+
+        <!-- Determinate, mid-progress, live-updating -->
+        <div class="demo-block">
+          <div class="hisd-progress-field">
+            <div class="hisd-progress-field__header">
+              <span class="hisd-progress-field__label" id="lt-det-label">Uploading transcript</span>
+              <span class="hisd-progress-field__value" id="lt-det-value" aria-live="polite">42%</span>
+            </div>
+            <div class="hisd-progress"
+                 role="progressbar"
+                 aria-labelledby="lt-det-label"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="42"
+                 aria-describedby="lt-det-value"
+                 style="--hisd-progress-value: 42%;"
+                 data-demo-animate>
+              <span class="hisd-progress__fill"></span>
+            </div>
+          </div>
+          <span class="demo-block__caption">Determinate — value animates; the % read-out is a polite live region.</span>
+        </div>
+
+        <!-- Complete -->
+        <div class="demo-block">
+          <div class="hisd-progress-field">
+            <div class="hisd-progress-field__header">
+              <span class="hisd-progress-field__label" id="lt-done-label">Enrollment submitted</span>
+              <span class="hisd-progress-field__value">100%</span>
+            </div>
+            <div class="hisd-progress hisd-progress--complete"
+                 role="progressbar"
+                 aria-labelledby="lt-done-label"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"
+                 style="--hisd-progress-value: 100%;">
+              <span class="hisd-progress__fill"></span>
+            </div>
+          </div>
+          <span class="demo-block__caption">Complete — fill shifts to <code>--color-success</code>.</span>
+        </div>
+
+        <!-- Indeterminate -->
+        <div class="demo-block">
+          <div class="hisd-progress-field">
+            <div class="hisd-progress-field__header">
+              <span class="hisd-progress-field__label" id="lt-ind-label">Syncing records</span>
+            </div>
+            <div class="hisd-progress hisd-progress--indeterminate"
+                 role="progressbar"
+                 aria-labelledby="lt-ind-label"
+                 aria-busy="true">
+              <span class="hisd-progress__fill"></span>
+            </div>
+          </div>
+          <span class="demo-block__caption">Indeterminate — <code>aria-busy="true"</code>, no <code>aria-valuenow</code>.</span>
+        </div>
+
+        <!-- Spinners -->
+        <div class="demo-block">
+          <div class="demo-spinner-row">
+            <span class="hisd-spinner-field">
+              <span class="hisd-spinner" role="progressbar" aria-label="Loading" aria-busy="true"></span>
+              <span>Loading…</span>
+            </span>
+            <span class="hisd-spinner hisd-spinner--lg" role="progressbar" aria-label="Loading dashboard" aria-busy="true"></span>
+          </div>
+          <span class="demo-block__caption">Spinner — circular variant; icon-only, labelled via <code>aria-label</code>.</span>
+        </div>
+      </section>
+
+      <!-- DARK THEME -->
+      <section class="demo-panel" data-theme="dark" aria-label="Progress states in dark theme">
+        <h2>Dark theme</h2>
+
+        <!-- Determinate, mid-progress, live-updating -->
+        <div class="demo-block">
+          <div class="hisd-progress-field">
+            <div class="hisd-progress-field__header">
+              <span class="hisd-progress-field__label" id="dk-det-label">Uploading transcript</span>
+              <span class="hisd-progress-field__value" id="dk-det-value" aria-live="polite">42%</span>
+            </div>
+            <div class="hisd-progress"
+                 role="progressbar"
+                 aria-labelledby="dk-det-label"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="42"
+                 aria-describedby="dk-det-value"
+                 style="--hisd-progress-value: 42%;"
+                 data-demo-animate>
+              <span class="hisd-progress__fill"></span>
+            </div>
+          </div>
+          <span class="demo-block__caption">Determinate — value animates; the % read-out is a polite live region.</span>
+        </div>
+
+        <!-- Complete -->
+        <div class="demo-block">
+          <div class="hisd-progress-field">
+            <div class="hisd-progress-field__header">
+              <span class="hisd-progress-field__label" id="dk-done-label">Enrollment submitted</span>
+              <span class="hisd-progress-field__value">100%</span>
+            </div>
+            <div class="hisd-progress hisd-progress--complete"
+                 role="progressbar"
+                 aria-labelledby="dk-done-label"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"
+                 style="--hisd-progress-value: 100%;">
+              <span class="hisd-progress__fill"></span>
+            </div>
+          </div>
+          <span class="demo-block__caption">Complete — fill shifts to <code>--color-success</code>.</span>
+        </div>
+
+        <!-- Indeterminate -->
+        <div class="demo-block">
+          <div class="hisd-progress-field">
+            <div class="hisd-progress-field__header">
+              <span class="hisd-progress-field__label" id="dk-ind-label">Syncing records</span>
+            </div>
+            <div class="hisd-progress hisd-progress--indeterminate"
+                 role="progressbar"
+                 aria-labelledby="dk-ind-label"
+                 aria-busy="true">
+              <span class="hisd-progress__fill"></span>
+            </div>
+          </div>
+          <span class="demo-block__caption">Indeterminate — <code>aria-busy="true"</code>, no <code>aria-valuenow</code>.</span>
+        </div>
+
+        <!-- Spinners -->
+        <div class="demo-block">
+          <div class="demo-spinner-row">
+            <span class="hisd-spinner-field">
+              <span class="hisd-spinner" role="progressbar" aria-label="Loading" aria-busy="true"></span>
+              <span>Loading…</span>
+            </span>
+            <span class="hisd-spinner hisd-spinner--lg" role="progressbar" aria-label="Loading dashboard" aria-busy="true"></span>
+          </div>
+          <span class="demo-block__caption">Spinner — circular variant; icon-only, labelled via <code>aria-label</code>.</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Canonical copy-paste markup -->
+    <section class="snippet">
+      <h2>Copy-paste snippet</h2>
+      <pre><code>&lt;!-- DETERMINATE: role=progressbar + aria-valuenow/min/max.
+     Set the fill width inline via --hisd-progress-value and keep it in
+     sync with aria-valuenow. Add --complete when valuenow == valuemax. --&gt;
+&lt;div class="hisd-progress-field"&gt;
+  &lt;div class="hisd-progress-field__header"&gt;
+    &lt;span class="hisd-progress-field__label" id="up-label"&gt;Uploading transcript&lt;/span&gt;
+    &lt;span class="hisd-progress-field__value" id="up-value" aria-live="polite"&gt;42%&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="hisd-progress" role="progressbar"
+       aria-labelledby="up-label"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="42"
+       aria-describedby="up-value"
+       style="--hisd-progress-value: 42%;"&gt;
+    &lt;span class="hisd-progress__fill"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- COMPLETE: valuenow == valuemax, add the modifier. --&gt;
+&lt;div class="hisd-progress hisd-progress--complete" role="progressbar"
+     aria-label="Enrollment submitted"
+     aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"
+     style="--hisd-progress-value: 100%;"&gt;
+  &lt;span class="hisd-progress__fill"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- INDETERMINATE: drop aria-valuenow, set aria-busy="true". --&gt;
+&lt;div class="hisd-progress hisd-progress--indeterminate" role="progressbar"
+     aria-label="Syncing records" aria-busy="true"&gt;
+  &lt;span class="hisd-progress__fill"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- SPINNER (circular variant): icon-only, label with aria-label. --&gt;
+&lt;span class="hisd-spinner" role="progressbar"
+      aria-label="Loading" aria-busy="true"&gt;&lt;/span&gt;</code></pre>
+    </section>
+  </main>
+
+  <script>
+    /* Progressbars have NO keyboard interaction per the WAI-ARIA APG — they are
+     * read-only status widgets, not in the tab order. This script only DEMOS the
+     * determinate variant updating over time: it advances aria-valuenow, resizes
+     * the fill via --hisd-progress-value, and writes the % into the live region
+     * so assistive tech announces progress. Production code wires these same
+     * three updates to your real progress events; no library is required. */
+    (function () {
+      function setValue(bar, now) {
+        var min = Number(bar.getAttribute('aria-valuemin')) || 0;
+        var max = Number(bar.getAttribute('aria-valuemax')) || 100;
+        now = Math.max(min, Math.min(max, now));
+        var pct = Math.round(((now - min) / (max - min)) * 100);
+
+        bar.setAttribute('aria-valuenow', String(now));
+        bar.style.setProperty('--hisd-progress-value', pct + '%');
+
+        /* Mirror the value into the labelled read-out (the live region). */
+        var describedby = bar.getAttribute('aria-describedby');
+        var out = describedby && document.getElementById(describedby);
+        if (out) out.textContent = pct + '%';
+
+        /* Flip to the complete state at the ceiling. */
+        if (now >= max) bar.classList.add('hisd-progress--complete');
+        else bar.classList.remove('hisd-progress--complete');
+      }
+
+      var bars = document.querySelectorAll('.hisd-progress[data-demo-animate]');
+      Array.prototype.forEach.call(bars, function (bar) {
+        var now = Number(bar.getAttribute('aria-valuenow')) || 0;
+        setInterval(function () {
+          now += 7;
+          if (now > 100) now = 0;           /* loop the demo */
+          setValue(bar, now);
+        }, 1200);
+      });
+    })();
+  </script>
+</body>
+</html>

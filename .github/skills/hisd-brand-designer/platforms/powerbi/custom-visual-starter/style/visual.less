@@ -1,0 +1,82 @@
+// HISD Power BI custom-visual styles.
+//
+// LESS is pbiviz's authoring format; the kit deliberately keeps the rule set
+// small and token-shaped — colour values mirror HISD_PALETTE.* in src/hisd-tokens.ts
+// so the visual stays on brand when the consuming report has not applied the
+// HISD theme. The forced-colors block honors the system-color contract every
+// HISD component ships. Reduced-motion is honored by every recipe.
+
+.hisd-visual {
+  font-family: "Segoe UI", system-ui, sans-serif; // Power BI cannot embed brand fonts
+  color: #19282C;
+  background-color: #FFFFFF;
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// Skip link — sr-only until focused
+.hisd-visual__skip {
+  position: absolute;
+  inset-inline-start: 8px;
+  inset-block-start: 8px;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  color: #037882;
+  background-color: #FFFFFF;
+  text-decoration: underline;
+  &:focus-visible {
+    inline-size: auto;
+    block-size: auto;
+    padding: 4px 8px;
+    clip-path: none;
+    outline: 2px solid #037882;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.hisd-visual__canvas { flex: 1; min-block-size: 0; }
+.hisd-visual__table  {
+  font-size: 12px;
+  border-top: 1px solid #D0D6D8;
+  padding-block-start: 8px;
+  max-block-size: 50%;
+  overflow: auto;
+}
+.hisd-visual__data-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  th, td { padding: 4px 8px; text-align: start; border-bottom: 1px solid #D0D6D8; }
+  th { font-weight: 700; color: #19282C; }
+  td { color: #5B6B72; }
+}
+.hisd-visual__state { color: #5B6B72; font-style: italic; }
+.hisd-visual__live {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  margin: -1px;
+}
+
+// Forced colors — every visual must stay readable under Windows High Contrast.
+@media (forced-colors: active) {
+  .hisd-visual {
+    color: CanvasText;
+    background-color: Canvas;
+  }
+  .hisd-visual__skip { color: LinkText; background-color: Canvas; }
+  .hisd-visual__skip:focus-visible { outline-color: Highlight; }
+  .hisd-visual__table { border-color: CanvasText; }
+  .hisd-visual__data-table {
+    th, td { border-color: CanvasText; }
+    th { color: CanvasText; }
+    td { color: CanvasText; }
+  }
+}
